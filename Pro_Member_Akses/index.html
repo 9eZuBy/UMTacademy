@@ -452,8 +452,9 @@
         <main id="app-content" class="flex-1 p-4 md:p-6 space-y-6 pb-24 md:pb-6 overflow-x-hidden"></main>
     </div>
 
-    <div id="toast-container" class="fixed top-5 right-5 z-[100] space-y-3 w-80"></div>
-    <div id="modal-container" style="display: none;"></div>
+    <div id="toast-container" class="fixed top-5 right-5 z-[99999] space-y-3 w-80"></div>
+    <div id="modal-container" style="display: none; position: relative; z-index: 99999;"></div>
+
 
 <script>
 // === [STRUKTUR DATA] ===
