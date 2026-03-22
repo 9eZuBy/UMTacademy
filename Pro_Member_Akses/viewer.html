@@ -71,12 +71,7 @@
         .toolbar-button:hover:not(:disabled) { background-color: var(--border-color); }
         .toolbar-button:disabled { color: var(--text-secondary); cursor: not-allowed; }
 
-        /*
-         * pdf-viewer: area scroll utama
-         * overflow: auto  → bisa scroll ke semua arah setelah render
-         * touch-action: pan-x pan-y → izinkan scroll native saat TIDAK sedang pinch
-         * -webkit-overflow-scrolling: touch → scroll smooth di iOS
-         */
+        /* Area scroll utama */
         .pdf-viewer {
             flex-grow: 1;
             overflow: auto;
@@ -87,28 +82,52 @@
         }
 
         /*
-         * scroll-inner: wrapper yang lebarnya di-set JS setelah render
-         * agar scroll area mengikuti ukuran konten yang sebenarnya
+         * pages-container: menampung semua page-slot
+         * Lebarnya di-set JS sesuai lebar halaman PDF
          */
-        #scroll-inner {
-            display: inline-block;
-            min-width: 100%;
-            min-height: 100%;
-            padding: 1rem;
-            box-sizing: border-box;
-            text-align: center;
+        #pages-container {
+            position: relative;
+            margin: 0 auto;
+            /* width & height di-set JS */
         }
 
-        #canvas-container {
-            display: inline-flex;
-            flex-direction: column;
+        /*
+         * Setiap halaman PDF punya slot dengan posisi absolute.
+         * Slot ini sudah punya ukuran yang benar sehingga
+         * scroll area tahu total tinggi dokumen.
+         * Canvas di dalam slot hanya dibuat kalau halaman terlihat.
+         */
+        .page-slot {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            background-color: #1a1f27;
+            border: 1px solid var(--border-color);
+            box-sizing: border-box;
+            display: flex;
             align-items: center;
-            transform-origin: top center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .page-slot canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Placeholder teks saat halaman belum dirender */
+        .page-placeholder {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            pointer-events: none;
+            user-select: none;
         }
 
         .status-message {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             font-size: 1.2rem; color: var(--text-secondary);
+            pointer-events: none;
         }
 
         /* Indikator zoom */
@@ -117,9 +136,9 @@
             bottom: 80px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.75);
             color: white;
-            padding: 6px 16px;
+            padding: 6px 18px;
             border-radius: 20px;
             font-size: 0.85rem;
             pointer-events: none;
@@ -168,10 +187,7 @@
         </div>
 
         <div id="pdf-viewer" class="pdf-viewer">
-            <!-- scroll-inner menentukan luas area scroll -->
-            <div id="scroll-inner">
-                <div id="canvas-container"></div>
-            </div>
+            <div id="pages-container"></div>
             <div id="status-message" class="status-message">Memuat PDF...</div>
         </div>
     </div>
@@ -187,7 +203,7 @@
     const token = sessionStorage.getItem('sessionToken');
     if (!token) { window.location.href = '../Login/'; }
 
-    // --- Helper Functions ---
+    // ─── Helper ───────────────────────────────────────────────
     function markAsCompleted(itemId) {
         const key = 'userCompletedItems';
         let completed = JSON.parse(localStorage.getItem(key)) || [];
@@ -203,41 +219,66 @@
         localStorage.setItem(key, JSON.stringify(lastActivity));
     }
 
-    // --- DOM Elements ---
-    const titleShortEl    = document.getElementById('materi-title-short');
-    const titleFullEl     = document.getElementById('materi-title-full');
-    const titleTrigger    = document.getElementById('title-trigger');
-    const titleDropdown   = document.getElementById('title-dropdown');
-    const statusMessageEl = document.getElementById('status-message');
-    const viewerEl        = document.getElementById('pdf-viewer');
-    const scrollInner     = document.getElementById('scroll-inner');
-    const canvasContainer = document.getElementById('canvas-container');
-    const zoomIndicator   = document.getElementById('zoom-indicator');
+    // ─── DOM ──────────────────────────────────────────────────
+    const titleShortEl     = document.getElementById('materi-title-short');
+    const titleFullEl      = document.getElementById('materi-title-full');
+    const titleTrigger     = document.getElementById('title-trigger');
+    const titleDropdown    = document.getElementById('title-dropdown');
+    const statusMessageEl  = document.getElementById('status-message');
+    const viewerEl         = document.getElementById('pdf-viewer');
+    const pagesContainer   = document.getElementById('pages-container');
+    const zoomIndicator    = document.getElementById('zoom-indicator');
 
     pdfjsLib.GlobalWorkerOptions.workerSrc = './pdfjs/build/pdf.worker.mjs';
 
-    let pdfDoc       = null;
-    let currentScale = 1.0;
-    let autoFitScale = 1.0;
+    // ─── State ────────────────────────────────────────────────
+    let pdfDoc          = null;
+    let currentScale    = 1.0;
+    let autoFitScale    = 1.0;
 
-    // --- Pinch Zoom State ---
+    /*
+     * DPR dibatasi maksimal 2 untuk mencegah canvas terlalu besar
+     * di HP dengan layar high-density (DPR 3 atau 4)
+     */
+    const MAX_DPR = 2;
+    const dpr     = Math.min(window.devicePixelRatio || 1, MAX_DPR);
+
+    /*
+     * pageHeights: array tinggi setiap halaman (dalam CSS px)
+     * diisi saat buildLayout, dipakai untuk menghitung posisi slot
+     */
+    let pageHeights   = [];   // tinggi per halaman (px)
+    let pageOffsets   = [];   // posisi top setiap halaman (px)
+    let totalHeight   = 0;
+    let pageWidth     = 0;    // lebar halaman (px), sama untuk semua
+
+    /*
+     * renderingPages: Set berisi nomor halaman yang sedang
+     * dalam proses render agar tidak double-render
+     */
+    const renderingPages = new Set();
+
+    // Margin antar halaman (px)
+    const PAGE_GAP = 16;
+
+    // ─── Pinch Zoom ───────────────────────────────────────────
     let initialPinchDistance = 0;
     let initialScale         = 1;
     let isPinching           = false;
 
-    // --- Timers ---
-    let renderDebounceTimer = null;
-    let zoomIndicatorTimer  = null;
+    // ─── Timers ───────────────────────────────────────────────
+    let renderDebounceTimer  = null;
+    let scrollDebounceTimer  = null;
+    let zoomIndicatorTimer   = null;
+    let resizeTimer          = null;
 
-    // --- Anti klik kanan & shortcut ---
-    document.addEventListener('contextmenu', event => event.preventDefault());
+    // ─── Anti klik kanan & shortcut ───────────────────────────
+    document.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('keydown', (e) => {
-        if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'p' || e.key === 'u')) {
-            e.preventDefault();
-        }
+        if ((e.ctrlKey || e.metaKey) && ['s','p','u'].includes(e.key)) e.preventDefault();
     });
 
-    // --- Dropdown Logic ---
+    // ─── Dropdown ─────────────────────────────────────────────
     titleTrigger.addEventListener('click', (e) => {
         e.stopPropagation();
         titleDropdown.classList.toggle('show');
@@ -250,11 +291,11 @@
     document.addEventListener('click', (e) => {
         if (!titleTrigger.contains(e.target) && !titleDropdown.contains(e.target)) {
             titleDropdown.classList.remove('show');
-            titleTrigger.querySelector('.title-icon').classList.replace('fa-chevron-up', 'fa-chevron-down');
+            titleTrigger.querySelector('.title-icon').classList.replace('fa-chevron-up','fa-chevron-down');
         }
     });
 
-    // --- Zoom indicator ---
+    // ─── Zoom indicator ───────────────────────────────────────
     function showZoomIndicator(scale) {
         zoomIndicator.textContent = Math.round(scale * 100) + '%';
         zoomIndicator.classList.add('visible');
@@ -262,111 +303,221 @@
         zoomIndicatorTimer = setTimeout(() => zoomIndicator.classList.remove('visible'), 1500);
     }
 
-    // --- Calculate auto fit ---
+    // ─── Auto fit scale ───────────────────────────────────────
     const calculateAutoFitScale = async () => {
         if (!pdfDoc) return 1.0;
         const page = await pdfDoc.getPage(1);
-        const unscaledViewport = page.getViewport({ scale: 1.0 });
-        const containerWidth = viewerEl.clientWidth - 32;
-        return containerWidth / unscaledViewport.width;
+        const vp   = page.getViewport({ scale: 1.0 });
+        return (viewerEl.clientWidth - 32) / vp.width;
     };
 
-    /**
-     * updateScrollArea:
-     * Setelah render selesai, beri tahu browser ukuran konten
-     * yang sebenarnya agar scroll ke kiri/kanan/atas/bawah bisa bekerja.
-     */
-    const updateScrollArea = () => {
-        // Biarkan browser menghitung dulu ukuran naturalnya
-        scrollInner.style.width  = '';
-        scrollInner.style.height = '';
-
-        // Kemudian set ke ukuran konten yang sebenarnya
-        const contentW = canvasContainer.offsetWidth  + 32; // +32 = padding kiri kanan
-        const contentH = canvasContainer.offsetHeight + 32; // +32 = padding atas bawah
-
-        scrollInner.style.width  = Math.max(contentW, viewerEl.clientWidth)  + 'px';
-        scrollInner.style.height = Math.max(contentH, viewerEl.clientHeight) + 'px';
-    };
-
-    /**
-     * renderAllPages:
-     * Render semua halaman → update scroll area → scroll bisa ke semua arah
-     */
-    const renderAllPages = async () => {
+    // ─────────────────────────────────────────────────────────
+    //  buildLayout
+    //  Hitung ukuran setiap halaman pada scale saat ini,
+    //  buat slot-slot div dengan posisi absolute,
+    //  set total tinggi container.
+    //  Canvas belum dirender di sini.
+    // ─────────────────────────────────────────────────────────
+    const buildLayout = async () => {
         if (!pdfDoc) return;
 
-        statusMessageEl.textContent = 'Memuat...';
-        statusMessageEl.style.display = 'block';
+        pageHeights = [];
+        pageOffsets = [];
+        totalHeight = 0;
 
-        // Reset CSS transform sebelum render agar tidak double-scale
-        canvasContainer.style.transition = 'none';
-        canvasContainer.style.transform  = 'scale(1)';
-        canvasContainer.innerHTML = '';
-
-        const dpr = window.devicePixelRatio || 1;
-        const pagePromises = [];
-
-        for (let num = 1; num <= pdfDoc.numPages; num++) {
-            const promise = pdfDoc.getPage(num).then(page => {
-                const renderViewport = page.getViewport({ scale: currentScale * dpr });
-
-                const canvas = document.createElement('canvas');
-                const ctx    = canvas.getContext('2d');
-
-                canvas.height = renderViewport.height;
-                canvas.width  = renderViewport.width;
-
-                canvas.style.width        = `${renderViewport.width / dpr}px`;
-                canvas.style.height       = `${renderViewport.height / dpr}px`;
-                canvas.style.marginBottom = '1rem';
-                canvas.style.display      = 'block';
-                canvas.id = `page-${num}`;
-
-                canvasContainer.appendChild(canvas);
-                return page.render({ canvasContext: ctx, viewport: renderViewport }).promise;
-            });
-            pagePromises.push(promise);
+        // Dapatkan ukuran semua halaman
+        for (let i = 1; i <= pdfDoc.numPages; i++) {
+            const page = await pdfDoc.getPage(i);
+            const vp   = page.getViewport({ scale: currentScale });
+            pageHeights.push(vp.height);
+            pageOffsets.push(totalHeight);
+            totalHeight += vp.height + PAGE_GAP;
+            pageWidth = Math.max(pageWidth, vp.width);
         }
 
-        await Promise.all(pagePromises);
+        // Lebar container mengikuti lebar halaman terlebar
+        // atau lebar viewer (mana yang lebih besar)
+        const containerW = Math.max(pageWidth, viewerEl.clientWidth - 32);
+
+        pagesContainer.style.width  = containerW + 'px';
+        pagesContainer.style.height = totalHeight + 'px';
+
+        // Hapus slot lama
+        pagesContainer.innerHTML = '';
+
+        // Buat slot untuk setiap halaman
+        for (let i = 0; i < pdfDoc.numPages; i++) {
+            const slot = document.createElement('div');
+            slot.className   = 'page-slot';
+            slot.id          = `page-slot-${i + 1}`;
+            slot.dataset.page = i + 1;
+            slot.dataset.rendered = 'false';
+
+            // Posisi dan ukuran slot
+            slot.style.top    = pageOffsets[i] + 'px';
+            slot.style.height = pageHeights[i] + 'px';
+
+            // Placeholder teks
+            const ph = document.createElement('span');
+            ph.className   = 'page-placeholder';
+            ph.textContent = `Halaman ${i + 1}`;
+            slot.appendChild(ph);
+
+            pagesContainer.appendChild(slot);
+        }
+    };
+
+    // ─────────────────────────────────────────────────────────
+    //  renderPage
+    //  Render satu halaman ke canvas di dalam slotnya.
+    //  Dipanggil oleh intersection observer.
+    // ─────────────────────────────────────────────────────────
+    const renderPage = async (pageNum) => {
+        if (renderingPages.has(pageNum)) return;
+        const slot = document.getElementById(`page-slot-${pageNum}`);
+        if (!slot || slot.dataset.rendered === 'true') return;
+
+        renderingPages.add(pageNum);
+
+        try {
+            const page        = await pdfDoc.getPage(pageNum);
+            const renderVp    = page.getViewport({ scale: currentScale * dpr });
+
+            const canvas  = document.createElement('canvas');
+            const ctx     = canvas.getContext('2d');
+
+            canvas.width  = renderVp.width;
+            canvas.height = renderVp.height;
+
+            // CSS size = ukuran yang terlihat user
+            canvas.style.width  = `${renderVp.width  / dpr}px`;
+            canvas.style.height = `${renderVp.height / dpr}px`;
+
+            await page.render({ canvasContext: ctx, viewport: renderVp }).promise;
+
+            // Hapus placeholder, pasang canvas
+            slot.innerHTML = '';
+            slot.appendChild(canvas);
+            slot.dataset.rendered = 'true';
+        } catch (err) {
+            console.error(`Gagal render halaman ${pageNum}:`, err);
+        } finally {
+            renderingPages.delete(pageNum);
+        }
+    };
+
+    // ─────────────────────────────────────────────────────────
+    //  unrenderPage
+    //  Hapus canvas dari slot untuk bebaskan memori.
+    //  Slot tetap ada dengan ukuran yang benar agar scroll tidak lompat.
+    // ─────────────────────────────────────────────────────────
+    const unrenderPage = (pageNum) => {
+        const slot = document.getElementById(`page-slot-${pageNum}`);
+        if (!slot || slot.dataset.rendered !== 'true') return;
+
+        slot.innerHTML = '';
+        const ph = document.createElement('span');
+        ph.className   = 'page-placeholder';
+        ph.textContent = `Halaman ${pageNum}`;
+        slot.appendChild(ph);
+        slot.dataset.rendered = 'false';
+    };
+
+    // ─────────────────────────────────────────────────────────
+    //  Intersection Observer
+    //  Memantau halaman mana yang masuk/keluar viewport.
+    //  Buffer = 1.5x tinggi layar agar halaman di sekitar
+    //  viewport juga dirender (mengurangi blank saat scroll)
+    // ─────────────────────────────────────────────────────────
+    let observer = null;
+
+    const setupObserver = () => {
+        if (observer) observer.disconnect();
+
+        const bufferPx = viewerEl.clientHeight * 1.5;
+
+        observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const pageNum = parseInt(entry.target.dataset.page);
+                if (entry.isIntersecting) {
+                    renderPage(pageNum);
+                    // Render halaman tetangga juga (prefetch)
+                    if (pageNum > 1)                  renderPage(pageNum - 1);
+                    if (pageNum < pdfDoc.numPages)    renderPage(pageNum + 1);
+                } else {
+                    // Bebaskan memori untuk halaman jauh dari viewport
+                    // Hanya unrender kalau sudah jauh (lebih dari 3 halaman)
+                    const slots = pagesContainer.querySelectorAll('.page-slot');
+                    let visiblePages = [];
+                    slots.forEach(s => {
+                        const rect = s.getBoundingClientRect();
+                        const vRect = viewerEl.getBoundingClientRect();
+                        if (rect.bottom > vRect.top - bufferPx && rect.top < vRect.bottom + bufferPx) {
+                            visiblePages.push(parseInt(s.dataset.page));
+                        }
+                    });
+                    const minVisible = Math.min(...visiblePages);
+                    const maxVisible = Math.max(...visiblePages);
+                    if (pageNum < minVisible - 3 || pageNum > maxVisible + 3) {
+                        unrenderPage(pageNum);
+                    }
+                }
+            });
+        }, {
+            root: viewerEl,
+            rootMargin: `${bufferPx}px 0px ${bufferPx}px 0px`,
+            threshold: 0
+        });
+
+        // Observe semua slot
+        pagesContainer.querySelectorAll('.page-slot').forEach(slot => {
+            observer.observe(slot);
+        });
+    };
+
+    // ─────────────────────────────────────────────────────────
+    //  initViewer
+    //  Build layout + setup observer.
+    //  Dipanggil saat pertama load dan saat scale berubah.
+    // ─────────────────────────────────────────────────────────
+    const initViewer = async () => {
+        statusMessageEl.style.display = 'block';
+        statusMessageEl.textContent   = 'Memuat...';
+
+        // Reset semua rendered state
+        renderingPages.clear();
+        pageWidth = 0;
+
+        await buildLayout();
+        setupObserver();
 
         statusMessageEl.style.display = 'none';
-
-        // KUNCI: update scroll area agar viewerEl tahu ukuran konten
-        updateScrollArea();
-
         showZoomIndicator(currentScale);
     };
 
-    /**
-     * onZoom: untuk tombol +/-
-     * Pertahankan posisi scroll relatif setelah zoom
-     */
-    const onZoom = (newScale) => {
+    // ─────────────────────────────────────────────────────────
+    //  onZoom — tombol +/-
+    // ─────────────────────────────────────────────────────────
+    const onZoom = async (newScale) => {
         if (!pdfDoc) return;
-        newScale = Math.max(autoFitScale * 0.5, Math.min(5.0, newScale));
+        newScale = Math.max(autoFitScale * 0.5, Math.min(3.0, newScale));
 
-        // Simpan rasio posisi scroll sebelum zoom
+        // Simpan posisi scroll relatif
         const ratioX = viewerEl.scrollLeft / Math.max(viewerEl.scrollWidth,  1);
         const ratioY = viewerEl.scrollTop  / Math.max(viewerEl.scrollHeight, 1);
 
         currentScale = newScale;
+        await initViewer();
 
-        renderAllPages().then(() => {
-            viewerEl.scrollLeft = ratioX * viewerEl.scrollWidth;
-            viewerEl.scrollTop  = ratioY * viewerEl.scrollHeight;
-        });
+        // Kembalikan posisi scroll
+        viewerEl.scrollLeft = ratioX * viewerEl.scrollWidth;
+        viewerEl.scrollTop  = ratioY * viewerEl.scrollHeight;
     };
 
-    // =========================================================
-    //  PINCH ZOOM — SMOOTH SEPERTI GOOGLE DRIVE
-    //
-    //  Fase 1 touchmove : hanya CSS transform (GPU, nol lag)
-    //  Fase 2 touchend  : render ulang sebenarnya (debounce 200ms)
-    //                     + aktifkan kembali scroll ke semua arah
-    // =========================================================
-
+    // ─────────────────────────────────────────────────────────
+    //  PINCH ZOOM — smooth preview via CSS transform
+    //  Render ulang setelah jari diangkat (debounce)
+    // ─────────────────────────────────────────────────────────
     viewerEl.addEventListener('touchstart', (e) => {
         if (e.touches.length === 2) {
             isPinching = true;
@@ -375,9 +526,9 @@
                 e.touches[0].pageY - e.touches[1].pageY
             );
             initialScale = currentScale;
-            canvasContainer.style.transition = 'none';
+            pagesContainer.style.transition = 'none';
 
-            // Matikan scroll saat pinch agar tidak bentrok
+            // Matikan scroll saat pinch
             viewerEl.style.overflow    = 'hidden';
             viewerEl.style.touchAction = 'none';
         }
@@ -385,87 +536,85 @@
 
     viewerEl.addEventListener('touchmove', (e) => {
         if (!isPinching || e.touches.length < 2) return;
-        e.preventDefault(); // cegah scroll sistem saat pinch
+        e.preventDefault();
 
         const dist = Math.hypot(
             e.touches[0].pageX - e.touches[1].pageX,
             e.touches[0].pageY - e.touches[1].pageY
         );
 
-        const rawRatio    = dist / initialPinchDistance;
-        const minRatio    = (autoFitScale * 0.5) / initialScale;
-        const maxRatio    = 5.0 / initialScale;
-        const clamped     = Math.max(minRatio, Math.min(maxRatio, rawRatio));
+        const rawRatio = dist / initialPinchDistance;
+        const minRatio = (autoFitScale * 0.5) / initialScale;
+        const maxRatio = 3.0 / initialScale;
+        const clamped  = Math.max(minRatio, Math.min(maxRatio, rawRatio));
 
-        // Hanya CSS transform — sangat ringan
-        canvasContainer.style.transform = `scale(${clamped})`;
+        // Preview via CSS transform — ringan, GPU
+        pagesContainer.style.transformOrigin = 'top center';
+        pagesContainer.style.transform       = `scale(${clamped})`;
         showZoomIndicator(initialScale * clamped);
 
     }, { passive: false });
 
     viewerEl.addEventListener('touchend', (e) => {
         if (!isPinching) return;
-        if (e.touches.length >= 2) return; // masih ada jari kedua
+        if (e.touches.length >= 2) return;
 
         isPinching = false;
 
-        // Baca scale CSS saat ini
-        const matrix   = new DOMMatrix(window.getComputedStyle(canvasContainer).transform);
+        const matrix   = new DOMMatrix(window.getComputedStyle(pagesContainer).transform);
         const cssScale = matrix.a;
 
-        let newScale = Math.max(autoFitScale * 0.5, Math.min(5.0, initialScale * cssScale));
+        let newScale = Math.max(autoFitScale * 0.5, Math.min(3.0, initialScale * cssScale));
         currentScale = newScale;
 
-        // Sedikit transisi saat snap ke scale final
-        canvasContainer.style.transition = 'transform 0.15s ease-out';
+        // Reset transform preview
+        pagesContainer.style.transition = 'transform 0.15s ease-out';
+        pagesContainer.style.transform  = 'scale(1)';
 
-        // Simpan posisi scroll relatif
+        // Simpan posisi scroll
         const ratioX = viewerEl.scrollLeft / Math.max(viewerEl.scrollWidth,  1);
         const ratioY = viewerEl.scrollTop  / Math.max(viewerEl.scrollHeight, 1);
 
+        // Debounce render ulang
         clearTimeout(renderDebounceTimer);
-        renderDebounceTimer = setTimeout(() => {
-            renderAllPages().then(() => {
-                // KUNCI: aktifkan kembali scroll setelah render selesai
-                viewerEl.style.overflow    = 'auto';
-                viewerEl.style.touchAction = 'pan-x pan-y';
+        renderDebounceTimer = setTimeout(async () => {
+            await initViewer();
 
-                // Kembalikan posisi scroll
-                viewerEl.scrollLeft = ratioX * viewerEl.scrollWidth;
-                viewerEl.scrollTop  = ratioY * viewerEl.scrollHeight;
-            });
-        }, 200);
+            viewerEl.style.overflow    = 'auto';
+            viewerEl.style.touchAction = 'pan-x pan-y';
+
+            viewerEl.scrollLeft = ratioX * viewerEl.scrollWidth;
+            viewerEl.scrollTop  = ratioY * viewerEl.scrollHeight;
+        }, 250);
 
     }, { passive: true });
 
-    // Jika jari keluar layar tiba-tiba
     viewerEl.addEventListener('touchcancel', () => {
         if (isPinching) {
             isPinching = false;
+            pagesContainer.style.transform = 'scale(1)';
             viewerEl.style.overflow    = 'auto';
             viewerEl.style.touchAction = 'pan-x pan-y';
             clearTimeout(renderDebounceTimer);
-            renderDebounceTimer = setTimeout(() => renderAllPages(), 200);
+            renderDebounceTimer = setTimeout(() => initViewer(), 250);
         }
     }, { passive: true });
 
-    // --- Resize Handler ---
-    let resizeTimer = null;
+    // ─── Resize ───────────────────────────────────────────────
     window.addEventListener('resize', () => {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(async () => {
-            if (pdfDoc) {
-                const oldFitScale = autoFitScale;
-                autoFitScale = await calculateAutoFitScale();
-                if (Math.abs(currentScale - oldFitScale) < 0.1) {
-                    currentScale = autoFitScale;
-                    renderAllPages();
-                }
+            if (!pdfDoc) return;
+            const oldFit = autoFitScale;
+            autoFitScale = await calculateAutoFitScale();
+            if (Math.abs(currentScale - oldFit) < 0.1) {
+                currentScale = autoFitScale;
             }
+            await initViewer();
         }, 300);
     });
 
-    // --- INIT ---
+    // ─── Find content ─────────────────────────────────────────
     function findContentDetails(contentId) {
         for (const key in allContentData) {
             const categoryData = allContentData[key];
@@ -485,6 +634,7 @@
         return null;
     }
 
+    // ─── INIT ─────────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', async () => {
         const urlParams = new URLSearchParams(window.location.search);
         const contentId = urlParams.get('id');
@@ -494,6 +644,7 @@
         if (!result || !result.contentItem) {
             titleShortEl.textContent = 'Error';
             titleFullEl.textContent  = 'Tidak ditemukan.';
+            statusMessageEl.style.display = 'none';
             return;
         }
 
@@ -508,31 +659,27 @@
             pdfDoc       = await pdfjsLib.getDocument(contentItem.filePath).promise;
             autoFitScale = await calculateAutoFitScale();
             currentScale = autoFitScale;
-            await renderAllPages();
+            await initViewer();
         } catch (err) {
-            console.error("Error:", err);
+            console.error('Error:', err);
             statusMessageEl.textContent = 'Gagal memuat PDF.';
         }
 
-        const prevMateriBtn = document.getElementById('prev-materi');
-        const nextMateriBtn = document.getElementById('next-materi');
+        const prevBtn = document.getElementById('prev-materi');
+        const nextBtn = document.getElementById('next-materi');
 
         if (prevItem) {
-            prevMateriBtn.disabled = false;
-            prevMateriBtn.addEventListener('click', () => {
-                window.location.href = `viewer.html?id=${prevItem.id}`;
-            });
+            prevBtn.disabled = false;
+            prevBtn.addEventListener('click', () => { window.location.href = `viewer.html?id=${prevItem.id}`; });
         } else {
-            prevMateriBtn.disabled = true;
+            prevBtn.disabled = true;
         }
 
         if (nextItem) {
-            nextMateriBtn.disabled = false;
-            nextMateriBtn.addEventListener('click', () => {
-                window.location.href = `viewer.html?id=${nextItem.id}`;
-            });
+            nextBtn.disabled = false;
+            nextBtn.addEventListener('click', () => { window.location.href = `viewer.html?id=${nextItem.id}`; });
         } else {
-            nextMateriBtn.disabled = true;
+            nextBtn.disabled = true;
         }
 
         document.getElementById('zoom-in').addEventListener('click',  () => onZoom(currentScale + 0.25));
