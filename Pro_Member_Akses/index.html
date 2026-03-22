@@ -1791,6 +1791,7 @@ function showAnswerAndExplanation(isRestoringState = false) {
         MathJax.typesetPromise([explanationText]).catch(err => console.log('MathJax error:', err));
     }
 }
+
 function selectAnswer(optionIndex, element) {
     if (userAnswers[currentQuestionIndex] !== null) return;
     userAnswers[currentQuestionIndex] = optionIndex;
@@ -1802,6 +1803,7 @@ function selectAnswer(optionIndex, element) {
 
     showAnswerAndExplanation();
 }
+
 function nextQuestion() {
     if (currentQuestionIndex < currentQuizData.questions.length - 1) {
         currentQuestionIndex++;
@@ -1827,12 +1829,13 @@ function submitQuiz() {
     if (userAnswers[currentQuestionIndex] === null) { showToast('Silakan pilih jawaban terlebih dahulu!', 'error'); return; }
     if (currentQuestionIndex < currentQuizData.questions.length - 1) { currentQuestionIndex++; renderQuizInterface(); } else { renderQuizResults(); }
 }
+
 function renderQuizResults() {
     const quiz = currentQuizData;
     let score = 0;
     quiz.questions.forEach((q, index) => {
         const correctIndex = q.options.indexOf(q.correctAnswer);
-        if (userAnswers[index] === correctIndex) { score++; } 
+        if (userAnswers[index] === correctIndex) { score++; }
     });
 
     markAsCompleted(quiz.id);
@@ -1871,10 +1874,14 @@ function renderQuizResults() {
     currentExplanationIndex = 0;
     renderSingleExplanation(currentExplanationIndex);
 }
+
 function renderSingleExplanation(index) {
     const container = document.getElementById('single-explanation-container');
     const quiz = currentQuizData;
     const q = quiz.questions[index];
+
+    const correctIndex = q.options.indexOf(q.correctAnswer);
+    const userAnswerText = userAnswers[index] !== null ? q.options[userAnswers[index]] : null;
 
     const whatsappMessage = `Halo Mentor UMT, saya ingin bertanya mengenai soal dari paket '${encodeURIComponent(quiz.title)}'.\n\nPertanyaan: ${encodeURIComponent(q.questionText)}\n\nMohon bantuannya untuk penjelasan lebih lanjut.`;
     const whatsappLink = `https://wa.me/6285961160545?text=${whatsappMessage}`;
@@ -1884,7 +1891,8 @@ function renderSingleExplanation(index) {
         <p class="text-sm text-gray-400 mb-4">Pertanyaan ${index + 1} dari ${quiz.questions.length}</p>
         <div class="mb-5 text-gray-200 text-lg">${q.questionText}</div>
         <div class="space-y-3 text-base">
-            <p class="${userAnswers[index] === correctIndex ? 'correct-answer' : 'wrong-answer'}">
+            <p class="${userAnswers[index] === correctIndex ? 'correct-answer' : 'wrong-answer'} p-3 rounded-lg">
+                <span class="font-bold block">Jawaban Anda:</span>
                 ${userAnswerText || 'Tidak dijawab'}
             </p>
             <p class="correct-answer p-3 rounded-lg">
@@ -1901,7 +1909,6 @@ function renderSingleExplanation(index) {
                 </div>
             </div>
         </div>
-        
         <div class="mt-6 pt-5 border-t border-dashed border-gray-600">
             <h4 class="font-bold text-lg text-amber-300 mb-2">Pembahasan Kurang Jelas?</h4>
             <p class="text-gray-400 text-sm leading-relaxed mb-4">
@@ -1920,6 +1927,7 @@ function renderSingleExplanation(index) {
         MathJax.typesetPromise([container]).catch(err => console.log('MathJax error: ', err.message));
     }
 }
+
 function nextExplanation() { if (currentExplanationIndex < currentQuizData.questions.length - 1) { currentExplanationIndex++; renderSingleExplanation(currentExplanationIndex); } }
 function prevExplanation() { if (currentExplanationIndex > 0) { currentExplanationIndex--; renderSingleExplanation(currentExplanationIndex); } }
 function showToast(message, type = 'info') {
