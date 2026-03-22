@@ -1734,13 +1734,13 @@ const allContentData = {
         questions: [
             {
                 questionText: "Diketahui persegi dengan panjang sisi $s$ dan setengah lingkaran dengan diameter pada alas seperti pada gambar. <img src=\"rg-1.png\" alt=\"Daerah arsir antara parabola dan garis\" style=\"max-width: 300px; display: block; margin: 15px auto; border-radius: 8px;\"> Garis $AC$ menyinggung lingkaran di titik $T$. Panjang $AC$ adalah :",
-                options: ["A. $\sqrt{2}$", "B. $2$", "C. $\sqrt{5}$", "D. $2\sqrt{2}$", "E. $3$"],
+                options: ["A. $ \\sqrt{2} $", "B. $2$", "C. $ \\sqrt{5} $", "D. $2 \\sqrt{2} $", "E. $3$"],
                 correctAnswer: "B. $2$",
                 explanation: "Misalkan persegi sisi $s = 2$. Setengah lingkaran diameter $AB = 2$, jari-jari $r = 1$, pusat $(1, 0)$. Garis $AC$ dari $A(0,0)$ ke $C(2,2)$, kemiringan 1. Persamaan $y = x$, jarak ke pusat $\\frac{|1-0|}{\\sqrt{2}} = \\frac{1}{\\sqrt{2}}$. Panjang $AC = \\sqrt{(2-0)^2 + (2-0)^2} = 2$ (opsi B)."
             },
             {
                 questionText: "Segitiga $ABC$ siku-siku di $B$. Titik $D$ terletak pada sisi $AC$ sedemikian hingga $AD = DC$. Jika $\\angle ABC = 45^\\circ$, maka besar sudut $\\angle DBC$ adalah:",
-                options: ["A. $15^\circ$", "B. $30^\circ$", "C. $45^\circ$", "D. $60^\circ$", "E. $75^\circ$"],
+                options: ["A. $ 15^\\circ $", "B. $ 30^\\circ $", "C. $ 45^\\circ $", "D. $ 60^\\circ $", "E. $ 75^\\circ $"],
                 correctAnswer: "C. $45^\\circ$",
                 explanation: "$\\angle ABC = 45^\\circ$, $\\angle BAC = 45^\\circ$, segitiga 45°-45°-90°. $D$ titik tengah $AC$, $\\angle BDC = 90^\\circ$, $\\angle BCD = 45^\\circ$, sehingga $\\angle DBC = 45^\\circ$ (opsi C)."
             },
