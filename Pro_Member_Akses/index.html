@@ -1537,12 +1537,16 @@ function initializeKamusPageLogic() {
         document.body.style.paddingRight = `${scrollbarWidth}px`;
         document.body.classList.add('kamus-modal-open'); // Class CSS unik
         modal.classList.add('active'); // Class CSS unik
+
+        document.querySelector('aside').style.zIndex = '1';
     }
 
     function closeKamusModal() { // Nama fungsi di-namespaced
         document.body.classList.remove('kamus-modal-open');
         document.body.style.paddingRight = '';
         modal.classList.remove('active');
+
+        document.querySelector('aside').style.zIndex = '';
     }
 
     function showKamusTermDetail(termId) {
