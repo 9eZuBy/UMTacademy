@@ -1378,8 +1378,11 @@ function renderPerpustakaanPage() {
 
             <!-- Ikon + Judul -->
             <div class="flex items-center gap-3 mb-2">
-                <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-gray-900/60 flex items-center justify-center">
-                    <i class="fa-solid fa-book-open text-xl text-cyan-400"></i>
+                <div class="flex-shrink-0 w-10 h-10 rounded-xl overflow-hidden">
+                    ${item.image 
+                        ? `<img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover">` 
+                        : `<div class="w-full h-full bg-gray-900/60 flex items-center justify-center"><i class="fa-solid fa-book-open text-xl text-cyan-400"></i></div>`
+                    }
                 </div>
                 <h3 class="font-bold text-base text-cyan-400 pr-14 leading-snug"
                     style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
