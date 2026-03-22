@@ -1791,7 +1791,7 @@ function showAnswerAndExplanation(isRestoringState = false) {
         MathJax.typesetPromise([explanationText]).catch(err => console.log('MathJax error:', err));
     }
 }
-function selectAnswer(answer, element) {
+function selectAnswer(optionIndex, element) {
     if (userAnswers[currentQuestionIndex] !== null) return;
     userAnswers[currentQuestionIndex] = optionIndex;
 
@@ -1829,9 +1829,11 @@ function submitQuiz() {
 }
 function renderQuizResults() {
     const quiz = currentQuizData;
-    const correctIndex = q.options.indexOf(q.correctAnswer);
     let score = 0;
-    quiz.questions.forEach((q, index) => { if (userAnswers[index] === correctIndex) { score++; } });
+    quiz.questions.forEach((q, index) => {
+        const correctIndex = q.options.indexOf(q.correctAnswer);
+        if (userAnswers[index] === correctIndex) { score++; } 
+    });
 
     markAsCompleted(quiz.id);
 
@@ -1882,9 +1884,8 @@ function renderSingleExplanation(index) {
         <p class="text-sm text-gray-400 mb-4">Pertanyaan ${index + 1} dari ${quiz.questions.length}</p>
         <div class="mb-5 text-gray-200 text-lg">${q.questionText}</div>
         <div class="space-y-3 text-base">
-            <p class="${userAnswers[index] === q.correctAnswer ? 'correct-answer' : 'wrong-answer'} p-3 rounded-lg">
-                <span class="font-bold block">Jawaban Anda:</span>
-                ${userAnswers[index] || 'Tidak dijawab'}
+            <p class="${userAnswers[index] === correctIndex ? 'correct-answer' : 'wrong-answer'}">
+                ${userAnswerText || 'Tidak dijawab'}
             </p>
             <p class="correct-answer p-3 rounded-lg">
                 <span class="font-bold block">Jawaban Benar:</span>
