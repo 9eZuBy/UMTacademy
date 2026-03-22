@@ -1689,7 +1689,7 @@ function renderQuizInterface() {
     }).join('');
 
     const optionsHTML = question.options.map((opt, index) =>
-        `<div id="option-${index}" class="quiz-option p-4 rounded-lg cursor-pointer transition-colors" onclick="selectAnswer('${opt.replace(/'/g, "\\'")}', this)">
+        `<div id="option-${index}" class="quiz-option p-4 rounded-lg cursor-pointer transition-colors" onclick="selectAnswer(${index}, this)">
             ${opt}
         </div>`
     ).join('');
@@ -1829,8 +1829,9 @@ function submitQuiz() {
 }
 function renderQuizResults() {
     const quiz = currentQuizData;
+    const correctIndex = q.options.indexOf(q.correctAnswer);
     let score = 0;
-    quiz.questions.forEach((q, index) => { if (q.correctAnswer === userAnswers[index]) { score++; } });
+    quiz.questions.forEach((q, index) => { if (userAnswers[index] === correctIndex) { score++; } });
 
     markAsCompleted(quiz.id);
 
