@@ -1765,6 +1765,7 @@ function showAnswerAndExplanation(isRestoringState = false) {
 
     const optionsContainer = document.getElementById('quiz-options');
     const allOptions = optionsContainer.children;
+    const correctIndex = question.options.indexOf(question.correctAnswer);
 
     optionsContainer.classList.add('pointer-events-none');
 
@@ -1772,12 +1773,12 @@ function showAnswerAndExplanation(isRestoringState = false) {
         const optionEl = allOptions[i];
         const optionText = question.options[i];
 
-        if (optionText === question.correctAnswer) {
+        if (i === correctIndex) {
             optionEl.classList.remove('quiz-option');
             optionEl.classList.add('correct-answer');
         }
 
-        if (!isRestoringState && optionText === selectedAnswer && selectedAnswer !== question.correctAnswer) {
+        if (!isRestoringState && i === userAnswers[currentQuestionIndex] && i !== correctIndex) {
             optionEl.classList.remove('quiz-option');
             optionEl.classList.add('wrong-answer');
         }
@@ -1791,10 +1792,8 @@ function showAnswerAndExplanation(isRestoringState = false) {
     }
 }
 function selectAnswer(answer, element) {
-    if (userAnswers[currentQuestionIndex] !== null) {
-        return;
-    }
-    userAnswers[currentQuestionIndex] = answer;
+    if (userAnswers[currentQuestionIndex] !== null) return;
+    userAnswers[currentQuestionIndex] = optionIndex;
 
     const navItem = document.querySelector(`.quiz-nav-item:nth-child(${currentQuestionIndex + 1})`);
     if (navItem) {
