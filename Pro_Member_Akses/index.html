@@ -994,48 +994,134 @@ function renderDashboardPage() {
 }
 
 function renderMateriPage() {
-    let accordionHTML = '';
     const materiData = allContentData.materi;
 
+    // Hitung total & completed per grade
+    const completedItems = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEYS.COMPLETED_ITEMS)) || [];
+
+    let accordionHTML = '';
     for (const gradeKey in materiData) {
-        const itemsHTML = materiData[gradeKey].map(item => `
-            <li id="card-${item.id}"
-                class="card-item-list block p-3 rounded-md hover:bg-gray-700 cursor-pointer"
-                onclick="openMateri('${item.id}', '${item.filePath}')">
-                <span class="font-semibold">${item.title}</span>
-                <span class="block text-xs text-gray-400">${item.type}</span>
-            </li>
-        `).join('');
+        const items = materiData[gradeKey];
+        const completedCount = items.filter(i => completedItems.includes(i.id)).length;
+        const pct = items.length > 0 ? Math.round((completedCount / items.length) * 100) : 0;
+
+        const itemsHTML = items.map(item => {
+            const done = completedItems.includes(item.id);
+            return `
+                <li class="flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors group"
+                    style="color:var(--text-primary)"
+                    onmouseover="this.style.background='var(--bg-panel2)'"
+                    onmouseout="this.style.background='transparent'"
+                    onclick="openMateri('${item.id}', '${item.filePath}')">
+                    <div class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors"
+                         style="${done
+                            ? 'background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.3)'
+                            : 'background:var(--bg-main);border:1px solid var(--border-color)'}">
+                        <i class="fa-solid ${done ? 'fa-check text-[10px]' : 'fa-book-open text-[10px]'}"
+                           style="color:${done ? 'var(--accent-green)' : 'var(--text-subtle)'}"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="text-sm font-semibold truncate">${item.title}</div>
+                        <div class="text-[11px] mt-0.5" style="color:var(--text-secondary)">${item.type}</div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"
+                       style="color:var(--text-subtle)"></i>
+                </li>
+            `;
+        }).join('');
 
         accordionHTML += `
-            <div class="accordion-item border-b border-gray-700" data-accordion-group>
-                <h2>
-                    <button type="button" class="accordion-button flex items-center justify-between w-full p-4 font-semibold text-left text-cyan-300">
-                        <span>${gradeKey}</span>
-                        <i class="accordion-icon fa-solid fa-chevron-down shrink-0 transition-transform duration-200"></i>
-                    </button>
-                </h2>
-                <div class="accordion-content hidden p-2">
-                    <ul class="space-y-2">${itemsHTML}</ul>
+            <div class="accordion-item border-b last:border-b-0" style="border-color:var(--border-color)" data-accordion-group>
+                <button type="button"
+                        class="accordion-button w-full flex items-center gap-3 p-4 text-left transition-colors hover:bg-[var(--bg-panel2)]">
+                    <!-- Ikon -->
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                         style="background:var(--accent-cyan-dim);border:1px solid rgba(34,211,238,0.2)">
+                        <i class="fa-solid fa-layer-group text-xs" style="color:var(--accent-cyan)"></i>
+                    </div>
+                    <!-- Label + progress -->
+                    <div class="flex-1 min-w-0">
+                        <div class="font-bold text-sm" style="color:var(--text-primary)">${gradeKey}</div>
+                        <div class="flex items-center gap-2 mt-1">
+                            <div style="flex:1;height:3px;background:var(--border-color);border-radius:2px;overflow:hidden">
+                                <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--accent-cyan2),var(--accent-cyan));border-radius:2px;transition:width .5s ease"></div>
+                            </div>
+                            <span class="text-[10px] font-mono flex-shrink-0" style="color:var(--text-secondary)">${completedCount}/${items.length}</span>
+                        </div>
+                    </div>
+                    <!-- Chevron -->
+                    <i class="accordion-icon fa-solid fa-chevron-down text-xs flex-shrink-0 transition-transform duration-200"
+                       style="color:var(--text-subtle)"></i>
+                </button>
+                <div class="accordion-content hidden px-2 pb-2">
+                    <ul class="space-y-0.5">${itemsHTML}</ul>
                 </div>
             </div>
         `;
     }
 
-    const materiPageHTML = `
+    appContent.innerHTML = `
         <div class="panel">
-            <h2 class="text-2xl font-bold text-cyan-400">Materi UMT Learning</h2>
-            <p class="text-sm text-gray-400 mb-6">Cari atau pilih Materi UMT Learning yang ingin kamu pelajari.</p>
-            <div class="relative mb-6">
-                <input type="text" id="materi-search-input" class="w-full bg-gray-900/80 border border-gray-600 rounded-lg py-2 pl-10 pr-4 text-white placeholder-gray-500 focus:ring-2 focus:ring-cyan-500 focus:outline-none" placeholder="Ketik untuk mencari materi...">
-                <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"></i>
+            <!-- Header -->
+            <div class="flex items-center gap-3 mb-6">
+                <div class="panel-title-icon">
+                    <i class="fa-solid fa-book text-xs"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold" style="color:var(--accent-cyan)">Materi UMT Learning</h2>
+                    <p class="text-xs mt-0.5" style="color:var(--text-secondary)">
+                        Pilih materi yang ingin kamu pelajari.
+                    </p>
+                </div>
             </div>
-            <div class="border border-gray-700 rounded-lg bg-gray-900/50">
+
+            <!-- Search -->
+            <div class="relative mb-5">
+                <input type="text"
+                       id="materi-search-input"
+                       class="w-full rounded-xl py-2.5 pl-10 pr-4 text-sm transition-all"
+                       style="background:var(--bg-main);border:1px solid var(--border-color);color:var(--text-primary);font-family:'Plus Jakarta Sans',sans-serif"
+                       placeholder="Cari materi..."
+                       onfocus="this.style.borderColor='var(--accent-cyan)'"
+                       onblur="this.style.borderColor='var(--border-color)'">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-xs"
+                   style="color:var(--text-subtle)"></i>
+            </div>
+
+            <!-- Stats bar -->
+            <div id="materi-stats-bar" class="grid grid-cols-3 gap-3 mb-5"></div>
+
+            <!-- Accordion list -->
+            <div class="rounded-xl overflow-hidden" style="border:1px solid var(--border-color)">
                 ${accordionHTML}
             </div>
         </div>
     `;
-    appContent.innerHTML = materiPageHTML;
+
+    // Stats bar
+    const totalAll = Object.values(materiData).flat().length;
+    const doneAll  = Object.values(materiData).flat().filter(i => completedItems.includes(i.id)).length;
+    const pctAll   = totalAll > 0 ? Math.round((doneAll / totalAll) * 100) : 0;
+    const totalGrades = Object.keys(materiData).length;
+
+    document.getElementById('materi-stats-bar').innerHTML = [
+        { label: 'Total Materi',  val: totalAll,    icon: 'fa-book',       color: 'var(--accent-cyan)'   },
+        { label: 'Selesai',       val: doneAll,      icon: 'fa-check',      color: 'var(--accent-green)'  },
+        { label: 'Progress',      val: `${pctAll}%`, icon: 'fa-chart-line', color: 'var(--accent-amber)'  },
+    ].map(s => `
+        <div class="flex items-center gap-3 px-3 py-2.5 rounded-xl"
+             style="background:var(--bg-panel2);border:1px solid var(--border-color)">
+            <div class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+                 style="background:var(--accent-cyan-dim);border:1px solid rgba(34,211,238,0.15)">
+                <i class="fa-solid ${s.icon} text-xs" style="color:${s.color}"></i>
+            </div>
+            <div>
+                <div class="font-bold text-sm font-mono" style="color:var(--text-primary)">${s.val}</div>
+                <div class="text-[10px]" style="color:var(--text-secondary)">${s.label}</div>
+            </div>
+        </div>
+    `).join('');
+
     setupAccordionListeners();
     setupMateriSearch();
 }
@@ -1322,45 +1408,36 @@ function setupMateriSearch() {
 
     searchInput.addEventListener('input', (e) => {
         const searchTerm = e.target.value.toLowerCase().trim();
-        const allMateriItems = document.querySelectorAll('.card-item-list');
-        const allAccordionGroups = document.querySelectorAll('[data-accordion-group]');
+        const allGroups  = document.querySelectorAll('[data-accordion-group]');
 
-        if (searchTerm === '') {
-            allMateriItems.forEach(item => {
-                item.style.display = 'block';
-            });
-            allAccordionGroups.forEach(group => {
-                group.style.display = 'block';
+        allGroups.forEach(group => {
+            const items = group.querySelectorAll('li');
+
+            if (searchTerm === '') {
+                items.forEach(item => item.style.display = '');
+                group.style.display = '';
                 group.querySelector('.accordion-content').classList.add('hidden');
                 group.querySelector('.accordion-icon').classList.remove('rotate-180');
-            });
-            return;
-        }
+                return;
+            }
 
-        allAccordionGroups.forEach(group => {
-            const itemsInGroup = group.querySelectorAll('.card-item-list');
-            let hasVisibleItemInGroup = false;
-
-            itemsInGroup.forEach(item => {
-                const title = item.querySelector('.font-semibold').textContent.toLowerCase();
-                if (title.includes(searchTerm)) {
-                    item.style.display = 'block';
-                    hasVisibleItemInGroup = true;
-                } else {
-                    item.style.display = 'none';
-                }
+            let hasMatch = false;
+            items.forEach(item => {
+                const title = item.querySelector('.font-semibold')?.textContent.toLowerCase() || '';
+                const match = title.includes(searchTerm);
+                item.style.display = match ? '' : 'none';
+                if (match) hasMatch = true;
             });
 
-            if (hasVisibleItemInGroup) {
-                group.style.display = 'block';
+            group.style.display = hasMatch ? '' : 'none';
+            if (hasMatch) {
                 group.querySelector('.accordion-content').classList.remove('hidden');
                 group.querySelector('.accordion-icon').classList.add('rotate-180');
-            } else {
-                group.style.display = 'none';
             }
         });
     });
 }
+
 function renderVideoPage() {
     const categories = ['Semua', ...new Set(allContentData.video.map(item => item.category))];
 
