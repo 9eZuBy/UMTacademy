@@ -947,98 +947,150 @@ function renderSnbtDetailPage(categoryId) {
 }
 
 function renderInformasiPage() {
-    appContent.innerHTML = `
-    <div class="max-w-3xl mx-auto space-y-6">
-
-        <!-- Header -->
-        <div class="panel border-l-4 border-cyan-500">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center flex-shrink-0">
-                    <i class="fa-solid fa-shield-halved text-cyan-400 text-2xl"></i>
-                </div>
-                <div>
-                    <h2 class="text-2xl font-bold text-cyan-400">Pusat Informasi</h2>
-                    <p class="text-sm text-gray-400 mt-0.5">Kebijakan terbaru, keamanan akun, dan info penting UMT Pro.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Banner Kebijakan Baru -->
-        <div class="panel relative overflow-hidden">
-            <!-- Aksen dekoratif sudut -->
-            <div class="absolute top-0 right-0 w-32 h-32 bg-cyan-500/5 rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
-
-            <div class="flex items-center gap-3 mb-1">
-                <span class="text-xs font-bold bg-cyan-500/20 text-cyan-300 px-3 py-1 rounded-full tracking-wider uppercase">Kebijakan Baru</span>
-                <span class="text-xs text-gray-500">Diterbitkan 7 Agustus 2025</span>
-            </div>
-            <h3 class="text-xl font-bold text-white mt-3 mb-1">Pembaruan Keamanan Akun Pro</h3>
-            <p class="text-sm text-gray-400 leading-relaxed">
-                Demi meningkatkan keamanan dan eksklusivitas akun Anda, kami memberlakukan kebijakan baru:
-                <strong class="text-white">Sistem Perangkat Terdaftar (Device-Locking)</strong>.
-            </p>
-        </div>
-
-        <!-- Kartu Info Kebijakan -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="panel border border-green-500/20 bg-green-500/5 flex flex-col gap-2">
-                <div class="w-9 h-9 rounded-lg bg-green-500/10 flex items-center justify-center">
-                    <i class="fa-solid fa-mobile-screen-button text-green-400"></i>
-                </div>
-                <h4 class="font-bold text-green-300 text-sm">Satu Akun, Satu Perangkat</h4>
-                <p class="text-xs text-gray-400 leading-relaxed">Akun Anda aktif hanya di satu perangkat terdaftar. Mencegah penyalahgunaan akun premium.</p>
-            </div>
-            <div class="panel border border-amber-500/20 bg-amber-500/5 flex flex-col gap-2">
-                <div class="w-9 h-9 rounded-lg bg-amber-500/10 flex items-center justify-center">
-                    <i class="fa-solid fa-arrows-rotate text-amber-400"></i>
-                </div>
-                <h4 class="font-bold text-amber-300 text-sm">Ganti Perangkat</h4>
-                <p class="text-xs text-gray-400 leading-relaxed">Ingin pindah HP atau laptop? Hubungi Admin untuk proses peralihan. Tetap satu perangkat aktif.</p>
-            </div>
-            <div class="panel border border-purple-500/20 bg-purple-500/5 flex flex-col gap-2">
-                <div class="w-9 h-9 rounded-lg bg-purple-500/10 flex items-center justify-center">
-                    <i class="fa-solid fa-layer-group text-purple-400"></i>
-                </div>
-                <h4 class="font-bold text-purple-300 text-sm">Multi-Perangkat</h4>
-                <p class="text-xs text-gray-400 leading-relaxed">Butuh akses dari HP dan laptop sekaligus? Tersedia opsi upgrade paket dengan biaya tambahan.</p>
-            </div>
-        </div>
-
-        <!-- Tombol Daftar Perangkat -->
-        <div class="panel flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div>
-                <h4 class="font-bold text-white">Daftarkan Perangkat Baru</h4>
-                <p class="text-xs text-gray-400 mt-1">Gunakan perangkat baru? Daftarkan sekarang agar akses tidak terganggu.</p>
-            </div>
-            <a href="https://umt6174.site/Buat%20Akun/" target="_blank"
-               class="flex-shrink-0 bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2 px-5 rounded-lg text-sm transition-all hover:scale-105 flex items-center gap-2">
-                <i class="fa-solid fa-user-plus"></i> Daftar Perangkat
-            </a>
-        </div>
-
-        <!-- Bantuan / Hubungi Admin -->
-        <div class="panel flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-green-500/20 bg-green-500/5">
-            <div>
-                <h4 class="font-bold text-green-300 flex items-center gap-2">
-                    <i class="fa-solid fa-circle-question"></i> Butuh Bantuan?
-                </h4>
-                <p class="text-xs text-gray-400 mt-1 leading-relaxed">
-                    Ada pertanyaan soal kebijakan ini? Tim kami siap membantu via WhatsApp.
+    // =====================================================
+    // TAMBAH INFORMASI BARU DI SINI
+    // Cukup tambah objek baru ke array ini, otomatis tampil
+    // =====================================================
+    const infoArticles = [
+        {
+            tag: 'Kebijakan Baru',
+            tagColor: 'cyan',
+            date: '7 Agustus 2025',
+            icon: 'fa-solid fa-shield-halved',
+            title: 'Pembaruan Keamanan Akun Pro',
+            summary: 'Kami memberlakukan Sistem Perangkat Terdaftar (Device-Locking) demi keamanan dan eksklusivitas akun Anda.',
+            contentHTML: `
+                <p class="text-sm text-gray-400 leading-relaxed mb-5">
+                    Mulai hari ini, akun Pro Anda akan secara otomatis terhubung dengan perangkat yang pertama kali Anda gunakan untuk login.
                 </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-green-500/5 border border-green-500/20 rounded-xl p-4 flex flex-col gap-2">
+                        <div class="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center">
+                            <i class="fa-solid fa-mobile-screen-button text-green-400 text-sm"></i>
+                        </div>
+                        <h5 class="font-bold text-green-300 text-sm">Satu Akun, Satu Perangkat</h5>
+                        <p class="text-xs text-gray-400 leading-relaxed">Akun aktif hanya di satu perangkat terdaftar untuk mencegah penyalahgunaan.</p>
+                    </div>
+                    <div class="bg-amber-500/5 border border-amber-500/20 rounded-xl p-4 flex flex-col gap-2">
+                        <div class="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
+                            <i class="fa-solid fa-arrows-rotate text-amber-400 text-sm"></i>
+                        </div>
+                        <h5 class="font-bold text-amber-300 text-sm">Ingin Ganti Perangkat?</h5>
+                        <p class="text-xs text-gray-400 leading-relaxed">Hubungi Admin untuk proses peralihan. Tetap hanya satu perangkat aktif dalam satu waktu.</p>
+                    </div>
+                    <div class="bg-purple-500/5 border border-purple-500/20 rounded-xl p-4 flex flex-col gap-2">
+                        <div class="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                            <i class="fa-solid fa-layer-group text-purple-400 text-sm"></i>
+                        </div>
+                        <h5 class="font-bold text-purple-300 text-sm">Akses Multi-Perangkat</h5>
+                        <p class="text-xs text-gray-400 leading-relaxed">Butuh HP dan laptop sekaligus? Tersedia opsi upgrade paket dengan biaya tambahan.</p>
+                    </div>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <a href="https://umt6174.site/Buat%20Akun/" target="_blank"
+                       class="bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2 px-5 rounded-lg text-sm transition-all hover:scale-105 flex items-center gap-2 justify-center">
+                        <i class="fa-solid fa-user-plus"></i> Daftarkan Perangkat Baru
+                    </a>
+                    <a href="https://wa.me/6285961160545" target="_blank"
+                       class="bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-5 rounded-lg text-sm transition-all hover:scale-105 flex items-center gap-2 justify-center">
+                        <i class="fab fa-whatsapp"></i> Hubungi Admin
+                    </a>
+                </div>
+            `
+        },
+        // ── Contoh artikel kedua (hapus jika belum ada isi) ──
+        {
+            tag: 'Pengumuman',
+            tagColor: 'amber',
+            date: '1 September 2025',
+            icon: 'fa-solid fa-bullhorn',
+            title: 'Judul Informasi Berikutnya',
+            summary: 'Deskripsi singkat informasi ini.',
+            contentHTML: `<p class="text-sm text-gray-400">Isi konten di sini...</p>`
+        },
+    ];
+
+    // ── Peta warna tag ──
+    const tagColors = {
+        cyan:   { badge: 'bg-cyan-500/20 text-cyan-300',   border: 'border-cyan-500/40',   icon: 'text-cyan-400'   },
+        amber:  { badge: 'bg-amber-500/20 text-amber-300', border: 'border-amber-500/40',  icon: 'text-amber-400'  },
+        green:  { badge: 'bg-green-500/20 text-green-300', border: 'border-green-500/40',  icon: 'text-green-400'  },
+        red:    { badge: 'bg-red-500/20 text-red-300',     border: 'border-red-500/40',    icon: 'text-red-400'    },
+        purple: { badge: 'bg-purple-500/20 text-purple-300', border: 'border-purple-500/40', icon: 'text-purple-400' },
+    };
+
+    // ── Render setiap artikel ──
+    const articlesHTML = infoArticles.map((article, index) => {
+        const color = tagColors[article.tagColor] || tagColors.cyan;
+        const isFirst = index === 0;
+
+        return `
+            <div class="panel border ${color.border} relative overflow-hidden">
+                <!-- Aksen dekoratif pojok -->
+                <div class="absolute top-0 right-0 w-28 h-28 rounded-full pointer-events-none"
+                     style="background: radial-gradient(circle, rgba(47,129,247,0.06) 0%, transparent 70%); transform: translate(30%, -30%);"></div>
+
+                <!-- Header artikel -->
+                <div class="flex items-start justify-between gap-3 mb-4 flex-wrap">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-gray-800 flex items-center justify-center flex-shrink-0">
+                            <i class="${article.icon} ${color.icon}"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-xs font-bold px-2 py-0.5 rounded-full ${color.badge} tracking-wider uppercase">${article.tag}</span>
+                                ${isFirst ? `<span class="text-xs font-bold bg-red-500/20 text-red-300 px-2 py-0.5 rounded-full">Terbaru</span>` : ''}
+                            </div>
+                            <h3 class="font-bold text-white text-base leading-snug">${article.title}</h3>
+                        </div>
+                    </div>
+                    <span class="text-xs text-gray-500 flex-shrink-0 mt-1">${article.date}</span>
+                </div>
+
+                <!-- Summary -->
+                <p class="text-sm text-gray-400 leading-relaxed mb-5 border-l-2 border-gray-600 pl-3">${article.summary}</p>
+
+                <!-- Konten detail — bisa di-expand/collapse jika banyak -->
+                <details ${isFirst ? 'open' : ''} class="group">
+                    <summary class="cursor-pointer text-sm font-semibold text-cyan-400 hover:text-cyan-300 flex items-center gap-2 mb-4 select-none list-none">
+                        <i class="fa-solid fa-chevron-right transition-transform duration-200 group-open:rotate-90 text-xs"></i>
+                        <span class="group-open:hidden">Selengkapnya</span>
+                        <span class="hidden group-open:inline">Sembunyikan</span>
+                    </summary>
+                    <div class="pt-2 border-t border-gray-700/60">
+                        ${article.contentHTML}
+                    </div>
+                </details>
             </div>
-            <a href="https://wa.me/6285961160545" target="_blank"
-               class="flex-shrink-0 bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-5 rounded-lg text-sm transition-all hover:scale-105 flex items-center gap-2">
-                <i class="fab fa-whatsapp"></i> Hubungi Admin
-            </a>
-        </div>
+        `;
+    }).join('');
 
-        <!-- Footer Info -->
-        <div class="text-center text-xs text-gray-600 pb-4">
-            Pertanyaan lain? Email kami di
-            <a href="mailto:umt.math.6174@gmail.com" class="text-cyan-500 hover:underline">umt.math.6174@gmail.com</a>
-        </div>
+    appContent.innerHTML = `
+        <div class="max-w-3xl mx-auto space-y-6">
 
-    </div>
+            <!-- Page Header -->
+            <div class="panel border-l-4 border-cyan-500">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-newspaper text-cyan-400 text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-cyan-400">Pusat Informasi</h2>
+                        <p class="text-sm text-gray-400 mt-0.5">${infoArticles.length} informasi tersedia — kebijakan, pengumuman, dan update terbaru.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Artikel -->
+            ${articlesHTML}
+
+            <!-- Footer -->
+            <div class="text-center text-xs text-gray-600 pb-4">
+                Pertanyaan lain? Email kami di
+                <a href="mailto:umt.math.6174@gmail.com" class="text-cyan-500 hover:underline">umt.math.6174@gmail.com</a>
+            </div>
+
+        </div>
     `;
 }
 
