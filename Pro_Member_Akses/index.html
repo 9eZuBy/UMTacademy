@@ -884,36 +884,115 @@ function navigateTo(page, clickedElement) {
 }
 
 function renderDashboardPage() {
+    const email = sessionStorage.getItem(CONFIG.SESSION_KEYS.EMAIL) || 'member@umt.id';
+    const namePart = email.split('@')[0];
+    const displayName = namePart.charAt(0).toUpperCase() + namePart.slice(1);
+
     appContent.innerHTML = `
-        <header class="panel flex justify-between items-center">
+        <!-- TOPBAR -->
+        <div class="flex items-center justify-between mb-6">
             <div>
-                <h2 id="user-greeting" class="text-xl font-bold"></h2>
-                <p class="text-sm text-gray-400">Selamat datang di Command Center Anda.</p>
+                <h2 class="text-xl font-bold text-white">Halo, ${displayName} 👋</h2>
+                <p class="text-sm mt-0.5" style="color:var(--text-secondary)">Selamat datang di Command Center Anda.</p>
             </div>
-        </header>
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="col-span-1 lg:col-span-2 space-y-6">
+            <div class="hidden md:flex items-center gap-2">
+                <button onclick="navigateTo('informasi', null)"
+                        class="flex items-center gap-2 text-xs px-3 py-2 rounded-lg border transition-colors"
+                        style="border-color:var(--border-color);color:var(--text-secondary);background:var(--bg-panel2)"
+                        onmouseover="this.style.borderColor='var(--accent-cyan)';this.style.color='var(--accent-cyan)'"
+                        onmouseout="this.style.borderColor='var(--border-color)';this.style.color='var(--text-secondary)'">
+                    <i class="fa-solid fa-bell text-xs"></i> Info Terbaru
+                </button>
+            </div>
+        </div>
+
+        <!-- STAT CARDS -->
+        <div id="stat-cards-container" class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6"></div>
+
+        <!-- MAIN GRID -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+            <!-- KIRI: Quick Access + Aktivitas -->
+            <div class="lg:col-span-2 flex flex-col gap-5">
+
+                <!-- QUICK ACCESS -->
                 <div class="panel">
-                    <h4 class="font-bold text-lg mb-4">Status Anda</h4>
-                    <div id="status-container" class="space-y-4"></div>
+                    <div class="panel-header-row">
+                        <div class="panel-title-icon"><i class="fa-solid fa-bolt text-xs"></i></div>
+                        <h4 class="font-bold text-sm" style="color:var(--text-primary)">Akses Cepat</h4>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        ${[
+                            { icon: 'fa-solid fa-bolt',            label: 'Sprint Materi',  sub: 'Latihan intensif',    tag: 'Populer',  tagClass: 'text-[var(--accent-cyan)]   bg-[var(--accent-cyan-dim)]',   page: 'sprint_materi', featured: true  },
+                            { icon: 'fa-solid fa-graduation-cap',  label: 'SNBT / TKA',    sub: 'Persiapan ujian',     tag: 'Update',   tagClass: 'text-[var(--accent-amber)]  bg-amber-500/10',               page: 'snbt_tka',      featured: false },
+                            { icon: 'fa-solid fa-flask-vial',      label: 'UMT Lab',       sub: 'Analisis & teori',    tag: 'Baru',     tagClass: 'text-[var(--accent-purple)] bg-purple-500/10',              page: 'umt_lab',       featured: false },
+                            { icon: 'fa-solid fa-list-check',      label: 'Bank Soal',     sub: '200+ soal tersedia',  tag: 'Lengkap',  tagClass: 'text-[var(--accent-green)]  bg-green-500/10',               page: 'bank_soal',     featured: false },
+                        ].map(item => `
+                            <div onclick="navigateTo('${item.page}', null)"
+                                 class="flex flex-col gap-2 p-3 rounded-xl border cursor-pointer transition-all duration-200 group"
+                                 style="background:var(--bg-panel2);border-color:${item.featured ? 'rgba(34,211,238,0.3)' : 'var(--border-color)'};${item.featured ? 'background:linear-gradient(135deg,rgba(34,211,238,0.06),var(--bg-panel2))' : ''}"
+                                 onmouseover="this.style.borderColor='var(--border-color2)';this.style.transform='translateY(-2px)'"
+                                 onmouseout="this.style.borderColor='${item.featured ? 'rgba(34,211,238,0.3)' : 'var(--border-color)'}';this.style.transform='translateY(0)'">
+                                <i class="${item.icon} text-base" style="color:var(--accent-cyan)"></i>
+                                <div class="font-bold text-sm" style="color:var(--text-primary)">${item.label}</div>
+                                <div class="text-xs" style="color:var(--text-secondary)">${item.sub}</div>
+                                <span class="text-[9px] font-bold px-2 py-0.5 rounded-full w-fit mt-1 ${item.tagClass}">${item.tag}</span>
+                            </div>
+                        `).join('')}
+                    </div>
                 </div>
+
+                <!-- AKTIVITAS TERAKHIR -->
+                <div class="panel">
+                    <div class="panel-header-row">
+                        <div class="panel-title-icon"><i class="fa-solid fa-clock-rotate-left text-xs"></i></div>
+                        <h4 class="font-bold text-sm" style="color:var(--text-primary)">Aktivitas Terakhir</h4>
+                    </div>
+                    <div id="last-activity-container" class="space-y-1"></div>
+                </div>
+
+            </div>
+
+            <!-- KANAN: Progress + Skor + Lencana + Info -->
+            <div class="flex flex-col gap-5">
+
+                <!-- PROGRESS RING -->
+                <div class="panel text-center">
+                    <div class="panel-header-row justify-center">
+                        <div class="panel-title-icon"><i class="fa-solid fa-chart-pie text-xs"></i></div>
+                        <h4 class="font-bold text-sm" style="color:var(--text-primary)">Progress Belajar</h4>
+                    </div>
+                    <div id="progress-ring-container" class="flex flex-col items-center gap-3"></div>
+                </div>
+
+                <!-- SKOR TERAKHIR -->
                 <div id="last-score-widget-container"></div>
-                <div id="last-activity-container" class="space-y-6"></div>
-            </div>
-            <div class="col-span-1 space-y-6">
+
+                <!-- LENCANA -->
                 <div class="panel">
-                    <h4 class="font-bold text-lg mb-4">Pencapaian</h4>
-                    <div id="lencana-container" class="flex gap-4"></div>
+                    <div class="panel-header-row">
+                        <div class="panel-title-icon"><i class="fa-solid fa-medal text-xs"></i></div>
+                        <h4 class="font-bold text-sm" style="color:var(--text-primary)">Pencapaian</h4>
+                    </div>
+                    <div id="lencana-container" class="flex flex-wrap gap-2"></div>
                 </div>
+
+                <!-- INFO UMT -->
                 <div class="panel">
-                    <h4 class="font-bold text-lg mb-4">Info Terbaru UMT</h4>
-                    <div id="social-media-container" class="space-y-4"></div>
+                    <div class="panel-header-row">
+                        <div class="panel-title-icon"><i class="fa-solid fa-rss text-xs"></i></div>
+                        <h4 class="font-bold text-sm" style="color:var(--text-primary)">Info Terbaru UMT</h4>
+                    </div>
+                    <div id="social-media-container" class="space-y-1"></div>
                 </div>
+
             </div>
         </div>
     `;
-    initializeAppDashboardWidgets();
+
+    initializeDashboardWidgets();
 }
+
 function renderMateriPage() {
     let accordionHTML = '';
     const materiData = allContentData.materi;
@@ -1843,82 +1922,187 @@ function getTotalItemCount() {
     const totalSprintMateri = allContentData.sprintMateri.flatMap(sprint => Object.values(sprint.content).flat()).length;
     return totalMateri + totalVideo + totalBankSoal + totalUmtLab + totalPerpustakaan + totalSprintMateri;
 }
-function initializeAppDashboardWidgets() {
-    const email = sessionStorage.getItem(CONFIG.SESSION_KEYS.EMAIL) || 'pengguna@email.com';
-    const namePart = email.split('@')[0];
-    document.getElementById('user-greeting').innerHTML = `Halo, ${namePart.charAt(0).toUpperCase() + namePart.slice(1)} 👋`;
-
+function initializeDashboardWidgets() {
     const completedItems = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEYS.COMPLETED_ITEMS)) || [];
-    const totalItems = getTotalItemCount();
-    const progress = totalItems > 0 ? Math.round((completedItems.length / totalItems) * 100) : 0;
+    const totalItems     = getTotalItemCount();
+    const progress       = totalItems > 0 ? Math.round((completedItems.length / totalItems) * 100) : 0;
 
-    document.getElementById('status-container').innerHTML = `<div><span class="text-sm">📚 Progress Keseluruhan (${completedItems.length}/${totalItems})</span><div class="w-full bg-gray-700 rounded-full h-2.5 mt-1"><div class="bg-cyan-500 h-2.5 rounded-full transition-all duration-500" style="width: ${progress}%"></div></div></div>`;
+    // ── STAT CARDS ──
+    const totalMateri   = Object.values(allContentData.materi).flat().length;
+    const totalVideo    = allContentData.video.length;
+    const totalBankSoal = allContentData.bankSoal.length;
 
-    let lencanaHTML = '';
-    if (completedItems.length >= 1) lencanaHTML += `<div title="Langkah Pertama"><i class="fa-solid fa-shoe-prints text-cyan-400 text-2xl"></i></div>`;
-    if (progress >= 50) lencanaHTML += `<div title="Setengah Jalan!"><i class="fa-solid fa-road-circle-check text-green-400 text-2xl"></i></div>`;
-    if (progress === 100) lencanaHTML += `<div title="100% Selesai!"><i class="fa-solid fa-trophy text-amber-400 text-2xl"></i></div>`;
-    document.getElementById('lencana-container').innerHTML = lencanaHTML || `<p class="text-sm text-gray-500">Selesaikan materi untuk dapat lencana!</p>`;
+    const completedMateri   = completedItems.filter(id => Object.values(allContentData.materi).flat().some(i => i.id === id)).length;
+    const completedVideo    = completedItems.filter(id => allContentData.video.some(i => i.id === id)).length;
+    const completedBankSoal = completedItems.filter(id => allContentData.bankSoal.some(i => i.id === id)).length;
 
-    document.getElementById('social-media-container').innerHTML = socialMediaUpdates.map(item => `
-        <a href="${item.link}" target="_blank" class="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-800">
-            ${item.icon.endsWith('.png') ? `<img src="${item.icon}" class="w-6 h-6">` : `<i class="${item.icon} ${item.color} text-xl w-6 text-center"></i>`}
-            <span class="text-sm text-gray-300">${item.text}</span>
-        </a>
+    const statCards = [
+        { label: 'Total Progress',     val: `${progress}%`,         sub: `${completedItems.length} dari ${totalItems} item`,    icon: 'fa-chart-pie',    pct: progress,                                           featured: true  },
+        { label: 'Materi Dibaca',      val: completedMateri,        sub: `dari ${totalMateri} tersedia`,                        icon: 'fa-book',         pct: Math.round(completedMateri / totalMateri * 100) || 0, featured: false },
+        { label: 'Video Ditonton',     val: completedVideo,         sub: `dari ${totalVideo} tersedia`,                         icon: 'fa-video',        pct: Math.round(completedVideo / totalVideo * 100)   || 0, featured: false },
+        { label: 'Soal Dikerjakan',    val: completedBankSoal,      sub: `dari ${totalBankSoal} paket soal`,                    icon: 'fa-list-check',   pct: Math.round(completedBankSoal / totalBankSoal * 100) || 0, featured: false },
+    ];
+
+    document.getElementById('stat-cards-container').innerHTML = statCards.map(card => `
+        <div class="rounded-xl border p-4 relative overflow-hidden"
+             style="background:${card.featured ? 'linear-gradient(135deg,rgba(34,211,238,0.07),var(--bg-panel))' : 'var(--bg-panel)'};
+                    border-color:${card.featured ? 'rgba(34,211,238,0.25)' : 'var(--border-color)'}">
+            <div class="text-[10px] font-bold uppercase tracking-widest mb-2" style="color:var(--text-secondary)">${card.label}</div>
+            <div class="text-2xl font-bold font-mono mb-1" style="color:${card.featured ? 'var(--accent-cyan)' : 'var(--text-primary)'}">${card.val}</div>
+            <div class="text-[11px] mb-3" style="color:var(--text-secondary)">${card.sub}</div>
+            <div style="height:3px;background:var(--border-color);border-radius:2px;overflow:hidden">
+                <div style="height:100%;width:${card.pct}%;background:linear-gradient(90deg,var(--accent-cyan2),var(--accent-cyan));border-radius:2px;transition:width .6s ease"></div>
+            </div>
+            <i class="fa-solid ${card.icon} absolute top-3 right-3 text-lg opacity-20" style="color:${card.featured ? 'var(--accent-cyan)' : 'var(--text-primary)'}"></i>
+        </div>
     `).join('');
 
+    // ── PROGRESS RING ──
+    const r = 44, circ = Math.round(2 * Math.PI * r);
+    const dash = Math.round((progress / 100) * circ);
+    document.getElementById('progress-ring-container').innerHTML = `
+        <div style="position:relative;width:110px;height:110px">
+            <svg width="110" height="110" viewBox="0 0 110 110" style="transform:rotate(-90deg)">
+                <circle cx="55" cy="55" r="${r}" fill="none" stroke="var(--border-color)" stroke-width="7"/>
+                <circle cx="55" cy="55" r="${r}" fill="none"
+                        stroke="url(#pg)" stroke-width="7"
+                        stroke-dasharray="${circ}" stroke-dashoffset="${circ - dash}"
+                        stroke-linecap="round"/>
+                <defs>
+                    <linearGradient id="pg" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stop-color="#0EA5E9"/>
+                        <stop offset="100%" stop-color="#22D3EE"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+                <span class="font-mono font-bold text-xl" style="color:var(--accent-cyan);line-height:1">${progress}</span>
+                <span class="text-[10px]" style="color:var(--text-secondary)">persen</span>
+            </div>
+        </div>
+        <div class="text-xs text-center" style="color:var(--text-secondary)">
+            ${completedItems.length} dari ${totalItems} item selesai
+        </div>
+        <div style="width:100%;height:1px;background:var(--border-color)"></div>
+        <div class="w-full flex justify-between px-1 text-xs" style="color:var(--text-secondary)">
+            <span>Materi</span>
+            <span class="font-mono" style="color:var(--accent-cyan)">${Math.round(completedMateri/totalMateri*100)||0}%</span>
+        </div>
+        <div class="w-full flex justify-between px-1 text-xs" style="color:var(--text-secondary)">
+            <span>Video</span>
+            <span class="font-mono" style="color:var(--accent-cyan)">${Math.round(completedVideo/totalVideo*100)||0}%</span>
+        </div>
+        <div class="w-full flex justify-between px-1 text-xs" style="color:var(--text-secondary)">
+            <span>Bank Soal</span>
+            <span class="font-mono" style="color:var(--accent-cyan)">${Math.round(completedBankSoal/totalBankSoal*100)||0}%</span>
+        </div>
+    `;
+
+    // ── SKOR TERAKHIR ──
     const lastScoreContainer = document.getElementById('last-score-widget-container');
     const lastScoreData = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEYS.LAST_SCORE));
     if (lastScoreData) {
+        const sr = 32, sc = Math.round(2 * Math.PI * sr);
+        const sd = Math.round((lastScoreData.percentage / 100) * sc);
+        const scoreColor = lastScoreData.percentage >= 80 ? 'var(--accent-green)' : lastScoreData.percentage >= 60 ? 'var(--accent-amber)' : 'var(--accent-red)';
         lastScoreContainer.innerHTML = `
             <div class="panel">
-                <h4 class="font-bold text-lg mb-4">Skor Kuis Terakhir</h4>
-                <div class="text-center">
-                    <p class="text-sm text-gray-400">${lastScoreData.title}</p>
-                    <p class="text-4xl font-bold text-cyan-400 mt-2">${lastScoreData.percentage}%</p>
-                    <p class="text-gray-300 mt-1 text-xs">(${lastScoreData.score} dari ${lastScoreData.total} soal benar)</p>
+                <div class="panel-header-row">
+                    <div class="panel-title-icon"><i class="fa-solid fa-trophy text-xs"></i></div>
+                    <h4 class="font-bold text-sm" style="color:var(--text-primary)">Skor Terakhir</h4>
                 </div>
-            </div>`;
-    }
-    const lastActivityContainer = document.getElementById('last-activity-container');
-    const lastActivity = JSON.parse(localStorage.getItem('userLastActivity')) || {};
-    let activityHTML = '';
-
-    const createWidget = (config) => {
-        if (!config.data) return '';
-
-        let href = config.data.filePath || '#';
-        let actionOnClick = `onclick="event.preventDefault(); openMateri('${config.data.id}', '${href}')"`;
-
-        if (config.type === 'video') {
-            actionOnClick = `onclick="event.preventDefault(); playVideoInModal('${config.data.videoId}', '${config.data.title.replace(/'/g, "\\'")}')"`;
-        } else if (config.type === 'umtLab' || config.type === 'perpustakaan') {
-            href = `viewer.html?id=${config.data.id}`;
-            actionOnClick = `onclick="window.location.href='${href}'"`;
-        }
-
-        return `
-            <div class="panel">
-                <h4 class="font-bold text-lg mb-3">${config.title}</h4>
-                <div class="flex items-center gap-4 p-3 rounded-lg bg-gray-900/50">
-                    <i class="${config.icon} text-cyan-400 text-2xl w-8 text-center"></i>
-                    <div class="flex-grow">
-                        <p class="text-sm font-semibold">${config.data.title}</p>
-                        <a href="${href}" ${actionOnClick} class="text-xs text-cyan-400 hover:underline cursor-pointer">
-                            ${config.actionText}
-                        </a>
+                <div class="flex items-center gap-4">
+                    <div style="position:relative;width:74px;height:74px;flex-shrink:0">
+                        <svg width="74" height="74" viewBox="0 0 74 74" style="transform:rotate(-90deg)">
+                            <circle cx="37" cy="37" r="${sr}" fill="none" stroke="var(--border-color)" stroke-width="5"/>
+                            <circle cx="37" cy="37" r="${sr}" fill="none"
+                                    stroke="${scoreColor}" stroke-width="5"
+                                    stroke-dasharray="${sc}" stroke-dashoffset="${sc - sd}"
+                                    stroke-linecap="round"/>
+                        </svg>
+                        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+                            <span class="font-mono font-bold text-base" style="color:${scoreColor};line-height:1">${lastScoreData.percentage}</span>
+                            <span style="font-size:9px;color:var(--text-secondary)">%</span>
+                        </div>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="text-xs font-semibold truncate" style="color:var(--text-primary)">${lastScoreData.title}</div>
+                        <div class="text-[11px] mt-1" style="color:var(--text-secondary)">${lastScoreData.score} dari ${lastScoreData.total} benar</div>
                     </div>
                 </div>
             </div>
         `;
-    };
+    }
 
-    activityHTML += createWidget({ title: "Materi Terakhir Dibaca", icon: "fa-solid fa-book-open", actionText: "Lanjutkan Membaca", data: lastActivity.materi, type: 'materi' });
-    activityHTML += createWidget({ title: "Video Terakhir Ditonton", icon: "fa-solid fa-circle-play", actionText: "Tonton Lagi", data: lastActivity.video, type: 'video' });
-    activityHTML += createWidget({ title: "Lab Terakhir Dibaca", icon: "fa-solid fa-flask-vial", actionText: "Lanjutkan Membaca", data: lastActivity.umtLab, type: 'umtLab'});
-    activityHTML += createWidget({ title: "Buku Terakhir Dibuka", icon: "fa-solid fa-book-atlas", actionText: "Lanjutkan Membaca", data: lastActivity.perpustakaan, type: 'perpustakaan' });
-    lastActivityContainer.innerHTML = activityHTML;
+    // ── LENCANA ──
+    const badges = [
+        { earned: completedItems.length >= 1, icon: '👟', label: 'Langkah Pertama' },
+        { earned: progress >= 50,             icon: '🛣️', label: 'Setengah Jalan'  },
+        { earned: progress === 100,           icon: '🏆', label: '100% Selesai!'   },
+    ];
+    document.getElementById('lencana-container').innerHTML = badges.length
+        ? badges.map(b => `
+            <div title="${b.label}"
+                 class="w-10 h-10 rounded-xl flex items-center justify-center text-lg cursor-default transition-transform hover:scale-110"
+                 style="${b.earned
+                    ? 'background:var(--accent-cyan-dim);border:1px solid rgba(34,211,238,0.3)'
+                    : 'background:var(--bg-panel2);border:1px solid var(--border-color);opacity:0.3'}">
+                ${b.icon}
+            </div>
+        `).join('')
+        : `<p class="text-xs" style="color:var(--text-secondary)">Selesaikan materi untuk dapat lencana!</p>`;
+
+    // ── INFO UMT ──
+    document.getElementById('social-media-container').innerHTML = socialMediaUpdates.map(item => `
+        <a href="${item.link}" target="_blank"
+           class="flex items-center gap-3 px-2 py-2.5 rounded-lg transition-colors cursor-pointer"
+           style="color:var(--text-secondary)"
+           onmouseover="this.style.background='var(--bg-panel2)'"
+           onmouseout="this.style.background='transparent'">
+            ${item.icon.endsWith('.png')
+                ? `<img src="${item.icon}" class="w-5 h-5 rounded flex-shrink-0">`
+                : `<i class="${item.icon} ${item.color} text-base w-5 text-center flex-shrink-0"></i>`}
+            <span class="text-xs leading-snug">${item.text}</span>
+        </a>
+    `).join('');
+
+    // ── AKTIVITAS TERAKHIR ──
+    const lastActivity = JSON.parse(localStorage.getItem('userLastActivity')) || {};
+    const actItems = [
+        { key: 'materi',      icon: 'fa-book-open',    color: 'var(--accent-cyan)',   label: 'Materi',       action: (d) => openMateri(d.id, d.filePath) },
+        { key: 'video',       icon: 'fa-circle-play',  color: 'var(--accent-green)',  label: 'Video',        action: (d) => playVideoInModal(d.videoId, d.title) },
+        { key: 'umtLab',      icon: 'fa-flask-vial',   color: 'var(--accent-purple)', label: 'UMT Lab',      action: (d) => window.location.href = `viewer.html?id=${d.id}` },
+        { key: 'perpustakaan',icon: 'fa-book-atlas',   color: 'var(--accent-amber)',  label: 'Perpustakaan', action: (d) => window.location.href = `viewer.html?id=${d.id}` },
+    ];
+
+    const actHTML = actItems
+        .filter(a => lastActivity[a.key])
+        .map(a => {
+            const d = lastActivity[a.key];
+            const fnName = `_actCb_${a.key}`;
+            window[fnName] = () => a.action(d);
+            return `
+                <div onclick="${fnName}()"
+                     class="flex items-center gap-3 px-2 py-2.5 rounded-lg cursor-pointer transition-colors"
+                     onmouseover="this.style.background='var(--bg-panel2)'"
+                     onmouseout="this.style.background='transparent'">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                         style="background:rgba(34,211,238,0.06);border:1px solid var(--border-color)">
+                        <i class="fa-solid ${a.icon} text-xs" style="color:${a.color}"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="text-xs font-semibold truncate" style="color:var(--text-primary)">${d.title}</div>
+                        <div class="text-[11px]" style="color:var(--text-secondary)">${a.label}</div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-[10px]" style="color:var(--text-subtle)"></i>
+                </div>
+            `;
+        }).join('');
+
+    document.getElementById('last-activity-container').innerHTML = actHTML ||
+        `<p class="text-xs px-2 py-3" style="color:var(--text-secondary)">Belum ada aktivitas. Mulai belajar sekarang!</p>`;
 }
+
 function resetProgress() {
     showConfirmationModal({
         title: 'Konfirmasi Reset Progres',
