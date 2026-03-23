@@ -1526,110 +1526,157 @@ function setupVideoFilter() {
     });
 }
 function renderBankSoalPage() {
-    const categories = ['Semua', ...new Set(allContentData.bankSoal.map(quiz => quiz.category || 'Lainnya'))];
+    const allQuizzes = allContentData.bankSoal;
+    const completedItems = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEYS.COMPLETED_ITEMS)) || [];
 
-    const dropdownItemsHTML = categories.map(category => `
-        <div class="dropdown-item" data-filter="${category}">${category}</div>
-    `).join('');
+    // Kumpulkan semua kategori unik
+    const categories = ['Semua', ...new Set(allQuizzes.map(q => q.category || 'Lainnya'))];
 
-    const dropdownFilterHTML = `
-        <div class="mb-8">
-            <label class="block text-sm font-medium text-gray-400 mb-2">Filter Kategori:</label>
-            <div class="dropdown-container" id="filter-dropdown">
-                <button class="dropdown-button" id="dropdown-button">
-                    <span id="dropdown-label">Semua</span>
-                    <i class="fa-solid fa-chevron-down"></i>
-                </button>
-                <div class="dropdown-menu no-scrollbar" id="dropdown-menu">
-                    ${dropdownItemsHTML}
-                </div>
-            </div>
-        </div>
-    `;
-
-    const categoriesHTML = allContentData.bankSoal.reduce((acc, quiz) => {
-        const category = quiz.category || 'Lainnya';
-        if (!acc[category]) acc[category] = [];
-        acc[category].push(quiz);
+    // Group by category
+    const grouped = allQuizzes.reduce((acc, quiz) => {
+        const cat = quiz.category || 'Lainnya';
+        if (!acc[cat]) acc[cat] = [];
+        acc[cat].push(quiz);
         return acc;
     }, {});
 
-    let quizSectionsHTML = '';
-    for (const category in categoriesHTML) {
-        const quizzes = categoriesHTML[category];
-        const cardsHTML = quizzes.map(quiz => `
-            <div class="card-item p-6 rounded-lg flex flex-col flex-shrink-0 w-72 md:w-80" onclick="startQuiz('${quiz.id}')">
-                <h3 class="font-bold text-lg mb-2">${quiz.title}</h3>
-                <p class="text-sm text-gray-400 mb-4">${quiz.subject}</p>
-                <div class="mt-auto text-xs font-mono bg-gray-900/50 text-cyan-300 rounded-full px-3 py-1 self-start">
-                    ${quiz.totalQuestions} Soal
-                </div>
-            </div>
-        `).join('');
+    // Filter tabs HTML
+    const tabsHTML = categories.map((cat, i) => `
+        <button class="bank-tab flex-shrink-0 text-xs font-bold px-4 py-2 rounded-lg transition-all"
+                data-cat="${cat}"
+                style="${i === 0
+                    ? 'background:var(--accent-cyan-dim);color:var(--accent-cyan);border:1px solid rgba(34,211,238,0.3)'
+                    : 'background:transparent;color:var(--text-secondary);border:1px solid var(--border-color)'}"
+                onclick="filterBankSoal('${cat}', this)">
+            ${cat}
+            <span class="ml-1 font-mono text-[10px] opacity-70">${cat === 'Semua' ? allQuizzes.length : (grouped[cat]?.length || 0)}</span>
+        </button>
+    `).join('');
 
-        quizSectionsHTML += `
-            <div class="quiz-category-section mb-8" data-category="${category}">
-                <h3 class="text-xl font-bold mb-4 text-cyan-300">${category}</h3>
-                <div class="no-scrollbar flex overflow-x-auto gap-4 pb-4">
-                    ${cardsHTML}
-                </div>
+    // Quiz cards per section
+    const sectionsHTML = Object.entries(grouped).map(([cat, quizzes]) => `
+        <div class="bank-section" data-section="${cat}">
+            <div class="flex items-center gap-2 mb-4">
+                <div class="w-1 h-4 rounded-full" style="background:var(--accent-cyan)"></div>
+                <h3 class="font-bold text-sm" style="color:var(--text-primary)">${cat}</h3>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-full"
+                      style="background:var(--accent-cyan-dim);color:var(--accent-cyan)">${quizzes.length} paket</span>
             </div>
-        `;
-    }
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                ${quizzes.map(quiz => {
+                    const done = completedItems.includes(quiz.id);
+                    return `
+                        <div onclick="startQuiz('${quiz.id}')"
+                             class="group relative flex flex-col p-5 rounded-xl cursor-pointer transition-all duration-200"
+                             style="background:var(--bg-panel2);border:1px solid ${done ? 'rgba(52,211,153,0.25)' : 'var(--border-color)'}"
+                             onmouseover="this.style.borderColor='var(--border-color2)';this.style.transform='translateY(-2px)'"
+                             onmouseout="this.style.borderColor='${done ? 'rgba(52,211,153,0.25)' : 'var(--border-color)'}';this.style.transform='translateY(0)'">
 
-    const bankSoalHTML = `
+                            <!-- Done badge -->
+                            ${done ? `
+                                <div class="absolute top-3 right-3 flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full"
+                                     style="background:rgba(52,211,153,0.1);color:var(--accent-green);border:1px solid rgba(52,211,153,0.2)">
+                                    <i class="fa-solid fa-check text-[9px]"></i> Selesai
+                                </div>` : ''}
+
+                            <!-- Icon -->
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center mb-4 flex-shrink-0"
+                                 style="background:var(--accent-cyan-dim);border:1px solid rgba(34,211,238,0.2)">
+                                <i class="fa-solid fa-file-lines text-sm" style="color:var(--accent-cyan)"></i>
+                            </div>
+
+                            <!-- Info -->
+                            <h3 class="font-bold text-sm leading-snug mb-1 pr-12" style="color:var(--text-primary)">${quiz.title}</h3>
+                            <p class="text-xs mb-4" style="color:var(--text-secondary)">${quiz.subject}</p>
+
+                            <!-- Footer -->
+                            <div class="mt-auto flex items-center justify-between">
+                                <span class="text-[11px] font-mono px-2.5 py-1 rounded-lg"
+                                      style="background:var(--bg-main);color:var(--accent-cyan);border:1px solid var(--border-color)">
+                                    ${quiz.totalQuestions} soal
+                                </span>
+                                <span class="text-[11px] font-semibold flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                      style="color:var(--accent-cyan)">
+                                    Mulai <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        </div>
+    `).join('');
+
+    appContent.innerHTML = `
         <div class="panel">
-            <h2 class="text-2xl font-bold mb-1 text-cyan-400">Bank Soal</h2>
-            <p class="text-sm text-gray-400 mb-6">Pilih paket soal untuk mulai berlatih.</p>
-            ${dropdownFilterHTML}
-            <div id="quiz-list-container">
-                ${quizSectionsHTML}
+            <!-- Header -->
+            <div class="flex items-center gap-3 mb-6">
+                <div class="panel-title-icon">
+                    <i class="fa-solid fa-list-check text-xs"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold" style="color:var(--accent-cyan)">Bank Soal</h2>
+                    <p class="text-xs mt-0.5" style="color:var(--text-secondary)">
+                        ${allQuizzes.length} paket soal tersedia — pilih dan mulai berlatih.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-3 gap-3 mb-6">
+                ${[
+                    { label: 'Total Paket',  val: allQuizzes.length,                                                    icon: 'fa-layer-group', color: 'var(--accent-cyan)'   },
+                    { label: 'Dikerjakan',   val: allQuizzes.filter(q => completedItems.includes(q.id)).length,         icon: 'fa-check',       color: 'var(--accent-green)'  },
+                    { label: 'Belum',        val: allQuizzes.filter(q => !completedItems.includes(q.id)).length,        icon: 'fa-hourglass',   color: 'var(--accent-amber)'  },
+                ].map(s => `
+                    <div class="flex items-center gap-3 px-3 py-2.5 rounded-xl"
+                         style="background:var(--bg-panel2);border:1px solid var(--border-color)">
+                        <div class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+                             style="background:var(--accent-cyan-dim);border:1px solid rgba(34,211,238,0.15)">
+                            <i class="fa-solid ${s.icon} text-xs" style="color:${s.color}"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm font-mono" style="color:var(--text-primary)">${s.val}</div>
+                            <div class="text-[10px]" style="color:var(--text-secondary)">${s.label}</div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+
+            <!-- Filter tabs -->
+            <div class="flex gap-2 flex-wrap mb-6">
+                ${tabsHTML}
+            </div>
+
+            <!-- Divider -->
+            <div style="height:1px;background:var(--border-color);margin-bottom:1.5rem"></div>
+
+            <!-- Sections -->
+            <div id="bank-soal-sections">
+                ${sectionsHTML}
             </div>
         </div>
     `;
-    appContent.innerHTML = bankSoalHTML;
-
-    setupBankSoalFilter();
 }
-function setupBankSoalFilter() {
-    const dropdownContainer = document.getElementById('filter-dropdown');
-    if (!dropdownContainer) return;
 
-    const button = document.getElementById('dropdown-button');
-    const menu = document.getElementById('dropdown-menu');
-    const label = document.getElementById('dropdown-label');
-    const items = menu.querySelectorAll('.dropdown-item');
-    const quizSections = document.querySelectorAll('.quiz-category-section');
 
-    button.addEventListener('click', (event) => {
-        event.stopPropagation();
-        menu.classList.toggle('open');
-        button.classList.toggle('open');
+function filterBankSoal(selectedCat, clickedBtn) {
+    // Update tab styles
+    document.querySelectorAll('.bank-tab').forEach(btn => {
+        const isActive = btn.dataset.cat === selectedCat;
+        btn.style.background  = isActive ? 'var(--accent-cyan-dim)' : 'transparent';
+        btn.style.color       = isActive ? 'var(--accent-cyan)'     : 'var(--text-secondary)';
+        btn.style.borderColor = isActive ? 'rgba(34,211,238,0.3)'   : 'var(--border-color)';
     });
 
-    items.forEach(item => {
-        item.addEventListener('click', () => {
-            const selectedFilter = item.getAttribute('data-filter');
-            label.textContent = selectedFilter;
-            quizSections.forEach(section => {
-                if (selectedFilter === 'Semua' || section.dataset.category === selectedFilter) {
-                    section.style.display = 'block';
-                } else {
-                    section.style.display = 'none';
-                }
-            });
-            menu.classList.remove('open');
-            button.classList.remove('open');
-        });
-    });
-
-    window.addEventListener('click', (event) => {
-        if (!dropdownContainer.contains(event.target)) {
-            menu.classList.remove('open');
-            button.classList.remove('open');
-        }
+    // Show/hide sections
+    document.querySelectorAll('.bank-section').forEach(section => {
+        section.style.display =
+            selectedCat === 'Semua' || section.dataset.section === selectedCat
+                ? '' : 'none';
     });
 }
+
 function renderForumPage() {
     appContent.innerHTML = `<div class="forum-container"><div class="intro"><h1>Forum Belajar UMT</h1><p>Bergabunglah dengan komunitas eksklusif UMT Academy! Tempat terbaik untuk berdiskusi, bertanya, berbagi ilmu, dan menguasai matematika bersama sesama pelajar dan fasilitator.</p></div><div class="community-links"><h2>Pilih Komunitas Pilihanmu Sekarang!</h2><div class="flex justify-center gap-4 flex-wrap"><a href="https://chat.whatsapp.com/GpyKRFFjMINBcjqGEYSXQ6" target="_blank" class="community-btn whatsapp-btn"><i class="fab fa-whatsapp"></i><span>Komunitas WhatsApp</span></a><a href="https://t.me/umt6174" target="_blank" class="community-btn telegram-btn"><i class="fab fa-telegram"></i><span>Komunitas Telegram</span></a></div><p class="subtext">Bergabunglah dengan ribuan pelajar lainnya!</p></div></div>`;
 }
