@@ -1129,8 +1129,9 @@ function renderMateriPage() {
 function setupAccordionListeners() {
     document.querySelectorAll('.accordion-button').forEach(button => {
         button.addEventListener('click', () => {
-            const content = button.parentElement.nextElementSibling;
+            const content = button.nextElementSibling;
             const icon = button.querySelector('.accordion-icon');
+            if (!content || !icon) return;
             content.classList.toggle('hidden');
             icon.classList.toggle('rotate-180');
         });
