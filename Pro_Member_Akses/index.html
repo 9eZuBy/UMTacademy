@@ -611,11 +611,11 @@ if (typeof allContentData !== 'undefined') {
                         { id: 'snbt-mat-sub-19', title: 'Transformasi Geometri', type: 'UMT - Learning', filePath: 'Materi-TKA-SNBT/Geometri-04.html' },
                     ],
                     "Data dan Peluang": [
-                        { id: 'snbt-mat-sub-05', title: 'Penyajian dan Interpretasi Data', type: 'UMT - Learning', filePath: 'Materi-TKA-SNBT/Data-01.html' },
-                        { id: 'snbt-mat-sub-05', title: 'Ukuran Pemusatan Data (Data Tunggal & Kelompok)', type: 'UMT - Learning', filePath: 'Materi-TKA-SNBT/Data-02.html' },
-                        { id: 'snbt-mat-sub-05', title: 'Ukuran Penyebaran Data (Data Tunggal & Kelompok)', type: 'UMT - Learning', filePath: 'Materi-TKA-SNBT/Data-03.html' },
-                        { id: 'snbt-mat-sub-05', title: 'Kaidah Pencacahan (Counting Rules)', type: 'UMT - Learning', filePath: 'Materi-TKA-SNBT/Data-04.html' },
-                        { id: 'snbt-mat-sub-05', title: 'Peluang (Probability)', type: 'UMT - Learning', filePath: 'Materi-TKA-SNBT/Data-05.html' },
+                        { id: 'snbt-mat-sub-20', title: 'Penyajian dan Interpretasi Data', type: 'UMT - Learning', filePath: 'Materi-TKA-SNBT/Data-01.html' },
+                        { id: 'snbt-mat-sub-21', title: 'Ukuran Pemusatan Data (Data Tunggal & Kelompok)', type: 'UMT - Learning', filePath: 'Materi-TKA-SNBT/Data-02.html' },
+                        { id: 'snbt-mat-sub-22', title: 'Ukuran Penyebaran Data (Data Tunggal & Kelompok)', type: 'UMT - Learning', filePath: 'Materi-TKA-SNBT/Data-03.html' },
+                        { id: 'snbt-mat-sub-23', title: 'Kaidah Pencacahan (Counting Rules)', type: 'UMT - Learning', filePath: 'Materi-TKA-SNBT/Data-04.html' },
+                        { id: 'snbt-mat-sub-24', title: 'Peluang (Probability)', type: 'UMT - Learning', filePath: 'Materi-TKA-SNBT/Data-05.html' },
                     ],
                     "Trigonometri": [],
                 }
@@ -1559,22 +1559,54 @@ function openMateri(itemId, filePath) {
         return;
     }
 
-    let materiItem = null;
+    // Cari item di SEMUA sumber konten
+    let foundItem = null;
+
+    // 1. Cari di materi utama
     for (const gradeKey in allContentData.materi) {
-        const foundItem = allContentData.materi[gradeKey].find(item => item.id === itemId);
-        if (foundItem) {
-            materiItem = foundItem;
-            break;
+        const item = allContentData.materi[gradeKey].find(i => i.id === itemId);
+        if (item) { foundItem = item; break; }
+    }
+
+    // 2. Cari di SNBT TKA (materi & latihan)
+    if (!foundItem && allContentData.snbtTka) {
+        const allSnbt = [
+            ...allContentData.snbtTka.materi,
+            ...allContentData.snbtTka.latihan
+        ];
+        for (const category of allSnbt) {
+            for (const subKey in category.content) {
+                const item = category.content[subKey].find(i => i.id === itemId);
+                if (item) { foundItem = item; break; }
+            }
+            if (foundItem) break;
         }
     }
 
-    if (materiItem) {
-        updateLastActivity('materi', materiItem);
+    // 3. Cari di Sprint Materi
+    if (!foundItem && allContentData.sprintMateri) {
+        for (const sprint of allContentData.sprintMateri) {
+            for (const subKey in sprint.content) {
+                const item = sprint.content[subKey].find(i => i.id === itemId);
+                if (item) { foundItem = item; break; }
+            }
+            if (foundItem) break;
+        }
+    }
+
+    // Catat aktivitas & tandai selesai jika item ditemukan
+    if (foundItem) {
+        updateLastActivity('materi', foundItem);
+        markAsCompleted(itemId);
+        showToast('Progres telah dicatat!', 'success');
+    } else {
+        // Item tidak ditemukan di data, tetap tandai berdasarkan ID saja
         markAsCompleted(itemId);
     }
 
     window.location.href = filePath;
 }
+
 function setupMateriSearch() {
     const searchInput = document.getElementById('materi-search-input');
     if (!searchInput) return;
@@ -2964,9 +2996,29 @@ function openSprintLatihan(itemId, filePath) {
         showToast('Konten untuk latihan ini belum tersedia.', 'info');
         return;
     }
+
+    // Cari item di sprint data
+    let foundItem = null;
+    if (allContentData.sprintMateri) {
+        for (const sprint of allContentData.sprintMateri) {
+            for (const subKey in sprint.content) {
+                const item = sprint.content[subKey].find(i => i.id === itemId);
+                if (item) { foundItem = item; break; }
+            }
+            if (foundItem) break;
+        }
+    }
+
+    if (foundItem) {
+        updateLastActivity('materi', foundItem);
+        markAsCompleted(itemId);
+        showToast('Progres telah dicatat!', 'success');
+    } else {
+        markAsCompleted(itemId);
+    }
+
     window.location.href = filePath;
 }
-
 </script>
 </body>
 </html>
