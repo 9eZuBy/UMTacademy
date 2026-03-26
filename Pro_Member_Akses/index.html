@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -2913,81 +2914,245 @@ function renderSprintMateriPage() {
 }
 
 function renderSprintMainPage() {
-    const sprintCards = allContentData.sprintMateri.map(item => `
-        <div class="card-item p-5 rounded-lg flex flex-col" onclick="openSprintCategory('${item.id}')">
-            <div class="flex items-center gap-4 mb-3">
-                <i class="${item.icon} text-cyan-400 text-2xl w-8 text-center"></i>
-                <h3 class="font-bold text-lg text-cyan-400">${item.title}</h3>
-            </div>
-            <p class="text-sm text-gray-400 flex-grow">${item.summary}</p>
-            <div class="mt-4 text-xs font-mono bg-gray-900/50 text-cyan-300 rounded-full px-3 py-1 self-start">
-                Latihan Terstruktur
-            </div>
-        </div>
-    `).join('');
+    const completedItems = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEYS.COMPLETED_ITEMS)) || [];
 
-    const pageHTML = `
+    const sprintCards = allContentData.sprintMateri.map(item => {
+        const allSubItems = Object.values(item.content).flat();
+        const doneCount   = allSubItems.filter(s => completedItems.includes(s.id)).length;
+        const total       = allSubItems.length;
+        const pct         = total > 0 ? Math.round((doneCount / total) * 100) : 0;
+
+        return `
+            <div onclick="openSprintCategory('${item.id}')"
+                 class="group flex flex-col gap-3 p-4 rounded-xl cursor-pointer transition-all duration-200"
+                 style="background:var(--bg-panel2);border:1px solid var(--border-color)"
+                 onmouseover="this.style.borderColor='rgba(34,211,238,0.35)';this.style.transform='translateY(-2px)'"
+                 onmouseout="this.style.borderColor='var(--border-color)';this.style.transform='translateY(0)'">
+
+                <!-- Header -->
+                <div class="flex items-start gap-3">
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                         style="background:var(--accent-cyan-dim);border:1px solid rgba(34,211,238,0.2)">
+                        <i class="fa-solid fa-bolt text-sm" style="color:var(--accent-cyan)"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="font-bold text-sm leading-snug" style="color:var(--text-primary)">${item.title}</div>
+                        <span class="inline-block text-[9px] font-bold px-2 py-0.5 rounded-full mt-1"
+                              style="background:var(--accent-cyan-dim);color:var(--accent-cyan)">
+                            Latihan Terstruktur
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Summary -->
+                <p class="text-xs leading-relaxed flex-grow" style="color:var(--text-secondary)">${item.summary}</p>
+
+                <!-- Footer progress -->
+                <div class="pt-2" style="border-top:1px solid var(--border-color)">
+                    ${total > 0 ? `
+                        <div class="flex justify-between items-center mb-1.5">
+                            <span class="text-[10px]" style="color:var(--text-secondary)">Progress</span>
+                            <span class="text-[10px] font-mono" style="color:var(--accent-cyan)">${doneCount}/${total}</span>
+                        </div>
+                        <div style="height:3px;background:var(--border-color);border-radius:2px;overflow:hidden">
+                            <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--accent-cyan2),var(--accent-cyan));border-radius:2px;transition:width .5s ease"></div>
+                        </div>
+                    ` : `
+                        <div class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-info text-[10px]" style="color:var(--text-subtle)"></i>
+                            <span class="text-[10px]" style="color:var(--text-subtle)">Konten segera hadir</span>
+                        </div>
+                    `}
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    // Hitung total sprint stats
+    const totalSprint  = allContentData.sprintMateri.length;
+    const totalLatihan = allContentData.sprintMateri.flatMap(s => Object.values(s.content).flat()).length;
+    const totalDone    = allContentData.sprintMateri
+        .flatMap(s => Object.values(s.content).flat())
+        .filter(i => completedItems.includes(i.id)).length;
+
+    appContent.innerHTML = `
         <div class="panel">
-            <h2 class="text-2xl font-bold text-cyan-400">Sprint Materi</h2>
-            <p class="text-sm text-gray-400 mb-8">Pilih sprint materi yang ingin kamu kuasai dengan latihan terstruktur.</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+            <!-- Header -->
+            <div class="flex items-center gap-3 mb-2">
+                <div class="panel-title-icon">
+                    <i class="fa-solid fa-bolt text-xs"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold" style="color:var(--accent-cyan)">Sprint Materi</h2>
+                    <p class="text-xs mt-0.5" style="color:var(--text-secondary)">
+                        Latihan intensif dan terstruktur per topik untuk penguasaan cepat.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Stats bar -->
+            <div class="grid grid-cols-3 gap-3 my-5">
+                ${[
+                    { label: 'Topik Sprint', val: totalSprint,  icon: 'fa-bolt',       color: 'var(--accent-cyan)'   },
+                    { label: 'Total Soal',   val: totalLatihan, icon: 'fa-file-lines', color: 'var(--accent-purple)' },
+                    { label: 'Selesai',      val: totalDone,    icon: 'fa-check',      color: 'var(--accent-green)'  },
+                ].map(s => `
+                    <div class="flex items-center gap-3 px-3 py-2.5 rounded-xl"
+                         style="background:var(--bg-panel2);border:1px solid var(--border-color)">
+                        <div class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+                             style="background:var(--accent-cyan-dim);border:1px solid rgba(34,211,238,0.15)">
+                            <i class="fa-solid ${s.icon} text-xs" style="color:${s.color}"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm font-mono" style="color:var(--text-primary)">${s.val}</div>
+                            <div class="text-[10px]" style="color:var(--text-secondary)">${s.label}</div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+
+            <!-- Section label -->
+            <div class="flex items-center gap-2 mb-4">
+                <div style="width:3px;height:16px;background:var(--accent-cyan);border-radius:2px"></div>
+                <h3 class="text-sm font-bold" style="color:var(--text-primary)">Pilih Topik Sprint</h3>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded-full"
+                      style="background:var(--accent-cyan-dim);color:var(--accent-cyan)">
+                    ${totalSprint} topik
+                </span>
+            </div>
+
+            <!-- Cards grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 ${sprintCards}
             </div>
         </div>
     `;
-    appContent.innerHTML = pageHTML;
 }
 
 function renderSprintDetailPage(sprintId) {
     const sprintData = allContentData.sprintMateri.find(item => item.id === sprintId);
     if (!sprintData) { appContent.innerHTML = `<p>Konten sprint tidak ditemukan.</p>`; return; }
 
+    const completedItems = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEYS.COMPLETED_ITEMS)) || [];
+
     let accordionHTML = '';
     if (Object.keys(sprintData.content).length === 0) {
-        accordionHTML = `<p class="p-4 text-gray-500">Latihan untuk sprint ini belum tersedia.</p>`;
+        accordionHTML = `
+            <div class="flex flex-col items-center justify-center py-12 gap-3"
+                 style="color:var(--text-subtle)">
+                <i class="fa-solid fa-clock text-3xl"></i>
+                <p class="text-sm">Latihan untuk sprint ini belum tersedia.</p>
+            </div>
+        `;
     } else {
         for (const subCategory in sprintData.content) {
-            const itemsHTML = sprintData.content[subCategory].map(item => `
-                <li id="card-${item.id}" class="card-item-list block p-3 rounded-md hover:bg-gray-700 cursor-pointer" onclick="openSprintLatihan('${item.id}', '${item.filePath}')">
-                    <span class="font-semibold">${item.title}</span>
-                    <span class="block text-xs text-gray-400">${item.type}</span>
-                </li>
-            `).join('');
-            
-            // --- PERUBAHAN DI SINI ---
+            const subItems  = sprintData.content[subCategory];
+            const doneCount = subItems.filter(i => completedItems.includes(i.id)).length;
+            const pct       = subItems.length > 0 ? Math.round((doneCount / subItems.length) * 100) : 0;
+
+            const itemsHTML = subItems.map(item => {
+                const done = completedItems.includes(item.id);
+                return `
+                    <li class="flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors group"
+                        onmouseover="this.style.background='var(--bg-main)'"
+                        onmouseout="this.style.background='transparent'"
+                        onclick="openSprintLatihan('${item.id}', '${item.filePath}')">
+                        <div class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+                             style="${done
+                                ? 'background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.3)'
+                                : 'background:var(--bg-main);border:1px solid var(--border-color)'}">
+                            <i class="fa-solid ${done ? 'fa-check text-[10px]' : 'fa-bolt text-[10px]'}"
+                               style="color:${done ? 'var(--accent-green)' : 'var(--text-subtle)'}"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="text-sm font-semibold truncate" style="color:var(--text-primary)">${item.title}</div>
+                            <div class="text-[11px] mt-0.5" style="color:var(--text-secondary)">${item.type}</div>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-[10px] opacity-0 group-hover:opacity-100 transition-opacity"
+                           style="color:var(--text-subtle)"></i>
+                    </li>
+                `;
+            }).join('');
+
             accordionHTML += `
-                <div class="accordion-item border-b border-gray-700" data-accordion-group>
-                    <h2>
-                        <button type="button" class="accordion-button flex items-center justify-between w-full p-4 font-semibold text-left text-cyan-300">
-                            <span>${subCategory}</span>
-                            <i class="accordion-icon fa-solid fa-chevron-down shrink-0 transition-transform duration-200 rotate-180"></i> 
-                        </button>
-                    </h2>
-                    <div class="accordion-content p-2"> 
-                        <ul class="space-y-2">${itemsHTML}</ul>
+                <div class="accordion-item border-b last:border-b-0" style="border-color:var(--border-color)" data-accordion-group>
+                    <button type="button" class="accordion-button w-full flex items-center gap-3 p-4 text-left transition-colors hover:bg-[var(--bg-panel2)]">
+                        <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                             style="background:var(--accent-cyan-dim);border:1px solid rgba(34,211,238,0.2)">
+                            <i class="fa-solid fa-layer-group text-xs" style="color:var(--accent-cyan)"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="font-bold text-sm" style="color:var(--text-primary)">${subCategory}</div>
+                            <div class="flex items-center gap-2 mt-1">
+                                <div style="flex:1;height:3px;background:var(--border-color);border-radius:2px;overflow:hidden">
+                                    <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--accent-cyan2),var(--accent-cyan));border-radius:2px;transition:width .5s ease"></div>
+                                </div>
+                                <span class="text-[10px] font-mono flex-shrink-0" style="color:var(--text-secondary)">${doneCount}/${subItems.length}</span>
+                            </div>
+                        </div>
+                        <i class="accordion-icon fa-solid fa-chevron-down text-xs flex-shrink-0 transition-transform duration-200 rotate-180"
+                           style="color:var(--text-subtle)"></i>
+                    </button>
+                    <div class="accordion-content px-2 pb-2">
+                        <ul class="space-y-0.5">${itemsHTML}</ul>
                     </div>
-                </div>`;
-            // --- AKHIR PERUBAHAN ---
+                </div>
+            `;
         }
     }
 
-    const pageHTML = `
-        <div class="panel relative">
-            <button onclick="navigateTo('sprint_materi', document.querySelector('.sidebar-link[onclick*=\\'sprint_materi\\']'))"
-                    class="absolute top-4 right-4 md:top-6 md:right-6 h-10 w-10 flex items-center justify-center bg-gray-800/50 hover:bg-gray-700 rounded-full text-gray-400 hover:text-white transition-colors"
-                    aria-label="Kembali ke daftar sprint materi">
-                <i class="fa-solid fa-times text-xl"></i>
-            </button>
-            <div class="mb-6 pr-12">
-                <h2 class="text-2xl font-bold text-cyan-400">${sprintData.title}</h2>
-                <p class="text-sm text-gray-400">${sprintData.summary}</p>
+    // Total progress sprint ini
+    const allSub  = Object.values(sprintData.content).flat();
+    const doneSub = allSub.filter(i => completedItems.includes(i.id)).length;
+    const pctAll  = allSub.length > 0 ? Math.round((doneSub / allSub.length) * 100) : 0;
+
+    appContent.innerHTML = `
+        <div class="panel">
+            <!-- Back + header -->
+            <div class="flex items-start gap-3 mb-5">
+                <button onclick="navigateTo('sprint_materi', document.querySelector('.sidebar-link[onclick*=\\'sprint_materi\\']'))"
+                        class="w-9 h-9 flex items-center justify-center rounded-xl flex-shrink-0 transition-colors mt-0.5"
+                        style="background:var(--bg-panel2);border:1px solid var(--border-color);color:var(--text-secondary)"
+                        onmouseover="this.style.borderColor='var(--accent-cyan)';this.style.color='var(--accent-cyan)'"
+                        onmouseout="this.style.borderColor='var(--border-color)';this.style.color='var(--text-secondary)'">
+                    <i class="fa-solid fa-arrow-left text-xs"></i>
+                </button>
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full"
+                              style="background:var(--accent-cyan-dim);color:var(--accent-cyan)">
+                            Latihan Sprint
+                        </span>
+                    </div>
+                    <h2 class="text-xl font-bold leading-snug" style="color:var(--accent-cyan)">${sprintData.title}</h2>
+                    <p class="text-xs mt-1" style="color:var(--text-secondary)">${sprintData.summary}</p>
+                </div>
             </div>
-            <div class="border border-gray-700 rounded-lg bg-gray-900/50">
+
+            <!-- Progress bar -->
+            ${allSub.length > 0 ? `
+                <div class="flex items-center gap-3 px-4 py-3 rounded-xl mb-5"
+                     style="background:var(--bg-panel2);border:1px solid var(--border-color)">
+                    <div class="flex-1">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <span class="text-xs font-semibold" style="color:var(--text-secondary)">Progress Sprint</span>
+                            <span class="text-xs font-mono font-bold" style="color:var(--accent-cyan)">${doneSub}/${allSub.length} selesai</span>
+                        </div>
+                        <div style="height:5px;background:var(--border-color);border-radius:3px;overflow:hidden">
+                            <div style="height:100%;width:${pctAll}%;background:linear-gradient(90deg,var(--accent-cyan2),var(--accent-cyan));border-radius:3px;transition:width .6s ease"></div>
+                        </div>
+                    </div>
+                    <div class="text-xl font-bold font-mono flex-shrink-0" style="color:var(--accent-cyan)">${pctAll}%</div>
+                </div>
+            ` : ''}
+
+            <!-- Accordion -->
+            <div class="rounded-xl overflow-hidden" style="border:1px solid var(--border-color)">
                 ${accordionHTML}
             </div>
         </div>
     `;
-    appContent.innerHTML = pageHTML;
+
     setupAccordionListeners();
 }
 
@@ -2997,16 +3162,13 @@ function openSprintLatihan(itemId, filePath) {
         return;
     }
 
-    // Cari item di sprint data
     let foundItem = null;
-    if (allContentData.sprintMateri) {
-        for (const sprint of allContentData.sprintMateri) {
-            for (const subKey in sprint.content) {
-                const item = sprint.content[subKey].find(i => i.id === itemId);
-                if (item) { foundItem = item; break; }
-            }
-            if (foundItem) break;
+    for (const sprint of allContentData.sprintMateri) {
+        for (const subKey in sprint.content) {
+            const item = sprint.content[subKey].find(i => i.id === itemId);
+            if (item) { foundItem = item; break; }
         }
+        if (foundItem) break;
     }
 
     if (foundItem) {
@@ -3019,6 +3181,7 @@ function openSprintLatihan(itemId, filePath) {
 
     window.location.href = filePath;
 }
+
 </script>
 </body>
 </html>
