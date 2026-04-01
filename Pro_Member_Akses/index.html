@@ -433,6 +433,85 @@ input:focus { border-color: var(--accent-cyan) !important; outline: none; }
         .lib-card-author { font-size: 11px; color: var(--text-secondary); margin: 0 0 8px; display: flex; align-items: center; gap: 5px; }
         .lib-card-summary { font-size: 11px; color: var(--text-secondary); line-height: 1.55; margin: 0 0 10px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
         .lib-card-footer { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: var(--accent-cyan); border-top: 1px solid var(--border-color); padding-top: 10px; }
+/* ── MOBILE BOTTOM NAV (new) ── */
+@media (max-width: 767px) {
+  #sidebar-nav { display: flex !important; overflow: visible !important; height: 100% !important; }
+  #sidebar-nav > div { display: flex !important; flex-direction: row !important; width: 100% !important; }
+  .nav-item-mobile { display: flex !important; }
+  .nav-item-desktop-only { display: none !important; }
+}
+
+/* ── MORE DRAWER ── */
+#more-drawer {
+  position: fixed;
+  bottom: 64px;
+  left: 0; right: 0;
+  background: var(--bg-panel);
+  border-top: 1px solid var(--border-color2);
+  border-radius: 1.25rem 1.25rem 0 0;
+  z-index: 9998;
+  padding: 1rem 1rem 0.5rem;
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 -8px 32px rgba(0,0,0,0.4);
+}
+#more-drawer.open {
+  transform: translateY(0);
+}
+#more-drawer-overlay {
+  position: fixed; inset: 0;
+  z-index: 9997;
+  background: rgba(4,8,18,0.6);
+  backdrop-filter: blur(4px);
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+#more-drawer-overlay.open {
+  display: block;
+  opacity: 1;
+}
+.drawer-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 0.75rem;
+}
+.drawer-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 6px;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  border: 1px solid var(--border-color);
+  background: var(--bg-panel2);
+  transition: all 0.2s;
+  color: var(--text-secondary);
+}
+.drawer-item:hover, .drawer-item.active {
+  border-color: rgba(34,211,238,0.35);
+  background: var(--accent-cyan-dim);
+  color: var(--accent-cyan);
+}
+.drawer-item i { font-size: 16px; }
+.drawer-item span { font-size: 10px; font-weight: 600; }
+.drawer-handle {
+  width: 36px; height: 4px;
+  background: var(--border-color2);
+  border-radius: 2px;
+  margin: 0 auto 0.75rem;
+}
+.drawer-section-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+  margin-bottom: 8px;
+}
     </style>
 </head>
 <body class="text-white">
@@ -440,150 +519,136 @@ input:focus { border-color: var(--accent-cyan) !important; outline: none; }
     <div class="flex min-h-screen">
         <aside class="fixed bottom-0 left-0 z-50 w-full bg-[var(--bg-panel)] border-t border-[var(--border-color)] md:relative md:w-60 md:h-screen md:flex md:flex-col md:border-t-0 md:border-r">
 
-    <!-- Logo (desktop only) -->
-            <div class="hidden md:flex items-center gap-3 px-5 py-5 border-b border-[var(--border-color)]">
-                <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-black text-sm font-mono flex-shrink-0"
-                    style="background: linear-gradient(135deg, #0EA5E9, #22D3EE)">U</div>
-                <div>
-                    <div class="text-sm font-bold text-white leading-tight">UMT Pro</div>
-                    <div class="text-[10px] text-[var(--text-secondary)] uppercase tracking-widest">Command Center</div>
-                </div>
-            </div>
+  <!-- Logo (desktop only) -->
+  <div class="hidden md:flex items-center gap-3 px-5 py-5 border-b border-[var(--border-color)]">
+    <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-black text-sm font-mono flex-shrink-0"
+        style="background: linear-gradient(135deg, #0EA5E9, #22D3EE)">U</div>
+    <div>
+      <div class="text-sm font-bold text-white leading-tight">UMT Pro</div>
+      <div class="text-[10px] text-[var(--text-secondary)] uppercase tracking-widest">Command Center</div>
+    </div>
+  </div>
 
-    <!-- Nav wrapper -->
-            <div class="relative w-full h-16 md:h-auto md:flex-1 md:overflow-y-auto md:py-3">
+  <!-- DESKTOP: full sidebar nav -->
+  <div class="hidden md:block relative flex-1 overflow-y-auto py-3">
+    <nav class="px-3 space-y-0.5">
+      <div class="px-2 pt-2 pb-1"><span class="text-[9px] font-bold uppercase tracking-[0.12em] text-[var(--text-subtle)]">Utama</span></div>
+      <a href="#" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-[var(--text-secondary)] hover:text-white transition-colors" onclick="event.preventDefault(); navigateTo('dashboard', this)"><i class="fa-solid fa-chart-pie w-4 text-sm"></i><span>Dashboard</span></a>
+      <a href="#" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-[var(--text-secondary)] hover:text-white transition-colors" onclick="event.preventDefault(); navigateTo('materi', this)"><i class="fa-solid fa-book w-4 text-sm"></i><span>Materi</span></a>
+      <a href="#" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-[var(--text-secondary)] hover:text-white transition-colors" onclick="event.preventDefault(); navigateTo('perpustakaan', this)"><i class="fa-solid fa-book-atlas w-4 text-sm"></i><span>Perpustakaan</span></a>
+      <a href="#" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-[var(--text-secondary)] hover:text-white transition-colors" onclick="event.preventDefault(); navigateTo('bank_soal', this)"><i class="fa-solid fa-list-check w-4 text-sm"></i><span>Bank Soal</span></a>
+      <div class="px-2 pt-4 pb-1"><span class="text-[9px] font-bold uppercase tracking-[0.12em] text-[var(--text-subtle)]">Persiapan</span></div>
+      <a href="#" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-[var(--text-secondary)] hover:text-white transition-colors" onclick="event.preventDefault(); navigateTo('snbt_tka', this)"><i class="fa-solid fa-graduation-cap w-4 text-sm"></i><span>SNBT / TKA</span></a>
+      <a href="#" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-[var(--text-secondary)] hover:text-white transition-colors" onclick="event.preventDefault(); navigateTo('sprint_materi', this)"><i class="fa-solid fa-bolt w-4 text-sm"></i><span>Sprint Materi</span></a>
+      <div class="px-2 pt-4 pb-1"><span class="text-[9px] font-bold uppercase tracking-[0.12em] text-[var(--text-subtle)]">Eksplorasi</span></div>
+      <a href="#" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-[var(--text-secondary)] hover:text-white transition-colors" onclick="event.preventDefault(); navigateTo('umt_lab', this)"><i class="fa-solid fa-flask-vial w-4 text-sm"></i><span>UMT Lab</span></a>
+      <a href="#" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-[var(--text-secondary)] hover:text-white transition-colors" onclick="event.preventDefault(); navigateTo('video', this)"><i class="fa-solid fa-video w-4 text-sm"></i><span>Video</span></a>
+      <a href="#" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-[var(--text-secondary)] hover:text-white transition-colors" onclick="event.preventDefault(); navigateTo('forum', this)"><i class="fa-solid fa-comments w-4 text-sm"></i><span>Forum</span></a>
+      <div class="px-2 pt-4 pb-1"><span class="text-[9px] font-bold uppercase tracking-[0.12em] text-[var(--text-subtle)]">Lainnya</span></div>
+      <a href="#" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-[var(--text-secondary)] hover:text-white transition-colors" onclick="event.preventDefault(); navigateTo('kamus', this)"><i class="fa-solid fa-spell-check w-4 text-sm"></i><span>Kamus</span></a>
+      <a href="#" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-[var(--text-secondary)] hover:text-white transition-colors" onclick="event.preventDefault(); navigateTo('informasi', this)"><i class="fa-solid fa-info-circle w-4 text-sm"></i><span>Informasi</span></a>
+      <a href="#" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-[var(--text-secondary)] hover:text-white transition-colors" onclick="event.preventDefault(); navigateTo('pengaturan', this)"><i class="fa-solid fa-user-gear w-4 text-sm"></i><span>Pengaturan</span></a>
+    </nav>
+  </div>
 
-        <!-- Mobile scroll buttons -->
-                <button id="nav-scroll-left"
-                        class="md:hidden absolute left-0 top-0 bottom-0 z-20 w-8 flex items-center justify-center bg-gradient-to-r from-[var(--bg-panel)] to-transparent text-white opacity-0 pointer-events-none transition-opacity duration-300">
-                    <i class="fa-solid fa-chevron-left text-xs drop-shadow"></i>
-                </button>
+  <!-- MOBILE: 4 tab tetap di bottom -->
+  <nav class="md:hidden flex h-16 w-full" id="mobile-bottom-nav">
+    <!-- Slot 1: Dashboard -->
+    <a href="#" id="mob-tab-0" data-page="dashboard"
+       class="mobile-tab flex flex-col items-center justify-center flex-1 gap-1 text-[var(--text-secondary)] transition-colors"
+       onclick="event.preventDefault(); mobileNavTo('dashboard', 0)">
+      <i class="fa-solid fa-chart-pie text-base"></i>
+      <span class="text-[10px] font-semibold">Dash</span>
+    </a>
+    <!-- Slot 2: Materi -->
+    <a href="#" id="mob-tab-1" data-page="materi"
+       class="mobile-tab flex flex-col items-center justify-center flex-1 gap-1 text-[var(--text-secondary)] transition-colors"
+       onclick="event.preventDefault(); mobileNavTo('materi', 1)">
+      <i class="fa-solid fa-book text-base"></i>
+      <span class="text-[10px] font-semibold">Materi</span>
+    </a>
+    <!-- Slot 3: Sprint -->
+    <a href="#" id="mob-tab-2" data-page="sprint_materi"
+       class="mobile-tab flex flex-col items-center justify-center flex-1 gap-1 text-[var(--text-secondary)] transition-colors"
+       onclick="event.preventDefault(); mobileNavTo('sprint_materi', 2)">
+      <i class="fa-solid fa-bolt text-base"></i>
+      <span class="text-[10px] font-semibold">Sprint</span>
+    </a>
+    <!-- Slot 4: Dinamis (default: Bank Soal) -->
+    <a href="#" id="mob-tab-3" data-page="bank_soal"
+       class="mobile-tab flex flex-col items-center justify-center flex-1 gap-1 text-[var(--text-secondary)] transition-colors"
+       onclick="event.preventDefault(); mobileNavTo(document.getElementById('mob-tab-3').dataset.page, 3)">
+      <i class="fa-solid fa-list-check text-base" id="mob-tab-3-icon"></i>
+      <span class="text-[10px] font-semibold" id="mob-tab-3-label">Soal</span>
+    </a>
+    <!-- Tombol More -->
+    <button id="mob-more-btn"
+            class="flex flex-col items-center justify-center flex-1 gap-1 text-[var(--text-secondary)] transition-colors"
+            onclick="toggleMoreDrawer()">
+      <i class="fa-solid fa-grip text-base" id="mob-more-icon"></i>
+      <span class="text-[10px] font-semibold">Lainnya</span>
+    </button>
+  </nav>
 
-                <nav id="sidebar-nav"
-                    class="no-scrollbar flex overflow-x-auto h-full md:flex-col md:h-auto md:overflow-visible md:px-3 md:space-y-0.5">
-                    <div class="flex flex-nowrap items-center h-full w-full md:flex-col md:items-stretch md:gap-0 md:w-auto">
+  <!-- Desktop footer user card -->
+  <div class="hidden md:block px-3 py-3 border-t border-[var(--border-color)]">
+    <div class="flex items-center gap-3 px-3 py-2 rounded-xl bg-[var(--bg-panel2)] border border-[var(--border-color)]">
+      <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-black flex-shrink-0"
+          style="background: linear-gradient(135deg, #0EA5E9, #22D3EE)" id="sidebar-avatar">M</div>
+      <div class="flex-1 min-w-0">
+        <div class="text-xs font-semibold text-white truncate" id="sidebar-username">member</div>
+        <div class="text-[10px] text-[var(--text-secondary)]">Pro Member</div>
+      </div>
+      <button onclick="logout()"
+              class="w-7 h-7 flex items-center justify-center rounded-lg text-[var(--text-secondary)] hover:bg-red-500/10 hover:text-[var(--accent-red)] transition-colors text-xs"
+              title="Logout">
+        <i class="fa-solid fa-right-from-bracket"></i>
+      </button>
+    </div>
+  </div>
+</aside>
 
-                <!-- Mobile: semua item flat | Desktop: grouped -->
+<!-- More Drawer Overlay -->
+<div id="more-drawer-overlay" onclick="toggleMoreDrawer()"></div>
 
-                <!-- GROUP: Utama (label hidden on mobile) -->
-                        <div class="hidden md:block px-2 pt-2 pb-1">
-                            <span class="text-[9px] font-bold uppercase tracking-[0.12em] text-[var(--text-subtle)]">Utama</span>
-                        </div>
+<!-- More Drawer Panel -->
+<div id="more-drawer">
+  <div class="drawer-handle"></div>
 
-                        <a href="#" class="sidebar-link bottom-nav-link flex-shrink-0 w-[25vw] md:w-full flex flex-col items-center justify-center p-2 text-center text-[var(--text-secondary)] hover:text-white md:rounded-lg md:flex-row md:justify-start md:gap-3 md:px-3 md:py-2 md:text-sm transition-colors"
-                        onclick="event.preventDefault(); navigateTo('dashboard', this)">
-                            <i class="fa-solid fa-chart-pie text-base md:text-sm md:w-4"></i>
-                            <span class="text-[10px] mt-1 md:text-sm md:mt-0 truncate w-full md:w-auto">Dash</span>
-                        </a>
+  <div class="drawer-section-label">Menu Utama</div>
+  <div class="drawer-grid" id="drawer-main-grid">
+    <div class="drawer-item" data-page="perpustakaan" data-icon="fa-solid fa-book-atlas" data-label="Perpus" onclick="mobileNavFromDrawer('perpustakaan','fa-solid fa-book-atlas','Perpus')">
+      <i class="fa-solid fa-book-atlas"></i><span>Perpus</span>
+    </div>
+    <div class="drawer-item" data-page="snbt_tka" data-icon="fa-solid fa-graduation-cap" data-label="SNBT" onclick="mobileNavFromDrawer('snbt_tka','fa-solid fa-graduation-cap','SNBT')">
+      <i class="fa-solid fa-graduation-cap"></i><span>SNBT</span>
+    </div>
+    <div class="drawer-item" data-page="umt_lab" data-icon="fa-solid fa-flask-vial" data-label="Lab" onclick="mobileNavFromDrawer('umt_lab','fa-solid fa-flask-vial','Lab')">
+      <i class="fa-solid fa-flask-vial"></i><span>Lab</span>
+    </div>
+    <div class="drawer-item" data-page="video" data-icon="fa-solid fa-video" data-label="Video" onclick="mobileNavFromDrawer('video','fa-solid fa-video','Video')">
+      <i class="fa-solid fa-video"></i><span>Video</span>
+    </div>
+  </div>
 
-                        <a href="#" class="sidebar-link bottom-nav-link flex-shrink-0 w-[25vw] md:w-full flex flex-col items-center justify-center p-2 text-center text-[var(--text-secondary)] hover:text-white md:rounded-lg md:flex-row md:justify-start md:gap-3 md:px-3 md:py-2 md:text-sm transition-colors"
-                        onclick="event.preventDefault(); navigateTo('materi', this)">
-                            <i class="fa-solid fa-book text-base md:text-sm md:w-4"></i>
-                            <span class="text-[10px] mt-1 md:text-sm md:mt-0 truncate w-full md:w-auto">Materi</span>
-                        </a>
+  <div class="drawer-section-label" style="margin-top:4px">Lainnya</div>
+  <div class="drawer-grid">
+    <div class="drawer-item" data-page="forum" data-icon="fa-solid fa-comments" data-label="Forum" onclick="mobileNavFromDrawer('forum','fa-solid fa-comments','Forum')">
+      <i class="fa-solid fa-comments"></i><span>Forum</span>
+    </div>
+    <div class="drawer-item" data-page="kamus" data-icon="fa-solid fa-spell-check" data-label="Kamus" onclick="mobileNavFromDrawer('kamus','fa-solid fa-spell-check','Kamus')">
+      <i class="fa-solid fa-spell-check"></i><span>Kamus</span>
+    </div>
+    <div class="drawer-item" data-page="informasi" data-icon="fa-solid fa-info-circle" data-label="Info" onclick="mobileNavFromDrawer('informasi','fa-solid fa-info-circle','Info')">
+      <i class="fa-solid fa-info-circle"></i><span>Info</span>
+    </div>
+    <div class="drawer-item" data-page="pengaturan" data-icon="fa-solid fa-user-gear" data-label="Akun" onclick="mobileNavFromDrawer('pengaturan','fa-solid fa-user-gear','Akun')">
+      <i class="fa-solid fa-user-gear"></i><span>Akun</span>
+    </div>
+  </div>
 
-                        <a href="#" class="sidebar-link bottom-nav-link flex-shrink-0 w-[25vw] md:w-full flex flex-col items-center justify-center p-2 text-center text-[var(--text-secondary)] hover:text-white md:rounded-lg md:flex-row md:justify-start md:gap-3 md:px-3 md:py-2 md:text-sm transition-colors"
-                        onclick="event.preventDefault(); navigateTo('perpustakaan', this)">
-                            <i class="fa-solid fa-book-atlas text-base md:text-sm md:w-4"></i>
-                            <span class="text-[10px] mt-1 md:text-sm md:mt-0 truncate w-full md:w-auto">Perpus</span>
-                        </a>
-
-                        <a href="#" class="sidebar-link bottom-nav-link flex-shrink-0 w-[25vw] md:w-full flex flex-col items-center justify-center p-2 text-center text-[var(--text-secondary)] hover:text-white md:rounded-lg md:flex-row md:justify-start md:gap-3 md:px-3 md:py-2 md:text-sm transition-colors"
-                        onclick="event.preventDefault(); navigateTo('bank_soal', this)">
-                            <i class="fa-solid fa-list-check text-base md:text-sm md:w-4"></i>
-                            <span class="text-[10px] mt-1 md:text-sm md:mt-0 truncate w-full md:w-auto">Soal</span>
-                        </a>
-
-                <!-- GROUP: Persiapan -->
-                        <div class="hidden md:block px-2 pt-4 pb-1">
-                            <span class="text-[9px] font-bold uppercase tracking-[0.12em] text-[var(--text-subtle)]">Persiapan</span>
-                        </div>
-
-                        <a href="#" class="sidebar-link bottom-nav-link flex-shrink-0 w-[25vw] md:w-full flex flex-col items-center justify-center p-2 text-center text-[var(--text-secondary)] hover:text-white md:rounded-lg md:flex-row md:justify-start md:gap-3 md:px-3 md:py-2 md:text-sm transition-colors"
-                        onclick="event.preventDefault(); navigateTo('snbt_tka', this)">
-                            <i class="fa-solid fa-graduation-cap text-base md:text-sm md:w-4"></i>
-                            <span class="text-[10px] mt-1 md:text-sm md:mt-0 truncate w-full md:w-auto">SNBT</span>
-                        </a>
-
-                        <a href="#" class="sidebar-link bottom-nav-link flex-shrink-0 w-[25vw] md:w-full flex flex-col items-center justify-center p-2 text-center text-[var(--text-secondary)] hover:text-white md:rounded-lg md:flex-row md:justify-start md:gap-3 md:px-3 md:py-2 md:text-sm transition-colors"
-                        onclick="event.preventDefault(); navigateTo('sprint_materi', this)">
-                            <i class="fa-solid fa-bolt text-base md:text-sm md:w-4"></i>
-                            <span class="text-[10px] mt-1 md:text-sm md:mt-0 truncate w-full md:w-auto">Sprint</span>
-                        </a>
-
-                <!-- GROUP: Eksplorasi -->
-                        <div class="hidden md:block px-2 pt-4 pb-1">
-                            <span class="text-[9px] font-bold uppercase tracking-[0.12em] text-[var(--text-subtle)]">Eksplorasi</span>
-                        </div>
-
-                        <a href="#" class="sidebar-link bottom-nav-link flex-shrink-0 w-[25vw] md:w-full flex flex-col items-center justify-center p-2 text-center text-[var(--text-secondary)] hover:text-white md:rounded-lg md:flex-row md:justify-start md:gap-3 md:px-3 md:py-2 md:text-sm transition-colors"
-                        onclick="event.preventDefault(); navigateTo('umt_lab', this)">
-                            <i class="fa-solid fa-flask-vial text-base md:text-sm md:w-4"></i>
-                            <span class="text-[10px] mt-1 md:text-sm md:mt-0 truncate w-full md:w-auto">Lab</span>
-                        </a>
-
-                        <a href="#" class="sidebar-link bottom-nav-link flex-shrink-0 w-[25vw] md:w-full flex flex-col items-center justify-center p-2 text-center text-[var(--text-secondary)] hover:text-white md:rounded-lg md:flex-row md:justify-start md:gap-3 md:px-3 md:py-2 md:text-sm transition-colors"
-                        onclick="event.preventDefault(); navigateTo('video', this)">
-                            <i class="fa-solid fa-video text-base md:text-sm md:w-4"></i>
-                            <span class="text-[10px] mt-1 md:text-sm md:mt-0 truncate w-full md:w-auto">Video</span>
-                        </a>
-
-                        <a href="#" class="sidebar-link bottom-nav-link flex-shrink-0 w-[25vw] md:w-full flex flex-col items-center justify-center p-2 text-center text-[var(--text-secondary)] hover:text-white md:rounded-lg md:flex-row md:justify-start md:gap-3 md:px-3 md:py-2 md:text-sm transition-colors"
-                        onclick="event.preventDefault(); navigateTo('forum', this)">
-                            <i class="fa-solid fa-comments text-base md:text-sm md:w-4"></i>
-                            <span class="text-[10px] mt-1 md:text-sm md:mt-0 truncate w-full md:w-auto">Forum</span>
-                        </a>
-
-                <!-- GROUP: Lainnya -->
-                        <div class="hidden md:block px-2 pt-4 pb-1">
-                            <span class="text-[9px] font-bold uppercase tracking-[0.12em] text-[var(--text-subtle)]">Lainnya</span>
-                        </div>
-
-                        <a href="#" class="sidebar-link bottom-nav-link flex-shrink-0 w-[25vw] md:w-full flex flex-col items-center justify-center p-2 text-center text-[var(--text-secondary)] hover:text-white md:rounded-lg md:flex-row md:justify-start md:gap-3 md:px-3 md:py-2 md:text-sm transition-colors"
-                        onclick="event.preventDefault(); navigateTo('kamus', this)">
-                            <i class="fa-solid fa-spell-check text-base md:text-sm md:w-4"></i>
-                            <span class="text-[10px] mt-1 md:text-sm md:mt-0 truncate w-full md:w-auto">Kamus</span>
-                        </a>
-
-                        <a href="#" class="sidebar-link bottom-nav-link flex-shrink-0 w-[25vw] md:w-full flex flex-col items-center justify-center p-2 text-center text-[var(--text-secondary)] hover:text-white md:rounded-lg md:flex-row md:justify-start md:gap-3 md:px-3 md:py-2 md:text-sm transition-colors"
-                        onclick="event.preventDefault(); navigateTo('informasi', this)">
-                            <i class="fa-solid fa-info-circle text-base md:text-sm md:w-4"></i>
-                            <span class="text-[10px] mt-1 md:text-sm md:mt-0 truncate w-full md:w-auto">Info</span>
-                        </a>
-
-                        <a href="#" class="sidebar-link bottom-nav-link flex-shrink-0 w-[25vw] md:w-full flex flex-col items-center justify-center p-2 text-center text-[var(--text-secondary)] hover:text-white md:rounded-lg md:flex-row md:justify-start md:gap-3 md:px-3 md:py-2 md:text-sm transition-colors"
-                        onclick="event.preventDefault(); navigateTo('pengaturan', this)">
-                            <i class="fa-solid fa-user-gear text-base md:text-sm md:w-4"></i>
-                            <span class="text-[10px] mt-1 md:text-sm md:mt-0 truncate w-full md:w-auto">Akun</span>
-                        </a>
-
-                    </div>
-                </nav>
-
-                <button id="nav-scroll-right"
-                        class="md:hidden absolute right-0 top-0 bottom-0 z-20 w-8 flex items-center justify-center bg-gradient-to-l from-[var(--bg-panel)] to-transparent text-white opacity-0 pointer-events-none transition-opacity duration-300">
-                    <i class="fa-solid fa-chevron-right text-xs drop-shadow"></i>
-                </button>
-            </div>
-
-    <!-- Footer: user card + logout (desktop only) -->
-            <div class="hidden md:block px-3 py-3 border-t border-[var(--border-color)]">
-                <div class="flex items-center gap-3 px-3 py-2 rounded-xl bg-[var(--bg-panel2)] border border-[var(--border-color)]">
-                    <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-black flex-shrink-0"
-                        style="background: linear-gradient(135deg, #0EA5E9, #22D3EE)" id="sidebar-avatar">M</div>
-                    <div class="flex-1 min-w-0">
-                        <div class="text-xs font-semibold text-white truncate" id="sidebar-username">member</div>
-                        <div class="text-[10px] text-[var(--text-secondary)]">Pro Member</div>
-                    </div>
-                    <button onclick="logout()"
-                            class="w-7 h-7 flex items-center justify-center rounded-lg text-[var(--text-secondary)] hover:bg-red-500/10 hover:text-[var(--accent-red)] transition-colors text-xs"
-                            title="Logout">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                    </button>
-                </div>
-            </div>
-
-        </aside>
+  <div style="height: 0.5rem;"></div>
+</div>
 
         <main id="app-content" class="flex-1 p-4 md:p-6 space-y-6 pb-24 md:pb-6 overflow-x-hidden"></main>
     </div>
@@ -2823,6 +2888,75 @@ function showConfirmationModal(options) {
         });
     }
 }
+
+// ── MOBILE NAV SYSTEM ──
+const MOBILE_FIXED_TABS = [
+  { page: 'dashboard', icon: 'fa-solid fa-chart-pie', label: 'Dash' },
+  { page: 'materi',    icon: 'fa-solid fa-book',       label: 'Materi' },
+  { page: 'sprint_materi', icon: 'fa-solid fa-bolt',   label: 'Sprint' },
+];
+
+let mobileMoreOpen = false;
+
+function mobileNavTo(page, slotIndex) {
+  closeMoreDrawer();
+  updateMobileTabs(page);
+  navigateTo(page, null);
+}
+
+function mobileNavFromDrawer(page, icon, label) {
+  // Ganti slot ke-4 dengan item yang dipilih
+  const slot3 = document.getElementById('mob-tab-3');
+  const slot3Icon = document.getElementById('mob-tab-3-icon');
+  const slot3Label = document.getElementById('mob-tab-3-label');
+  if (slot3 && slot3Icon && slot3Label) {
+    slot3.dataset.page = page;
+    // Ganti icon: hapus semua class fa- lalu set baru
+    slot3Icon.className = icon + ' text-base';
+    slot3Label.textContent = label;
+  }
+  closeMoreDrawer();
+  updateMobileTabs(page);
+  navigateTo(page, null);
+}
+
+function updateMobileTabs(activePage) {
+  document.querySelectorAll('.mobile-tab').forEach(tab => {
+    const isActive = tab.dataset.page === activePage;
+    tab.style.color = isActive ? 'var(--accent-cyan)' : 'var(--text-secondary)';
+  });
+  // Update desktop sidebar juga
+  document.querySelectorAll('.sidebar-link').forEach(link => link.classList.remove('active'));
+  const desktopLink = document.querySelector(`.sidebar-link[onclick*="'${activePage}'"]`);
+  if (desktopLink) desktopLink.classList.add('active');
+  // Update drawer items
+  document.querySelectorAll('.drawer-item').forEach(item => {
+    item.classList.toggle('active', item.dataset.page === activePage);
+  });
+}
+
+function toggleMoreDrawer() {
+  mobileMoreOpen ? closeMoreDrawer() : openMoreDrawer();
+}
+
+function openMoreDrawer() {
+  mobileMoreOpen = true;
+  document.getElementById('more-drawer').classList.add('open');
+  const overlay = document.getElementById('more-drawer-overlay');
+  overlay.style.display = 'block';
+  requestAnimationFrame(() => overlay.classList.add('open'));
+  document.getElementById('mob-more-icon').className = 'fa-solid fa-xmark text-base';
+}
+
+function closeMoreDrawer() {
+  mobileMoreOpen = false;
+  document.getElementById('more-drawer').classList.remove('open');
+  const overlay = document.getElementById('more-drawer-overlay');
+  overlay.classList.remove('open');
+  setTimeout(() => { if (!mobileMoreOpen) overlay.style.display = 'none'; }, 300);
+  document.getElementById('mob-more-icon').className = 'fa-solid fa-grip text-base';
+}
+
 function initializeApp() {
     const token = sessionStorage.getItem(CONFIG.SESSION_KEYS.TOKEN);
     const email = sessionStorage.getItem(CONFIG.SESSION_KEYS.EMAIL);
