@@ -519,6 +519,12 @@ input:focus { border-color: var(--accent-cyan) !important; outline: none; }
   color: var(--text-subtle);
   margin-bottom: 8px;
 }
+/* ── BODY LOCK SAAT DRAWER OPEN ── */
+body.drawer-open {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+}
     </style>
 </head>
 <body class="text-white">
@@ -2959,6 +2965,8 @@ function openMoreDrawer() {
   drawer.classList.add('open');
   overlay.classList.add('open');
   document.getElementById('mob-more-icon').className = 'fa-solid fa-xmark text-base';
+  // Kunci scroll
+  document.body.classList.add('drawer-open');
 }
 
 function closeMoreDrawer() {
@@ -2968,6 +2976,8 @@ function closeMoreDrawer() {
   drawer.classList.remove('open');
   overlay.classList.remove('open');
   document.getElementById('mob-more-icon').className = 'fa-solid fa-grip text-base';
+  // Bebaskan scroll
+  document.body.classList.remove('drawer-open');
 }
 
 function initializeApp() {
