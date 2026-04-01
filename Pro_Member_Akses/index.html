@@ -442,6 +442,9 @@ input:focus { border-color: var(--accent-cyan) !important; outline: none; }
 }
 
 /* ── MORE DRAWER ── */
+
+
+
 #more-drawer {
   position: fixed;
   bottom: 64px;
@@ -451,25 +454,29 @@ input:focus { border-color: var(--accent-cyan) !important; outline: none; }
   border-radius: 1.25rem 1.25rem 0 0;
   z-index: 9998;
   padding: 1rem 1rem 0.5rem;
-  transform: translateY(100%);
+  transform: translateY(110%);
   transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 -8px 32px rgba(0,0,0,0.4);
+  visibility: hidden;
 }
 #more-drawer.open {
   transform: translateY(0);
+  visibility: visible;
 }
 #more-drawer-overlay {
   position: fixed; inset: 0;
   z-index: 9997;
   background: rgba(4,8,18,0.6);
   backdrop-filter: blur(4px);
-  display: none;
+  visibility: hidden;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  pointer-events: none;
 }
 #more-drawer-overlay.open {
-  display: block;
+  visibility: visible;
   opacity: 1;
+  pointer-events: auto;
 }
 .drawer-grid {
   display: grid;
@@ -517,8 +524,7 @@ input:focus { border-color: var(--accent-cyan) !important; outline: none; }
 <body class="text-white">
 
     <div class="flex min-h-screen">
-        <aside class="fixed bottom-0 left-0 z-50 w-full bg-[var(--bg-panel)] border-t border-[var(--border-color)] md:relative md:w-60 md:h-screen md:flex md:flex-col md:border-t-0 md:border-r">
-
+<aside class="fixed bottom-0 left-0 z-[9999] w-full bg-[var(--bg-panel)] border-t border-[var(--border-color)] md:relative md:z-auto md:w-60 md:h-screen md:flex md:flex-col md:border-t-0 md:border-r"></aside>
   <!-- Logo (desktop only) -->
   <div class="hidden md:flex items-center gap-3 px-5 py-5 border-b border-[var(--border-color)]">
     <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-black text-sm font-mono flex-shrink-0"
@@ -650,7 +656,7 @@ input:focus { border-color: var(--accent-cyan) !important; outline: none; }
   <div style="height: 0.5rem;"></div>
 </div>
 
-        <main id="app-content" class="flex-1 p-4 md:p-6 space-y-6 pb-24 md:pb-6 overflow-x-hidden"></main>
+        <main id="app-content" class="flex-1 p-4 md:p-6 space-y-6 pb-20 md:pb-6 overflow-x-hidden"></main>
     </div>
 
     <div id="toast-container" class="fixed top-5 right-5 z-[99999] space-y-3 w-80"></div>
@@ -2941,19 +2947,19 @@ function toggleMoreDrawer() {
 
 function openMoreDrawer() {
   mobileMoreOpen = true;
-  document.getElementById('more-drawer').classList.add('open');
+  const drawer = document.getElementById('more-drawer');
   const overlay = document.getElementById('more-drawer-overlay');
-  overlay.style.display = 'block';
-  requestAnimationFrame(() => overlay.classList.add('open'));
+  drawer.classList.add('open');
+  overlay.classList.add('open');
   document.getElementById('mob-more-icon').className = 'fa-solid fa-xmark text-base';
 }
 
 function closeMoreDrawer() {
   mobileMoreOpen = false;
-  document.getElementById('more-drawer').classList.remove('open');
+  const drawer = document.getElementById('more-drawer');
   const overlay = document.getElementById('more-drawer-overlay');
+  drawer.classList.remove('open');
   overlay.classList.remove('open');
-  setTimeout(() => { if (!mobileMoreOpen) overlay.style.display = 'none'; }, 300);
   document.getElementById('mob-more-icon').className = 'fa-solid fa-grip text-base';
 }
 
