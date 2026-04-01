@@ -2911,15 +2911,17 @@ function mobileNavTo(page, slotIndex) {
 }
 
 function mobileNavFromDrawer(page, icon, label) {
-  // Ganti slot ke-4 dengan item yang dipilih
   const slot3 = document.getElementById('mob-tab-3');
   const slot3Icon = document.getElementById('mob-tab-3-icon');
   const slot3Label = document.getElementById('mob-tab-3-label');
   if (slot3 && slot3Icon && slot3Label) {
     slot3.dataset.page = page;
-    // Ganti icon: hapus semua class fa- lalu set baru
     slot3Icon.className = icon + ' text-base';
     slot3Label.textContent = label;
+    // Simpan ke sessionStorage
+    sessionStorage.setItem('mob_slot3_page', page);
+    sessionStorage.setItem('mob_slot3_icon', icon);
+    sessionStorage.setItem('mob_slot3_label', label);
   }
   closeMoreDrawer();
   updateMobileTabs(page);
@@ -2931,7 +2933,7 @@ function updateMobileTabs(activePage) {
     const isActive = tab.dataset.page === activePage;
     tab.style.color = isActive ? 'var(--accent-cyan)' : 'var(--text-secondary)';
   });
-  // Update desktop sidebar juga
+  // Update desktop sidebar
   document.querySelectorAll('.sidebar-link').forEach(link => link.classList.remove('active'));
   const desktopLink = document.querySelector(`.sidebar-link[onclick*="'${activePage}'"]`);
   if (desktopLink) desktopLink.classList.add('active');
@@ -2939,6 +2941,8 @@ function updateMobileTabs(activePage) {
   document.querySelectorAll('.drawer-item').forEach(item => {
     item.classList.toggle('active', item.dataset.page === activePage);
   });
+  // Simpan tab aktif mobile
+  sessionStorage.setItem('mob_active_tab', activePage);
 }
 
 function toggleMoreDrawer() {
@@ -2974,22 +2978,37 @@ function initializeApp() {
 
     startSessionHeartbeat(token, email);
 
-    // Update sidebar user info
     const sidebarEmail = email.split('@')[0];
     const el = document.getElementById('sidebar-username');
     const av = document.getElementById('sidebar-avatar');
     if (el) el.textContent = sidebarEmail.charAt(0).toUpperCase() + sidebarEmail.slice(1);
     if (av) av.textContent = sidebarEmail.charAt(0).toUpperCase();
 
-    startSessionHeartbeat(token, email);
+    // ── Restore slot ke-4 ──
+    const savedPage  = sessionStorage.getItem('mob_slot3_page');
+    const savedIcon  = sessionStorage.getItem('mob_slot3_icon');
+    const savedLabel = sessionStorage.getItem('mob_slot3_label');
+    if (savedPage && savedIcon && savedLabel) {
+        const slot3      = document.getElementById('mob-tab-3');
+        const slot3Icon  = document.getElementById('mob-tab-3-icon');
+        const slot3Label = document.getElementById('mob-tab-3-label');
+        if (slot3 && slot3Icon && slot3Label) {
+            slot3.dataset.page    = savedPage;
+            slot3Icon.className   = savedIcon + ' text-base';
+            slot3Label.textContent = savedLabel;
+        }
+    }
 
     const lastActivePage = sessionStorage.getItem('lastActivePage');
 
     if (lastActivePage) {
         const targetLink = document.querySelector(`.sidebar-link[onclick*="'${lastActivePage}'"]`);
         navigateTo(lastActivePage, targetLink);
+        // Restore highlight tab mobile
+        updateMobileTabs(lastActivePage);
     } else {
         navigateTo('dashboard', document.querySelector('.sidebar-link'));
+        updateMobileTabs('dashboard');
     }
 
     if (!sessionStorage.getItem(CONFIG.STORAGE_KEYS.WELCOME_POPUP)) {
