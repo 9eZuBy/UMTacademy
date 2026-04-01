@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -419,6 +418,21 @@ input:focus { border-color: var(--accent-cyan) !important; outline: none; }
     .quiz-nav-buttons { flex-direction: column; gap: 0.75rem; }
     .quiz-nav-buttons > button { width: 100%; justify-content: center; }
 }
+        .lib-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 16px; }
+        .lib-card { border-radius: 0.875rem; border: 1px solid var(--border-color); overflow: hidden; background: var(--bg-panel); cursor: pointer; transition: transform 0.2s, border-color 0.2s; }
+        .lib-card:hover { transform: translateY(-3px); border-color: var(--border-color2); }
+        .lib-card-hero { position: relative; height: 130px; overflow: hidden; background: #0a1628; }
+        .lib-card-hero-bg { width: 100%; height: 100%; object-fit: cover; filter: blur(8px) brightness(0.5) saturate(1.4); transform: scale(1.1); }
+        .lib-card-hero-bg-placeholder { width: 100%; height: 100%; background: linear-gradient(135deg, #0d2137 0%, #113a5c 100%); }
+        .lib-card-hero-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+        .lib-card-cover { width: 62px; height: 84px; border-radius: 5px; object-fit: cover; box-shadow: 0 6px 20px rgba(0,0,0,0.5); border: 1.5px solid rgba(255,255,255,0.15); }
+        .lib-card-cover-placeholder { width: 62px; height: 84px; border-radius: 5px; background: var(--bg-panel2); display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(0,0,0,0.5); border: 1.5px solid rgba(255,255,255,0.12); }
+        .lib-card-body { padding: 14px; }
+        .lib-card-badge { display: inline-block; font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 20px; margin-bottom: 8px; background: var(--accent-cyan-dim); color: var(--accent-cyan); letter-spacing: 0.04em; }
+        .lib-card-title { font-size: 13px; font-weight: 700; color: var(--text-primary); margin: 0 0 5px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .lib-card-author { font-size: 11px; color: var(--text-secondary); margin: 0 0 8px; display: flex; align-items: center; gap: 5px; }
+        .lib-card-summary { font-size: 11px; color: var(--text-secondary); line-height: 1.55; margin: 0 0 10px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .lib-card-footer { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: var(--accent-cyan); border-top: 1px solid var(--border-color); padding-top: 10px; }
     </style>
 </head>
 <body class="text-white">
@@ -2025,24 +2039,6 @@ function renderPerpustakaanPage() {
     }).join('');
 
     appContent.innerHTML = `
-        <style>
-        .lib-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 16px; }
-        .lib-card { border-radius: 0.875rem; border: 1px solid var(--border-color); overflow: hidden; background: var(--bg-panel); cursor: pointer; transition: transform 0.2s, border-color 0.2s; }
-        .lib-card:hover { transform: translateY(-3px); border-color: var(--border-color2); }
-        .lib-card-hero { position: relative; height: 130px; overflow: hidden; background: #0a1628; }
-        .lib-card-hero-bg { width: 100%; height: 100%; object-fit: cover; filter: blur(8px) brightness(0.5) saturate(1.4); transform: scale(1.1); }
-        .lib-card-hero-bg-placeholder { width: 100%; height: 100%; background: linear-gradient(135deg, #0d2137 0%, #113a5c 100%); }
-        .lib-card-hero-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
-        .lib-card-cover { width: 62px; height: 84px; border-radius: 5px; object-fit: cover; box-shadow: 0 6px 20px rgba(0,0,0,0.5); border: 1.5px solid rgba(255,255,255,0.15); }
-        .lib-card-cover-placeholder { width: 62px; height: 84px; border-radius: 5px; background: var(--bg-panel2); display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(0,0,0,0.5); border: 1.5px solid rgba(255,255,255,0.12); }
-        .lib-card-body { padding: 14px; }
-        .lib-card-badge { display: inline-block; font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 20px; margin-bottom: 8px; background: var(--accent-cyan-dim); color: var(--accent-cyan); letter-spacing: 0.04em; }
-        .lib-card-title { font-size: 13px; font-weight: 700; color: var(--text-primary); margin: 0 0 5px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; }
-        .lib-card-author { font-size: 11px; color: var(--text-secondary); margin: 0 0 8px; display: flex; align-items: center; gap: 5px; }
-        .lib-card-summary { font-size: 11px; color: var(--text-secondary); line-height: 1.55; margin: 0 0 10px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-        .lib-card-footer { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: var(--accent-cyan); border-top: 1px solid var(--border-color); padding-top: 10px; }
-        </style>
-
         <div class="panel">
             <div class="flex items-center gap-3 mb-6">
                 <div class="panel-title-icon">
