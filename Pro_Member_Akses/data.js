@@ -2349,7 +2349,7 @@ const allContentData = {
         subject: "Matematika",
         totalQuestions: 10,
         questions: [
-            {
+  {
     "questionText": "Diketahui $4^x - 4^{x-1} = 24$. Nilai dari $2^{2x}$ adalah ...",
     "options": [
       "A. $32$",
@@ -3372,116 +3372,116 @@ const allContentData = {
         "subject": "Matematika",
         "totalQuestions": 10,
         "questions": [
-            {
-                "questionText": "Jika $3^{x+1} = 81$, maka nilai $x$ adalah:",
-                "options": [
-                    "A. $2$",
-                    "B. $3$",
-                    "C. $4$",
-                    "D. $5$"
-                ],
-                "correctAnswer": "B. $3$",
-                "explanation": "Tulis $81$ sebagai pangkat dari 3: $81 = 3^4$. Maka, $3^{x+1} = 3^4$. Karena basis sama, samakan eksponen: $x + 1 = 4 \\Rightarrow x = 3$. Pilihan B sesuai."
-            },
-            {
-                "questionText": "Bentuk sederhana dari $\\dfrac{2^5 \\cdot 2^3}{2^4}$ adalah:",
-                "options": [
-                    "A. $2^4$",
-                    "B. $2^3$",
-                    "C. $2^2$",
-                    "D. $2^5$"
-                ],
-                "correctAnswer": "A. $2^4$",
-                "explanation": "Gunakan sifat eksponen: $\\dfrac{2^5 \\cdot 2^3}{2^4} = \\dfrac{2^{5+3}}{2^4} = 2^{8-4} = 2^4$. Pilihan A sesuai."
-            },
-            {
-                "questionText": "Jika $f(x) = 3^{2x - 1}$, maka nilai dari $f(2)$ adalah:",
-                "options": [
-                    "A. $3$",
-                    "B. $9$",
-                    "C. $27$",
-                    "D. $81$"
-                ],
-                "correctAnswer": "C. $27$",
-                "explanation": "Substitusi $x = 2$ ke $f(x) = 3^{2x - 1}$: $f(2) = 3^{2 \\cdot 2 - 1} = 3^{4 - 1} = 3^3 = 27$. Pilihan C sesuai."
-            },
-            {
-                "questionText": "Jika $2^x = 5$, maka nilai dari $2^{2x}$ adalah:",
-                "options": [
-                    "A. $10$",
-                    "B. $25$",
-                    "C. $20$",
-                    "D. $5$"
-                ],
-                "correctAnswer": "B. $25$",
-                "explanation": "Gunakan sifat eksponen: $2^{2x} = (2^x)^2$. Diketahui $2^x = 5$, sehingga $2^{2x} = 5^2 = 25$. Pilihan B sesuai."
-            },
-            {
-                "questionText": "Fungsi $f(x) = a^x$ memiliki grafik yang melalui titik $(2, 16)$ dan $(0, 1)$. Nilai dari $a$ adalah:",
-                "options": [
-                    "A. $2$",
-                    "B. $3$",
-                    "C. $4$",
-                    "D. $5$"
-                ],
-                "correctAnswer": "C. $4$",
-                "explanation": "Gunakan titik $(0, 1)$: $f(0) = a^0 = 1$, memenuhi untuk semua $a \\neq 0$. Gunakan titik $(2, 16)$: $f(2) = a^2 = 16 \\Rightarrow a = \\sqrt{16} = 4$ (karena $a > 0$ untuk fungsi eksponensial). Pilihan C sesuai."
-            },
-            {
-                "questionText": "Persamaan $5^{2x} = 125$ ekuivalen dengan:",
-                "options": [
-                    "A. $2x = 3$",
-                    "B. $x = 2$",
-                    "C. $x = 3$",
-                    "D. $5^x = 25$"
-                ],
-                "correctAnswer": "A. $2x = 3$",
-                "explanation": "Tulis $125$ sebagai pangkat dari 5: $125 = 5^3$. Maka, $5^{2x} = 5^3$. Samakan eksponen: $2x = 3$. Pilihan A sesuai."
-            },
-            {
-                "questionText": "Jika diketahui $a^x = b$ dan $a^y = c$, maka nilai dari $a^{x+y}$ adalah:",
-                "options": [
-                    "A. $bc$",
-                    "B. $b + c$",
-                    "C. $b \\cdot c$",
-                    "D. $\\dfrac{b}{c}$"
-                ],
-                "correctAnswer": "C. $b \\cdot c$",
-                "explanation": "Gunakan sifat eksponen: $a^{x+y} = a^x \\cdot a^y$. Diketahui $a^x = b$ dan $a^y = c$, sehingga $a^{x+y} = b \\cdot c$. Pilihan C sesuai."
-            },
-            {
-                "questionText": "Tentukan himpunan penyelesaian dari pertidaksamaan $3^x < 81$.",
-                "options": [
-                    "A. $x < 3$",
-                    "B. $x > 4$",
-                    "C. $x < 4$",
-                    "D. $x \\leq 4$"
-                ],
-                "correctAnswer": "C. $x < 4$",
-                "explanation": "Tulis $81$ sebagai pangkat dari 3: $81 = 3^4$. Maka, $3^x < 3^4$. Karena fungsi eksponensial $3^x$ monoton naik, maka $x < 4$. Pilihan C sesuai."
-            },
-            {
-                "questionText": "Jika $4^x = 2$, maka $x = \\ldots$",
-                "options": [
-                    "A. $\\dfrac{1}{2}$",
-                    "B. $1$",
-                    "C. $2$",
-                    "D. $\\dfrac{1}{4}$"
-                ],
-                "correctAnswer": "A. $\\dfrac{1}{2}$",
-                "explanation": "Tulis $4$ sebagai pangkat dari 2: $4 = 2^2$, sehingga $4^x = (2^2)^x = 2^{2x}$. Persamaan menjadi $2^{2x} = 2^1$. Samakan eksponen: $2x = 1 \\Rightarrow x = \\dfrac{1}{2}$. Pilihan A sesuai."
-            },
-            {
-                "questionText": "Nilai dari $\\left(\\dfrac{1}{3}\\right)^{-2}$ adalah:",
-                "options": [
-                    "A. $\\dfrac{1}{9}$",
-                    "B. $3$",
-                    "C. $6$",
-                    "D. $9$"
-                ],
-                "correctAnswer": "D. $9$",
-                "explanation": "Gunakan sifat eksponen: $\\left(\\dfrac{1}{3}\\right)^{-2} = 3^2 = 9$. Pilihan D sesuai."
-            }
+  {
+    "questionText": "Nilai dari $2^3 \\times 2^{-5} \\times 2^4$ adalah:",
+    "options": [
+      "A. $2$",
+      "B. $4$",
+      "C. $8$",
+      "D. $16$"
+    ],
+    "correctAnswer": "B. $4$",
+    "explanation": "Gunakan sifat perkalian eksponen dengan basis yang sama, yaitu menjumlahkan pangkatnya: $2^{3 + (-5) + 4} = 2^{3 - 5 + 4} = 2^2 = 4$. Pilihan B sesuai."
+  },
+  {
+    "questionText": "Nilai dari $27^{\\dfrac{2}{3}}$ adalah:",
+    "options": [
+      "A. $6$",
+      "B. $9$",
+      "C. $18$",
+      "D. $81$"
+    ],
+    "correctAnswer": "B. $9$",
+    "explanation": "Tulis $27$ sebagai pangkat dari 3, yaitu $27 = 3^3$. Substitusikan ke dalam soal: $(3^3)^{\\dfrac{2}{3}}$. Gunakan sifat $(a^m)^n = a^{m \\times n}$, sehingga $3^{3 \\times \\dfrac{2}{3}} = 3^2 = 9$. Pilihan B sesuai."
+  },
+  {
+    "questionText": "Penyelesaian dari persamaan $5^{3x-2} = 25^{x+1}$ adalah:",
+    "options": [
+      "A. $x = 2$",
+      "B. $x = 3$",
+      "C. $x = 4$",
+      "D. $x = 5$"
+    ],
+    "correctAnswer": "C. $x = 4$",
+    "explanation": "Samakan basis di kedua ruas. Ubah $25$ menjadi $5^2$, sehingga persamaan menjadi $5^{3x-2} = (5^2)^{x+1}$. Gunakan sifat pangkat: $5^{3x-2} = 5^{2(x+1)} \\Rightarrow 5^{3x-2} = 5^{2x+2}$. Karena basis sama, samakan eksponennya: $3x - 2 = 2x + 2 \\Rightarrow 3x - 2x = 2 + 2 \\Rightarrow x = 4$. Pilihan C sesuai."
+  },
+  {
+    "questionText": "Bentuk sederhana dari $\\left(\\dfrac{a^{-2}b^3}{a^3b^{-1}}\\right)^{-1}$ adalah:",
+    "options": [
+      "A. $\\dfrac{b^4}{a^5}$",
+      "B. $\\dfrac{a^5}{b^4}$",
+      "C. $a^5b^2$",
+      "D. $\\dfrac{a}{b^2}$"
+    ],
+    "correctAnswer": "B. $\\dfrac{a^5}{b^4$",
+    "explanation": "Sederhanakan pecahan di dalam kurung terlebih dahulu dengan sifat pembagian eksponen: $\\dfrac{a^{-2}}{a^3} = a^{-2-3} = a^{-5}$ dan $\\dfrac{b^3}{b^{-1}} = b^{3-(-1)} = b^4$. Bentuk menjadi $(a^{-5}b^4)^{-1}$. Kalikan pangkat luar ke dalam: $a^{-5 \\times (-1)}b^{4 \\times (-1)} = a^5b^{-4} = \\dfrac{a^5}{b^4}$. Pilihan B sesuai."
+  },
+  {
+    "questionText": "Jika $\\sqrt{3^{2x+1}} = 9$, maka nilai $x$ adalah:",
+    "options": [
+      "A. $\\dfrac{1}{2}$",
+      "B. $1$",
+      "C. $\\dfrac{3}{2}$",
+      "D. $2$"
+    ],
+    "correctAnswer": "C. $\\dfrac{3}{2}$",
+    "explanation": "Ubah bentuk akar menjadi pangkat pecahan dan samakan basis: $\\sqrt{3^{2x+1}} = 3^{\\dfrac{2x+1}{2}}$ dan $9 = 3^2$. Persamaan menjadi $3^{\\dfrac{2x+1}{2}} = 3^2$. Samakan eksponennya: $\\dfrac{2x+1}{2} = 2 \\Rightarrow 2x + 1 = 4 \\Rightarrow 2x = 3 \\Rightarrow x = \\dfrac{3}{2}$. Pilihan C sesuai."
+  },
+  {
+    "questionText": "Hasil dari $2^5 - 2^4 - 2^3$ adalah:",
+    "options": [
+      "A. $2^{-2}$",
+      "B. $2^2$",
+      "C. $2^3$",
+      "D. $2^4$"
+    ],
+    "correctAnswer": "C. $2^3$",
+    "explanation": "Faktorkan persamaan dengan mengeluarkan pangkat terkecil, yaitu $2^3$. Maka, $2^5 - 2^4 - 2^3 = 2^3(2^2 - 2^1 - 1)$. Hitung nilai di dalam kurung: $2^3(4 - 2 - 1) = 2^3(1) = 2^3$. Pilihan C sesuai."
+  },
+  {
+    "questionText": "Jika $p = 2$ dan $q = 3$, maka nilai dari $\\dfrac{p^3 q^{-2}}{p^{-1} q}$ adalah:",
+    "options": [
+      "A. $\\dfrac{8}{9}$",
+      "B. $\\dfrac{16}{9}$",
+      "C. $\\dfrac{16}{27}$",
+      "D. $\\dfrac{32}{27}$"
+    ],
+    "correctAnswer": "C. $\\dfrac{16}{27}$",
+    "explanation": "Sederhanakan bentuk aljabar terlebih dahulu menggunakan sifat pembagian eksponen: $\\dfrac{p^3}{p^{-1}} = p^{3 - (-1)} = p^4$ dan $\\dfrac{q^{-2}}{q^1} = q^{-2 - 1} = q^{-3}$. Bentuk sederhananya adalah $p^4 q^{-3} = \\dfrac{p^4}{q^3}$. Substitusikan nilai $p=2$ dan $q=3$: $\\dfrac{2^4}{3^3} = \\dfrac{16}{27}$. Pilihan C sesuai."
+  },
+  {
+    "questionText": "Nilai $x$ yang memenuhi $\\left(\\dfrac{1}{4}\\right)^{x-1} = 64$ adalah:",
+    "options": [
+      "A. $-2$",
+      "B. $-1$",
+      "C. $2$",
+      "D. $4$"
+    ],
+    "correctAnswer": "A. $-2$",
+    "explanation": "Ubah kedua ruas agar memiliki basis 4. $\\dfrac{1}{4} = 4^{-1}$ dan $64 = 4^3$. Persamaan menjadi $(4^{-1})^{x-1} = 4^3 \\Rightarrow 4^{-x+1} = 4^3$. Samakan eksponennya: $-x + 1 = 3 \\Rightarrow -x = 2 \\Rightarrow x = -2$. Pilihan A sesuai."
+  },
+  {
+    "questionText": "Bentuk sederhana dari $\\dfrac{3^{2024} - 3^{2022}}{3^{2022}}$ adalah:",
+    "options": [
+      "A. $2$",
+      "B. $6$",
+      "C. $8$",
+      "D. $9$"
+    ],
+    "correctAnswer": "C. $8$",
+    "explanation": "Pecah bentuk $3^{2024}$ menjadi $3^{2022} \\cdot 3^2$. Maka persamaannya menjadi $\\dfrac{3^{2022} \\cdot 3^2 - 3^{2022} \\cdot 1}{3^{2022}}$. Faktorkan pembilang dengan mengeluarkan $3^{2022}$: $\\dfrac{3^{2022}(3^2 - 1)}{3^{2022}}$. Coret $3^{2022}$ pada pembilang dan penyebut, sehingga tersisa $3^2 - 1 = 9 - 1 = 8$. Pilihan C sesuai."
+  },
+  {
+    "questionText": "Himpunan penyelesaian dari $\\left(\\dfrac{1}{2}\\right)^{2x+1} > \\dfrac{1}{8}$ adalah:",
+    "options": [
+      "A. $x > 1$",
+      "B. $x < 1$",
+      "C. $x > 2$",
+      "D. $x < 2$"
+    ],
+    "correctAnswer": "B. $x < 1$",
+    "explanation": "Ubah bentuk $\\dfrac{1}{8}$ menjadi pangkat dari $\\dfrac{1}{2}$, yaitu $\\left(\\dfrac{1}{2}\\right)^3$. Pertidaksamaan menjadi $\\left(\\dfrac{1}{2}\\right)^{2x+1} > \\left(\\dfrac{1}{2}\\right)^3$. Karena basisnya pecahan di antara 0 dan 1 ($0 < a < 1$), tanda pertidaksamaan berubah arah saat menyamakan eksponen: $2x + 1 < 3 \\Rightarrow 2x < 2 \\Rightarrow x < 1$. Pilihan B sesuai."
+  }
         ]
     },
     {
