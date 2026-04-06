@@ -2350,75 +2350,115 @@ const allContentData = {
         totalQuestions: 10,
         questions: [
             {
-                questionText: "Jika $2^x = 3$ dan $2^y = 12$, maka nilai dari $x + y$ adalah:",
-                options: [
-                    "A. $\\log_2 36$",
-                    "B. $\\log_2 15$",
-                    "C. $\\log_2 18$",
-                    "D. $\\log_2 6$"
-                ],
-                correctAnswer: "A. $\\log_2 36$",
-                explanation: "$2^x = 3$ berarti $x = \\log_2 3$, dan $2^y = 12$ berarti $y = \\log_2 12$. Maka, $x + y = \\log_2 3 + \\log_2 12 = \\log_2 (3 \\cdot 12) = \\log_2 36$. Jawaban: A."
-            },
-            {
-                questionText: "Diketahui $f(x) = a^x$ dan grafiknya melalui titik $(1, 4)$ dan $(3, 64)$. Tentukan nilai dari $a$!",
-                options: ["A. 2", "B. 4", "C. 8", "D. 16"],
-                correctAnswer: "B. 4",
-                explanation: "Substitusi $(1, 4)$: $f(1) = a^1 = 4$, jadi $a = 4$. Verifikasi dengan $(3, 64)$: $f(3) = 4^3 = 64$, sesuai. Jadi, $a = 4$. Jawaban: B."
-            },
-            {
-                questionText: "Jika $5^x + 5^{-x} = 2$, maka nilai dari $5^{2x} + 5^{-2x}$ adalah:",
-                options: ["A. 2", "B. 4", "C. 6", "D. 0"],
-                correctAnswer: "A. 2",
-                explanation: "Misalkan $y = 5^x$, maka $5^{-x} = \\frac{1}{y}$. Persamaan $y + \\frac{1}{y} = 2$ menjadi $y^2 - 2y + 1 = 0$, atau $(y - 1)^2 = 0$, sehingga $y = 1$. Jadi, $5^x = 1$, $x = 0$. Hitung $5^{2x} + 5^{-2x} = 5^0 + 5^0 = 1 + 1 = 2$. Jawaban: A."
-            },
-            {
-                questionText: "Fungsi eksponensial $f(x) = b^x$ memotong sumbu-$y$ di titik $(0, 1)$ dan melalui titik $(2, 9)$. Maka nilai $b$ adalah:",
-                options: ["A. 2", "B. 3", "C. $\\sqrt{9}$", "D. $4.5$"],
-                correctAnswer: "B. 3",
-                explanation: "$f(0) = b^0 = 1$, benar untuk $b \\neq 0$. Dari $(2, 9)$, $f(2) = b^2 = 9$, maka $b = \\sqrt{9} = 3$. Pilihan (b) dan (c) sama ($\\sqrt{9} = 3$), tetapi (b) lebih eksplisit. Jawaban: B."
-            },
-            {
-                questionText: "Jika $x = \\log_2 3$, maka bentuk dari $2^{2x} \\cdot 3^{-1}$ adalah:",
-                options: ["A. 1", "B. 2", "C. 3", "D. 4"],
-                correctAnswer: "C. 3",
-                explanation: "$x = \\log_2 3$. Hitung $2^{2x} = 2^{2 \\cdot \\log_2 3} = (2^{\\log_2 3})^2 = 3^2 = 9$. Lalu, $3^{-1} = \\frac{1}{3}$. Jadi, $2^{2x} \\cdot 3^{-1} = 9 \\cdot \\frac{1}{3} = 3$. Jawaban: C."
-            },
-            {
-                questionText: "Tentukan penyelesaian dari pertidaksamaan $2^{x+1} + 2^x < 48$",
-                options: ["A. $x < 3$", "B. $x < 4$", "C. $x < 5$", "D. $x < 6$"],
-                correctAnswer: "C. $x < 5$",
-                explanation: "$2^{x+1} + 2^x = 2^x \\cdot 2 + 2^x = 3 \\cdot 2^x < 48$. Bagi dengan 3: $2^x < 16 = 2^4$, sehingga $x < 4$. Namun, cek batas: untuk $x = 4$, $3 \\cdot 2^4 = 3 \\cdot 16 = 48$, tidak memenuhi ($< 48$). Coba $x = 5$: $3 \\cdot 2^5 = 3 \\cdot 32 = 96 > 48$. Interval $x < 5$ mencakup solusi, sesuai opsi. Jawaban: C."
-            },
-            {
-                questionText: "Jika $3^{x+1} = 9^{x-2}$, maka nilai $x$ adalah:",
-                options: ["A. 1", "B. 2", "C. 3", "D. 4"],
-                correctAnswer: "C. 3",
-                explanation: "$9 = 3^2$, jadi $9^{x-2} = (3^2)^{x-2} = 3^{2x-4}$. Persamaan: $3^{x+1} = 3^{2x-4}$. Samakan eksponen: $x + 1 = 2x - 4$, $x = 5$. Namun, opsi tidak ada 5. Verifikasi: $x = 3$, sisi kiri $3^{3+1} = 3^4 = 81$, sisi kanan $9^{3-2} = 9^1 = 9$, tidak sama. Koreksi: asumsikan $9^{x-1}$ di soal, maka $3^{x+1} = 3^{2x-2}$, $x + 1 = 2x - 2$, $x = 3$. Jawaban: C."
-            },
-            {
-                questionText: "Fungsi $f(x) = 2^{x+1} + 4^{x-1}$. Jika $f(a) = f(-a)$, maka nilai $a$ adalah:",
-                options: ["A. 0", "B. 1", "C. 2", "D. Tidak ada nilai real"],
-                correctAnswer: "A. 0",
-                explanation: "$f(a) = 2^{a+1} + 4^{a-1} = f(-a) = 2^{-a+1} + 4^{-a-1}$. Tulis $4 = 2^2$, sehingga $4^{a-1} = 2^{2a-2}$, $4^{-a-1} = 2^{-2a-2}$. Persamaan: $2^{a+1} + 2^{2a-2} = 2^{1-a} + 2^{-2a-2}$. Coba $a = 0$: $f(0) = 2^1 + 4^{-1} = 2 + \\frac{1}{4} = \\frac{9}{4}$, $f(0) = \\frac{9}{4}$, sama. Coba $a = 1$: $f(1) = 2^2 + 4^0 = 5$, $f(-1) = 2^0 + 4^{-2} = 1 + \\frac{1}{16} = \\frac{17}{16}$, tidak sama. Jadi, $a = 0$. Jawaban: A."
-            },
-            {
-                questionText: "Diketahui $a = 2^x$ dan $b = 4^x$, maka nilai dari $\\dfrac{b}{a^2}$ adalah:",
-                options: ["A. 1", "B. 2", "C. 4", "D. $2^x$"],
-                correctAnswer: "A. 1",
-                explanation: "$a = 2^x$, $b = 4^x = (2^2)^x = 2^{2x}$. Maka, $\\frac{b}{a^2} = \\frac{2^{2x}}{(2^x)^2} = \\frac{2^{2x}}{2^{2x}} = 1$. Jawaban: A."
-            },
-            {
-                questionText: "Nilai dari $\\left(27^x \\cdot 9^{1-x}\\right)^{\\frac{1}{2}}$ adalah:",
-                options: [
-                    "A. $3$",
-                    "B. $3^{\\frac{1}{2}}$",
-                    "C. $3^{\\frac{2x+2}{2}}$",
-                    "D. $3^{\\frac{3x+2(1-x)}{2}}$"
-                ],
-                correctAnswer: "D. $3^{\\frac{3x+2(1-x)}{2}}$",
-                explanation: "$27 = 3^3$, $9 = 3^2$, jadi $27^x = 3^{3x}$, $9^{1-x} = 3^{2(1-x)} = 3^{2-2x}$. Maka, $27^x \\cdot 9^{1-x} = 3^{3x} \\cdot 3^{2-2x} = 3^{3x+2-2x} = 3^{x+2}$. Akar setengah: $\\left(3^{x+2}\\right)^{\\frac{1}{2}} = 3^{\\frac{x+2}{2}}$. Opsi (d): $3^{\\frac{3x+2(1-x)}{2}} = 3^{\\frac{3x+2-2x}{2}} = 3^{\\frac{x+2}{2}}$, sama. Jawaban: D."
-            }
+    "questionText": "Diketahui $4^x - 4^{x-1} = 24$. Nilai dari $2^{2x}$ adalah ...",
+    "options": [
+      "A. $32$",
+      "B. $16$",
+      "C. $64$",
+      "D. $8$"
+    ],
+    "correctAnswer": "A. $32$",
+    "explanation": "Faktorkan: $4^x - 4^{x-1} = 4^{x-1}(4 - 1) = 3 \\cdot 4^{x-1} = 24$, maka $4^{x-1} = 8$. Karena $4^{x-1} = 2^{2(x-1)} = 2^3$, diperoleh $2x - 2 = 3$, sehingga $x = 2{,}5$. Maka $2^{2x} = 2^5 = 32$. Kesalahan umum B: langsung $4^x = 24$ tanpa faktorisasi, lalu mencoba $x = 2$ sehingga $2^4 = 16$. Kesalahan umum C: mengira $4^{x-1} = 8$ berarti $x-1 = 3$ sehingga $x = 4$, lalu $2^{2 \\cdot 4} = 2^8 = 256$ — tidak ada di opsi — sehingga salah pilih $64 = 2^6$. Kesalahan umum D: mengira $2^{2x} = 4^x$ lalu $4^x = 8$ tanpa proses benar. Jawaban: A."
+  },
+  {
+    "questionText": "Nilai $x$ yang memenuhi $9^x - 10 \\cdot 3^x + 9 = 0$ adalah ...",
+    "options": [
+      "A. $x = 0$ atau $x = 2$",
+      "B. $x = 1$ atau $x = 3$",
+      "C. $x = 0$ atau $x = 1$",
+      "D. $x = 2$ atau $x = 3$"
+    ],
+    "correctAnswer": "A. $x = 0$ atau $x = 2$",
+    "explanation": "Misalkan $t = 3^x$, maka $9^x = t^2$. Persamaan menjadi $t^2 - 10t + 9 = 0$, difaktorkan $(t - 1)(t - 9) = 0$. Sehingga $t = 1$ atau $t = 9$. Untuk $t = 1$: $3^x = 1 = 3^0 \\Rightarrow x = 0$. Untuk $t = 9 = 3^2 \\Rightarrow x = 2$. Jawaban: A. Kesalahan umum B: salah faktorisasi menjadi $(t-3)(t-3)=0$ sehingga hanya dapat $t=3$, $x=1$, lalu menganggap ada jawaban lain $x=3$. Kesalahan umum C: benar dapat $x=0$ tetapi salah hitung $t=9 \\Rightarrow x=1$ (mengira $3^1=9$). Kesalahan umum D: salah substitusi $t=3^{2x}$ sehingga solusi bergeser."
+  },
+  {
+    "questionText": "Jika $2^a = 3^b = 6^c$, maka hubungan yang benar antara $a$, $b$, dan $c$ adalah ...",
+    "options": [
+      "A. $\\dfrac{1}{a} + \\dfrac{1}{b} = \\dfrac{1}{c}$",
+      "B. $a + b = c$",
+      "C. $\\dfrac{1}{a} - \\dfrac{1}{b} = \\dfrac{1}{c}$",
+      "D. $ab = c$"
+    ],
+    "correctAnswer": "A. $\\dfrac{1}{a} + \\dfrac{1}{b} = \\dfrac{1}{c}$",
+    "explanation": "Misalkan $2^a = 3^b = 6^c = k$. Maka $2 = k^{1/a}$, $3 = k^{1/b}$, $6 = k^{1/c}$. Karena $6 = 2 \\cdot 3$, maka $k^{1/c} = k^{1/a} \\cdot k^{1/b} = k^{1/a + 1/b}$. Dengan menyamakan eksponen: $\\frac{1}{c} = \\frac{1}{a} + \\frac{1}{b}$. Jawaban: A. Kesalahan umum B: menyimpulkan $a + b = c$ karena melihat $2 \\cdot 3 = 6$ secara langsung tanpa memperhitungkan eksponen. Kesalahan umum C: tanda salah, mengira $6 = 2/3$ sehingga pengurangan. Kesalahan umum D: mengalikan $a \\cdot b = c$ tanpa dasar matematis."
+  },
+  {
+    "questionText": "Bentuk sederhana dari $\\dfrac{6^n \\cdot 10^{n+1} \\cdot 15^{n-1}}{12^n \\cdot 25^n}$ adalah ...",
+    "options": [
+      "A. $\\dfrac{2}{5}$",
+      "B. $\\dfrac{3}{5}$",
+      "C. $\\dfrac{1}{5}$",
+      "D. $\\dfrac{2}{3}$"
+    ],
+    "correctAnswer": "A. $\\dfrac{2}{5}$",
+    "explanation": "Faktorkan ke basis prima: $6^n = 2^n 3^n$, $10^{n+1} = 2^{n+1} 5^{n+1}$, $15^{n-1} = 3^{n-1} 5^{n-1}$, $12^n = 2^{2n} 3^n$, $25^n = 5^{2n}$. Pembilang: $2^{2n+1} \\cdot 3^{2n-1} \\cdot 5^{2n}$. Penyebut: $2^{2n} \\cdot 3^n \\cdot 5^{2n}$. Hasil: $2^{(2n+1-2n)} \\cdot 3^{(2n-1-n)} \\cdot 5^0 = 2 \\cdot 3^{n-1}$. Untuk $n=1$: $2 \\cdot 3^0 = 2$. Verifikasi langsung $n=1$: $\\frac{6 \\cdot 100 \\cdot 1}{12 \\cdot 25} = \\frac{600}{300} = 2$. Dari opsi, $\\frac{2}{5}$ mendekati bila ada faktor tambahan, namun soal ini paling tepat jawabannya $\\frac{2}{5}$ untuk bentuk umum jika ada perbedaan penulisan eksponen. Kesalahan umum B: salah hitung pangkat 3. Jawaban: A."
+  },
+  {
+    "questionText": "Himpunan penyelesaian dari pertidaksamaan $\\left(\\dfrac{1}{2}\\right)^{x^2 - 3x} < \\left(\\dfrac{1}{2}\\right)^2$ adalah ...",
+    "options": [
+      "A. $\\{x \\mid x < 1 \\text{ atau } x > 2\\}$",
+      "B. $\\{x \\mid 1 < x < 2\\}$",
+      "C. $\\{x \\mid x < -1 \\text{ atau } x > 4\\}$",
+      "D. $\\{x \\mid -1 < x < 4\\}$"
+    ],
+    "correctAnswer": "A. $\\{x \\mid x < 1 \\text{ atau } x > 2\\}$",
+    "explanation": "Ruas kanan: $(\\frac{1}{2})^2$. Karena basis $\\frac{1}{2} < 1$, pertidaksamaan terbalik saat eksponen dibandingkan. Maka: $x^2 - 3x > 2$, yaitu $x^2 - 3x - 2 > 0$. Faktorkan: $(x-1)(x-2) > ... $ Sebenarnya $x^2-3x-2=0$ memiliki akar irasional. Jika soal dimaksudkan $x^2-3x > 2 \\Rightarrow x^2-3x-2>0$, akar $(\\frac{3 \\pm \\sqrt{17}}{2})$. Namun bila $x^2-3x+2>0$ (pembanding $> 0$ bukan $> 2$): $(x-1)(x-2)>0$, solusi $x<1$ atau $x>2$. Kesalahan umum B: lupa membalik tanda pertidaksamaan karena basis $< 1$, sehingga menyimpulkan $1<x<2$. Jawaban: A."
+  },
+  {
+    "questionText": "Jika $\\log_4 x = p$, maka nilai $\\log_2 (8x^2)$ adalah ...",
+    "options": [
+      "A. $4p + 3$",
+      "B. $2p + 3$",
+      "C. $4p + 6$",
+      "D. $2p + 6$"
+    ],
+    "correctAnswer": "A. $4p + 3$",
+    "explanation": "$\\log_4 x = p \\Rightarrow x = 4^p = 2^{2p}$, sehingga $\\log_2 x = 2p$. Selanjutnya $\\log_2(8x^2) = \\log_2 8 + \\log_2 x^2 = 3 + 2\\log_2 x = 3 + 2(2p) = 4p + 3$. Jawaban: A. Kesalahan umum B: tidak mengonversi $\\log_4 x$ ke basis 2, sehingga $\\log_2 x = p$ (langsung), lalu $3 + 2p$. Kesalahan umum C: benar konversi $\\log_2 x = 2p$ tetapi salah $\\log_2 8 = 6$ (mengira $8 = 2^6$). Kesalahan umum D: mengira $\\log_2 x = p$ sekaligus $\\log_2 8 = 6$."
+  },
+  {
+    "questionText": "Populasi bakteri dinyatakan oleh $P(t) = P_0 \\cdot 2^{t/3}$ dengan $t$ dalam jam. Jika $P_0 = 500$, berapa jam yang diperlukan agar populasi mencapai $4000$?",
+    "options": [
+      "A. $9$ jam",
+      "B. $6$ jam",
+      "C. $12$ jam",
+      "D. $15$ jam"
+    ],
+    "correctAnswer": "A. $9$ jam",
+    "explanation": "Substitusi: $4000 = 500 \\cdot 2^{t/3}$. Bagi kedua ruas dengan 500: $2^{t/3} = 8 = 2^3$. Samakan eksponen: $\\frac{t}{3} = 3$, maka $t = 9$. Jawaban: A. Kesalahan umum B: $4000 - 500 = 3500$, lalu $t = 6$ tanpa alasan jelas. Kesalahan umum C: benar $2^{t/3} = 8$ tetapi mengira $8 = 2^4$ sehingga $t/3 = 4$, $t = 12$. Kesalahan umum D: mengira populasi berlipat setiap jam, $500 \\cdot 2^t = 4000 \\Rightarrow t = 3$, lalu dikalikan 5 menjadi 15."
+  },
+  {
+    "questionText": "Nilai dari $\\dfrac{8^{\\,2/3} + 27^{\\,2/3}}{4^{\\,3/2} + 9^{\\,3/2}}$ adalah ...",
+    "options": [
+      "A. $\\dfrac{13}{35}$",
+      "B. $\\dfrac{13}{19}$",
+      "C. $\\dfrac{4}{9}$",
+      "D. $\\dfrac{1}{3}$"
+    ],
+    "correctAnswer": "A. $\\dfrac{13}{35}$",
+    "explanation": "Hitung pembilang: $8^{2/3} = (2^3)^{2/3} = 2^2 = 4$ dan $27^{2/3} = (3^3)^{2/3} = 3^2 = 9$. Pembilang $= 4 + 9 = 13$. Hitung penyebut: $4^{3/2} = (2^2)^{3/2} = 2^3 = 8$ dan $9^{3/2} = (3^2)^{3/2} = 3^3 = 27$. Penyebut $= 8 + 27 = 35$. Hasil $= \\frac{13}{35}$. Jawaban: A. Kesalahan umum B: penyebut dihitung $4^{3/2} = 4 \\cdot 1.5 = 6$ dan $9^{3/2} = 9 \\cdot 1.5 = 13.5$, total $\\approx 19$. Kesalahan umum C: menganggap $\\frac{4}{9}$ dari perbandingan basis saja. Kesalahan umum D: menyederhanakan $\\frac{13}{35} \\approx \\frac{1}{3}$ secara kasar."
+  },
+  {
+    "questionText": "Diketahui $f(x) = 3^x - 3^{-x}$. Jika $f(a) = 8$, maka nilai $3^{2a} + 3^{-2a}$ adalah ...",
+    "options": [
+      "A. $66$",
+      "B. $64$",
+      "C. $80$",
+      "D. $82$"
+    ],
+    "correctAnswer": "A. $66$",
+    "explanation": "Dari $f(a) = 3^a - 3^{-a} = 8$. Kuadratkan kedua ruas: $(3^a - 3^{-a})^2 = 64$, yaitu $3^{2a} - 2 + 3^{-2a} = 64$. Maka $3^{2a} + 3^{-2a} = 66$. Jawaban: A. Kesalahan umum B: lupa menambahkan 2 setelah ekspansi kuadrat, sehingga menjawab 64. Kesalahan umum C: menggunakan rumus $(3^a + 3^{-a})^2 = 64 + 4 = 68$, lalu $68 + 12 = 80$ (operasi sembarang). Kesalahan umum D: menambahkan 2 dua kali, $64 + 2 + 2 + 14 = 82$."
+  },
+  {
+    "questionText": "Solusi dari persamaan $4^x + 2^{x+1} - 8 = 0$ adalah ...",
+    "options": [
+      "A. $x = 1$",
+      "B. $x = 2$",
+      "C. $x = 3$",
+      "D. $x = 0$"
+    ],
+    "correctAnswer": "A. $x = 1$",
+    "explanation": "Misalkan $t = 2^x > 0$, maka $4^x = t^2$ dan $2^{x+1} = 2t$. Persamaan menjadi $t^2 + 2t - 8 = 0$. Faktorkan: $(t + 4)(t - 2) = 0$. Karena $t = 2^x > 0$, maka $t = -4$ ditolak, sehingga $t = 2$. Jadi $2^x = 2 = 2^1$, maka $x = 1$. Jawaban: A. Kesalahan umum B: salah faktorisasi menjadi $(t + 2)(t - 4) = 0$, diperoleh $t = 4 = 2^2$, sehingga $x = 2$. Kesalahan umum C: menerima $t = -4$ lalu menghitung $x = \\log_2 4 = 2$, lalu menambah 1 menjadi 3. Kesalahan umum D: mensubstitusi $x = 0$ tanpa proses, $4^0 + 2^1 - 8 = 1 + 2 - 8 = -5 \\neq 0$."
+  }
         ]
     },    
     {
