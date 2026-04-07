@@ -3372,115 +3372,115 @@ const allContentData = {
         "subject": "Matematika",
         "totalQuestions": 10,
         "questions": [
-  {
+{
     "questionText": "Nilai dari $2^3 \\times 2^{-5} \\times 2^4$ adalah:",
     "options": [
-      "A. $2$",
-      "B. $4$",
-      "C. $8$",
-      "D. $16$"
+      "A. $8$",
+      "B. $16$",
+      "C. $2$",
+      "D. $4$"
     ],
-    "correctAnswer": "B. $4$",
-    "explanation": "Gunakan sifat perkalian eksponen dengan basis yang sama, yaitu menjumlahkan pangkatnya: $2^{3 + (-5) + 4} = 2^{3 - 5 + 4} = 2^2 = 4$. Pilihan B sesuai."
+    "correctAnswer": "D. $4$",
+    "explanation": "Langkah 1: Gunakan sifat perkalian eksponen dengan basis yang sama, yaitu dengan menjumlahkan pangkatnya.\n$2^{3 + (-5) + 4}$\n\nLangkah 2: Hitung hasil penjumlahan pangkat eksponen tersebut.\n$2^{3 - 5 + 4} = 2^2$\n\nLangkah 3: Selesaikan untuk mendapatkan nilai akhir.\n$2^2 = 4$."
   },
   {
     "questionText": "Nilai dari $27^{\\dfrac{2}{3}}$ adalah:",
     "options": [
-      "A. $6$",
-      "B. $9$",
-      "C. $18$",
+      "A. $9$",
+      "B. $18$",
+      "C. $6$",
       "D. $81$"
     ],
-    "correctAnswer": "B. $9$",
-    "explanation": "Tulis $27$ sebagai pangkat dari 3, yaitu $27 = 3^3$. Substitusikan ke dalam soal: $(3^3)^{\\dfrac{2}{3}}$. Gunakan sifat $(a^m)^n = a^{m \\times n}$, sehingga $3^{3 \\times \\dfrac{2}{3}} = 3^2 = 9$. Pilihan B sesuai."
+    "correctAnswer": "A. $9$",
+    "explanation": "Langkah 1: Ubah bilangan bulat menjadi bentuk pangkat.\n$27 = 3^3$\n\nLangkah 2: Substitusikan kembali ke dalam soal.\n$(3^3)^{\\dfrac{2}{3}}$\n\nLangkah 3: Gunakan sifat pangkat eksponen $(a^m)^n = a^{m \\times n}$.\n$3^{3 \\times \\dfrac{2}{3}} = 3^2$\n\nLangkah 4: Hitung hasil akhirnya.\n$3^2 = 9$."
   },
   {
     "questionText": "Penyelesaian dari persamaan $5^{3x-2} = 25^{x+1}$ adalah:",
     "options": [
       "A. $x = 2$",
-      "B. $x = 3$",
-      "C. $x = 4$",
-      "D. $x = 5$"
+      "B. $x = 4$",
+      "C. $x = 5$",
+      "D. $x = 3$"
     ],
-    "correctAnswer": "C. $x = 4$",
-    "explanation": "Samakan basis di kedua ruas. Ubah $25$ menjadi $5^2$, sehingga persamaan menjadi $5^{3x-2} = (5^2)^{x+1}$. Gunakan sifat pangkat: $5^{3x-2} = 5^{2(x+1)} \\Rightarrow 5^{3x-2} = 5^{2x+2}$. Karena basis sama, samakan eksponennya: $3x - 2 = 2x + 2 \\Rightarrow 3x - 2x = 2 + 2 \\Rightarrow x = 4$. Pilihan C sesuai."
+    "correctAnswer": "B. $x = 4$",
+    "explanation": "Langkah 1: Samakan basis di kedua ruas. Ubah bilangan $25$ menjadi $5^2$.\n$5^{3x-2} = (5^2)^{x+1}$\n\nLangkah 2: Gunakan sifat pangkat untuk menjabarkan ruas kanan.\n$5^{3x-2} = 5^{2(x+1)}$\n$5^{3x-2} = 5^{2x+2}$\n\nLangkah 3: Karena basis sudah sama, samakan nilai eksponennya.\n$3x - 2 = 2x + 2$\n\nLangkah 4: Selesaikan persamaan linear untuk mencari nilai $x$.\n$3x - 2x = 2 + 2$\n$x = 4$."
   },
   {
     "questionText": "Bentuk sederhana dari $\\left(\\dfrac{a^{-2}b^3}{a^3b^{-1}}\\right)^{-1}$ adalah:",
     "options": [
       "A. $\\dfrac{b^4}{a^5}$",
-      "B. $\\dfrac{a^5}{b^4}$",
-      "C. $a^5b^2$",
-      "D. $\\dfrac{a}{b^2}$"
+      "B. $\\dfrac{a}{b^2}$",
+      "C. $\\dfrac{a^5}{b^4}$",
+      "D. $a^5b^2$"
     ],
-    "correctAnswer": "B. $\\dfrac{a^5}{b^4$",
-    "explanation": "Sederhanakan pecahan di dalam kurung terlebih dahulu dengan sifat pembagian eksponen: $\\dfrac{a^{-2}}{a^3} = a^{-2-3} = a^{-5}$ dan $\\dfrac{b^3}{b^{-1}} = b^{3-(-1)} = b^4$. Bentuk menjadi $(a^{-5}b^4)^{-1}$. Kalikan pangkat luar ke dalam: $a^{-5 \\times (-1)}b^{4 \\times (-1)} = a^5b^{-4} = \\dfrac{a^5}{b^4}$. Pilihan B sesuai."
+    "correctAnswer": "C. $\\dfrac{a^5}{b^4}$",
+    "explanation": "Langkah 1: Sederhanakan pecahan di dalam kurung terlebih dahulu menggunakan sifat pembagian eksponen (kurangkan pangkatnya).\n$\\dfrac{a^{-2}}{a^3} = a^{-2-3} = a^{-5}$\n$\\dfrac{b^3}{b^{-1}} = b^{3-(-1)} = b^4$\n\nLangkah 2: Substitusikan kembali ke dalam kurung awal.\n$(a^{-5}b^4)^{-1}$\n\nLangkah 3: Kalikan pangkat luar ke dalam masing-masing variabel.\n$a^{-5 \\times (-1)}b^{4 \\times (-1)} = a^5b^{-4}$\n\nLangkah 4: Ubah ke bentuk pangkat positif sebagai bentuk sederhana akhir.\n$\\dfrac{a^5}{b^4}$."
   },
   {
     "questionText": "Jika $\\sqrt{3^{2x+1}} = 9$, maka nilai $x$ adalah:",
     "options": [
-      "A. $\\dfrac{1}{2}$",
-      "B. $1$",
-      "C. $\\dfrac{3}{2}$",
-      "D. $2$"
+      "A. $\\dfrac{3}{2}$",
+      "B. $2$",
+      "C. $1$",
+      "D. $\\dfrac{1}{2}$"
     ],
-    "correctAnswer": "C. $\\dfrac{3}{2}$",
-    "explanation": "Ubah bentuk akar menjadi pangkat pecahan dan samakan basis: $\\sqrt{3^{2x+1}} = 3^{\\dfrac{2x+1}{2}}$ dan $9 = 3^2$. Persamaan menjadi $3^{\\dfrac{2x+1}{2}} = 3^2$. Samakan eksponennya: $\\dfrac{2x+1}{2} = 2 \\Rightarrow 2x + 1 = 4 \\Rightarrow 2x = 3 \\Rightarrow x = \\dfrac{3}{2}$. Pilihan C sesuai."
+    "correctAnswer": "A. $\\dfrac{3}{2}$",
+    "explanation": "Langkah 1: Ubah bentuk akar menjadi pangkat pecahan dan samakan basis ruas kanan.\n$\\sqrt{3^{2x+1}} = 3^{\\dfrac{2x+1}{2}}$\n$9 = 3^2$\n\nLangkah 2: Susun kembali persamaan dengan basis yang sama.\n$3^{\\dfrac{2x+1}{2}} = 3^2$\n\nLangkah 3: Samakan nilai eksponen di kedua ruas.\n$\\dfrac{2x+1}{2} = 2$\n\nLangkah 4: Selesaikan persamaan untuk mencari nilai $x$.\n$2x + 1 = 4$\n$2x = 3 \\Rightarrow x = \\dfrac{3}{2}$."
   },
   {
     "questionText": "Hasil dari $2^5 - 2^4 - 2^3$ adalah:",
     "options": [
-      "A. $2^{-2}$",
-      "B. $2^2$",
-      "C. $2^3$",
-      "D. $2^4$"
+      "A. $2^4$",
+      "B. $2^{-2$",
+      "C. $2^2$",
+      "D. $2^3$"
     ],
-    "correctAnswer": "C. $2^3$",
-    "explanation": "Faktorkan persamaan dengan mengeluarkan pangkat terkecil, yaitu $2^3$. Maka, $2^5 - 2^4 - 2^3 = 2^3(2^2 - 2^1 - 1)$. Hitung nilai di dalam kurung: $2^3(4 - 2 - 1) = 2^3(1) = 2^3$. Pilihan C sesuai."
+    "correctAnswer": "D. $2^3$",
+    "explanation": "Langkah 1: Faktorkan bentuk aljabar dengan mengeluarkan eksponen berpangkat terkecil, yaitu $2^3$.\n$2^5 - 2^4 - 2^3 = 2^3(2^2 - 2^1 - 2^0)$\n\nLangkah 2: Hitung nilai numerik di dalam kurung.\n$2^3(4 - 2 - 1)$\n\nLangkah 3: Selesaikan operasi pengurangannya.\n$2^3(1) = 2^3$."
   },
   {
     "questionText": "Jika $p = 2$ dan $q = 3$, maka nilai dari $\\dfrac{p^3 q^{-2}}{p^{-1} q}$ adalah:",
     "options": [
-      "A. $\\dfrac{8}{9}$",
-      "B. $\\dfrac{16}{9}$",
-      "C. $\\dfrac{16}{27}$",
-      "D. $\\dfrac{32}{27}$"
+      "A. $\\dfrac{16}{27}$",
+      "B. $\\dfrac{8}{9}$",
+      "C. $\\dfrac{32}{27}$",
+      "D. $\\dfrac{16}{9}$"
     ],
-    "correctAnswer": "C. $\\dfrac{16}{27}$",
-    "explanation": "Sederhanakan bentuk aljabar terlebih dahulu menggunakan sifat pembagian eksponen: $\\dfrac{p^3}{p^{-1}} = p^{3 - (-1)} = p^4$ dan $\\dfrac{q^{-2}}{q^1} = q^{-2 - 1} = q^{-3}$. Bentuk sederhananya adalah $p^4 q^{-3} = \\dfrac{p^4}{q^3}$. Substitusikan nilai $p=2$ dan $q=3$: $\\dfrac{2^4}{3^3} = \\dfrac{16}{27}$. Pilihan C sesuai."
+    "correctAnswer": "A. $\\dfrac{16}{27}$",
+    "explanation": "Langkah 1: Sederhanakan bentuk pecahan aljabar terlebih dahulu menggunakan sifat pembagian eksponen.\n$\\dfrac{p^3}{p^{-1}} = p^{3 - (-1)} = p^4$\n$\\dfrac{q^{-2}}{q^1} = q^{-2 - 1} = q^{-3}$\n\nLangkah 2: Gabungkan hasil penyederhanaan dan ubah ke bentuk pangkat positif.\n$p^4 q^{-3} = \\dfrac{p^4}{q^3}$\n\nLangkah 3: Substitusikan nilai $p=2$ dan $q=3$ ke dalam bentuk sederhana tersebut.\n$\\dfrac{2^4}{3^3}$\n\nLangkah 4: Hitung hasil akhirnya.\n$\\dfrac{16}{27}$."
   },
   {
     "questionText": "Nilai $x$ yang memenuhi $\\left(\\dfrac{1}{4}\\right)^{x-1} = 64$ adalah:",
     "options": [
-      "A. $-2$",
-      "B. $-1$",
-      "C. $2$",
-      "D. $4$"
+      "A. $4$",
+      "B. $-2$",
+      "C. $-1$",
+      "D. $2$"
     ],
-    "correctAnswer": "A. $-2$",
-    "explanation": "Ubah kedua ruas agar memiliki basis 4. $\\dfrac{1}{4} = 4^{-1}$ dan $64 = 4^3$. Persamaan menjadi $(4^{-1})^{x-1} = 4^3 \\Rightarrow 4^{-x+1} = 4^3$. Samakan eksponennya: $-x + 1 = 3 \\Rightarrow -x = 2 \\Rightarrow x = -2$. Pilihan A sesuai."
+    "correctAnswer": "B. $-2$",
+    "explanation": "Langkah 1: Ubah kedua ruas agar memiliki basis eksponensial yang sama, yaitu $4$.\n$\\dfrac{1}{4} = 4^{-1}$\n$64 = 4^3$\n\nLangkah 2: Substitusikan kembali ke persamaan awal.\n$(4^{-1})^{x-1} = 4^3$\n$4^{-x+1} = 4^3$\n\nLangkah 3: Samakan nilai eksponennya karena basis sudah sama.\n$-x + 1 = 3$\n\nLangkah 4: Selesaikan persamaan linear untuk menentukan $x$.\n$-x = 3 - 1$\n$-x = 2 \\Rightarrow x = -2$."
   },
   {
     "questionText": "Bentuk sederhana dari $\\dfrac{3^{2024} - 3^{2022}}{3^{2022}}$ adalah:",
     "options": [
       "A. $2$",
-      "B. $6$",
-      "C. $8$",
-      "D. $9$"
+      "B. $9$",
+      "C. $6$",
+      "D. $8$"
     ],
-    "correctAnswer": "C. $8$",
-    "explanation": "Pecah bentuk $3^{2024}$ menjadi $3^{2022} \\cdot 3^2$. Maka persamaannya menjadi $\\dfrac{3^{2022} \\cdot 3^2 - 3^{2022} \\cdot 1}{3^{2022}}$. Faktorkan pembilang dengan mengeluarkan $3^{2022}$: $\\dfrac{3^{2022}(3^2 - 1)}{3^{2022}}$. Coret $3^{2022}$ pada pembilang dan penyebut, sehingga tersisa $3^2 - 1 = 9 - 1 = 8$. Pilihan C sesuai."
+    "correctAnswer": "D. $8$",
+    "explanation": "Langkah 1: Pecah bentuk pangkat yang lebih besar agar memuat bentuk pangkat yang lebih kecil di penyebut.\n$3^{2024} = 3^{2022 + 2} = 3^{2022} \\cdot 3^2$\n\nLangkah 2: Substitusikan nilai tersebut ke dalam pembilang.\n$\\dfrac{3^{2022} \\cdot 3^2 - 3^{2022} \\cdot 1}{3^{2022}}$\n\nLangkah 3: Faktorkan pembilang dengan mengeluarkan suku $3^{2022}$.\n$\\dfrac{3^{2022}(3^2 - 1)}{3^{2022}}$\n\nLangkah 4: Sederhanakan dengan mencoret $3^{2022}$ pada pembilang dan penyebut, lalu hitung sisanya.\n$3^2 - 1 = 9 - 1 = 8$."
   },
   {
     "questionText": "Himpunan penyelesaian dari $\\left(\\dfrac{1}{2}\\right)^{2x+1} > \\dfrac{1}{8}$ adalah:",
     "options": [
-      "A. $x > 1$",
-      "B. $x < 1$",
-      "C. $x > 2$",
-      "D. $x < 2$"
+      "A. $x > 2$",
+      "B. $x < 2$",
+      "C. $x < 1$",
+      "D. $x > 1$"
     ],
-    "correctAnswer": "B. $x < 1$",
-    "explanation": "Ubah bentuk $\\dfrac{1}{8}$ menjadi pangkat dari $\\dfrac{1}{2}$, yaitu $\\left(\\dfrac{1}{2}\\right)^3$. Pertidaksamaan menjadi $\\left(\\dfrac{1}{2}\\right)^{2x+1} > \\left(\\dfrac{1}{2}\\right)^3$. Karena basisnya pecahan di antara 0 dan 1 ($0 < a < 1$), tanda pertidaksamaan berubah arah saat menyamakan eksponen: $2x + 1 < 3 \\Rightarrow 2x < 2 \\Rightarrow x < 1$. Pilihan B sesuai."
+    "correctAnswer": "C. $x < 1$",
+    "explanation": "Langkah 1: Ubah bilangan $\\dfrac{1}{8}$ menjadi pangkat yang memiliki basis $\\dfrac{1}{2}$.\n$\\dfrac{1}{8} = \\left(\\dfrac{1}{2}\\right)^3$\n\nLangkah 2: Substitusikan kembali ke dalam pertidaksamaan.\n$\\left(\\dfrac{1}{2}\\right)^{2x+1} > \\left(\\dfrac{1}{2}\\right)^3$\n\nLangkah 3: Perhatikan basisnya. Karena basis pecahan berada di interval $0 < a < 1$, maka tanda pertidaksamaan harus dibalik ketika kita menyamakan eksponennya.\n$2x + 1 < 3$\n\nLangkah 4: Selesaikan pertidaksamaan linear untuk mendapatkan rentang nilai $x$.\n$2x < 3 - 1$\n$2x < 2 \\Rightarrow x < 1$."
   }
         ]
     },
