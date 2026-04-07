@@ -4813,116 +4813,116 @@ const allContentData = {
         "subject": "Matematika",
         "totalQuestions": 10,
         "questions": [
-            {
-                "questionText": "Hasil dari $2^3 \\cdot 2^4$ adalah:",
-                "options": [
-                    "A. $2^7$",
-                    "B. $2^{12}$",
-                    "C. $8$",
-                    "D. $64$"
-                ],
-                "correctAnswer": "A. $2^7$",
-                "explanation": "Gunakan sifat eksponen: $a^m \\cdot a^n = a^{m+n}$. Maka, $2^3 \\cdot 2^4 = 2^{3+4} = 2^7$. Pilihan A sesuai."
-            },
-            {
-                "questionText": "Hasil dari $\\dfrac{5^6}{5^2}$ adalah:",
-                "options": [
-                    "A. $5^8$",
-                    "B. $5^4$",
-                    "C. $25$",
-                    "D. $5^3$"
-                ],
-                "correctAnswer": "B. $5^4$",
-                "explanation": "Gunakan sifat eksponen: $\\dfrac{a^m}{a^n} = a^{m-n}$. Maka, $\\dfrac{5^6}{5^2} = 5^{6-2} = 5^4$. Pilihan B sesuai."
-            },
-            {
-                "questionText": "Bentuk sederhana dari $(3^2)^3$ adalah:",
-                "options": [
-                    "A. $3^5$",
-                    "B. $3^6$",
-                    "C. $9^3$",
-                    "D. $729$"
-                ],
-                "correctAnswer": "B. $3^6$",
-                "explanation": "Gunakan sifat eksponen: $(a^m)^n = a^{m \\cdot n}$. Maka, $(3^2)^3 = 3^{2 \\cdot 3} = 3^6$. Pilihan B sesuai."
-            },
-            {
-                "questionText": "Jika $2^x = 32$, maka nilai $x$ adalah:",
-                "options": [
-                    "A. $4$",
-                    "B. $5$",
-                    "C. $6$",
-                    "D. $8$"
-                ],
-                "correctAnswer": "B. $5$",
-                "explanation": "Tulis $32$ sebagai pangkat dari 2: $32 = 2^5$. Maka, $2^x = 2^5 \\Rightarrow x = 5$. Pilihan B sesuai."
-            },
-            {
-                "questionText": "Jika $f(x) = 2^x$, maka nilai dari $f(3)$ adalah:",
-                "options": [
-                    "A. $6$",
-                    "B. $8$",
-                    "C. $9$",
-                    "D. $12$"
-                ],
-                "correctAnswer": "B. $8$",
-                "explanation": "Substitusi $x = 3$ ke $f(x) = 2^x$: $f(3) = 2^3 = 8$. Pilihan B sesuai."
-            },
-            {
-                "questionText": "Grafik dari fungsi $f(x) = 2^x$ akan:",
-                "options": [
-                    "A. Menurun dari kiri ke kanan",
-                    "B. Naik dari kiri ke kanan",
-                    "C. Datar dan konstan",
-                    "D. Berbentuk parabola"
-                ],
-                "correctAnswer": "B. Naik dari kiri ke kanan",
-                "explanation": "Fungsi eksponensial $f(x) = 2^x$ dengan basis $2 > 1$ selalu naik dari kiri ke kanan karena nilai $f(x)$ bertambah seiring $x$ bertambah. Pilihan B sesuai."
-            },
-            {
-                "questionText": "Jika $3^x = 81$, maka nilai $x$ adalah:",
-                "options": [
-                    "A. $2$",
-                    "B. $3$",
-                    "C. $4$",
-                    "D. $5$"
-                ],
-                "correctAnswer": "C. $4$",
-                "explanation": "Tulis $81$ sebagai pangkat dari 3: $81 = 3^4$. Maka, $3^x = 3^4 \\Rightarrow x = 4$. Pilihan C sesuai."
-            },
-            {
-                "questionText": "Pertidaksamaan $2^x > 8$ akan terpenuhi jika:",
-                "options": [
-                    "A. $x < 3$",
-                    "B. $x > 3$",
-                    "C. $x = 2$",
-                    "D. $x = 1$"
-                ],
-                "correctAnswer": "B. $x > 3$",
-                "explanation": "Tulis $8 = 2^3$. Maka, $2^x > 2^3$. Karena basis $2 > 1$, pertidaksamaan terpenuhi jika $x > 3$. Pilihan B sesuai."
-            },
-            {
-                "questionText": "Nilai dari $10^0$ adalah:",
-                "options": [
-                    "A. $0$",
-                    "B. $1$",
-                    "C. $10$",
-                    "D. Tidak terdefinisi"
-                ],
-                "correctAnswer": "B. $1$",
-                "explanation": "Sifat eksponen: $a^0 = 1$ untuk $a \\neq 0$. Maka, $10^0 = 1$. Pilihan B sesuai."
-            },
-            {
-                "questionText": "Bentuk pangkat dari $1/16$ dengan basis 2 adalah:",
-                "options": [
-                    "A. $2^{-2}$",
-                    "B. $2^{-4}$",
-                    "C. $2^4$",
-                    "D. $2^2$"
-                ],
-                "correctAnswer": "B. $2^{-4}$",
-                "explanation": "Tulis $1/16 = \\frac{1}{16} = \\frac{1}{2^4} = 2^{-4}$. Pilihan B sesuai."
-            }
+{
+    "questionText": "Nilai dari $2^3 \\times 2^4$ adalah ...",
+    "options": [
+      "A. $2^7$",
+      "B. $2^{12}$",
+      "C. $4^7$",
+      "D. $4^{12}$"
+    ],
+    "correctAnswer": "A. $2^7$",
+    "explanation": "Langkah 1: Gunakan sifat perkalian eksponen dengan basis yang sama, yaitu dengan menjumlahkan pangkatnya.\n$a^m \\times a^n = a^{m+n}$\n\nLangkah 2: Terapkan sifat tersebut pada soal.\n$2^3 \\times 2^4 = 2^{3+4}$\n\nLangkah 3: Hitung hasil penjumlahan eksponennya.\n$2^7$."
+  },
+  {
+    "questionText": "Bentuk sederhana dari $\\dfrac{5^6}{5^2}$ adalah ...",
+    "options": [
+      "A. $5^3$",
+      "B. $1^4$",
+      "C. $5^4$",
+      "D. $5^8$"
+    ],
+    "correctAnswer": "C. $5^4$",
+    "explanation": "Langkah 1: Gunakan sifat pembagian eksponen dengan basis yang sama, yaitu dengan mengurangkan pangkatnya.\n$\\dfrac{a^m}{a^n} = a^{m-n}$\n\nLangkah 2: Terapkan sifat tersebut pada soal.\n$\\dfrac{5^6}{5^2} = 5^{6-2}$\n\nLangkah 3: Hitung hasil pengurangan eksponennya.\n$5^4$."
+  },
+  {
+    "questionText": "Hasil dari $(3^2)^4$ adalah ...",
+    "options": [
+      "A. $3^6$",
+      "B. $9^6$",
+      "C. $9^8$",
+      "D. $3^8$"
+    ],
+    "correctAnswer": "D. $3^8$",
+    "explanation": "Langkah 1: Gunakan sifat eksponen yang dipangkatkan kembali, yaitu dengan mengalikan pangkatnya.\n$(a^m)^n = a^{m \\times n}$\n\nLangkah 2: Terapkan sifat tersebut pada soal.\n$(3^2)^4 = 3^{2 \\times 4}$\n\nLangkah 3: Hitung hasil perkalian eksponennya.\n$3^8$."
+  },
+  {
+    "questionText": "Nilai dari $10^0 + 5^0 - 2^0$ adalah ...",
+    "options": [
+      "A. $0$",
+      "B. $1$",
+      "C. $3$",
+      "D. $13$"
+    ],
+    "correctAnswer": "B. $1$",
+    "explanation": "Langkah 1: Ingat kembali sifat dasar pangkat nol.\nSetiap bilangan real tak nol ($a \\neq 0$) yang dipangkatkan dengan $0$ hasilnya adalah $1$.\n$a^0 = 1$\n\nLangkah 2: Ubah setiap suku ke dalam bentuk nilainya masing-masing.\n$10^0 = 1$\n$5^0 = 1$\n$2^0 = 1$\n\nLangkah 3: Lakukan operasi penjumlahan dan pengurangannya.\n$1 + 1 - 1 = 1$."
+  },
+  {
+    "questionText": "Bentuk pangkat positif dari $4^{-3}$ adalah ...",
+    "options": [
+      "A. $-\\dfrac{1}{4^3}$",
+      "B. $-4^3$",
+      "C. $\\dfrac{1}{4^3}$",
+      "D. $\\dfrac{1}{3^4}$"
+    ],
+    "correctAnswer": "C. $\\dfrac{1}{4^3}$",
+    "explanation": "Langkah 1: Gunakan sifat eksponen pangkat negatif untuk mengubahnya menjadi bentuk pecahan dengan pangkat positif.\n$a^{-n} = \\dfrac{1}{a^n}$\n\nLangkah 2: Terapkan sifat tersebut secara langsung pada soal.\n$4^{-3} = \\dfrac{1}{4^3}$."
+  },
+  {
+    "questionText": "Nilai dari $25^{\\dfrac{1}{2}}$ adalah ...",
+    "options": [
+      "A. $50$",
+      "B. $12{,}5$",
+      "C. $5$",
+      "D. $25$"
+    ],
+    "correctAnswer": "C. $5$",
+    "explanation": "Langkah 1: Ingat kembali hubungan antara pangkat pecahan dan bentuk akar.\nPangkat $\\dfrac{1}{2}$ sama artinya dengan akar kuadrat: $a^{\\dfrac{1}{2}} = \\sqrt{a}$\n\nLangkah 2: Ubah soal ke dalam bentuk akar kuadrat.\n$25^{\\dfrac{1}{2}} = \\sqrt{25}$\n\nLangkah 3: Selesaikan bentuk akar tersebut.\n$\\sqrt{25} = 5$."
+  },
+  {
+    "questionText": "Hasil dari $2^3 \\times 5^3$ adalah ...",
+    "options": [
+      "A. $10^6$",
+      "B. $10^3$",
+      "C. $7^6$",
+      "D. $7^3$"
+    ],
+    "correctAnswer": "B. $10^3$",
+    "explanation": "Langkah 1: Perhatikan bahwa pangkatnya sama namun basisnya berbeda. Gunakan sifat gabungan dari perpangkatan.\n$a^n \\times b^n = (a \\times b)^n$\n\nLangkah 2: Kelompokkan basisnya dan keluarkan pangkatnya.\n$2^3 \\times 5^3 = (2 \\times 5)^3$\n\nLangkah 3: Kalikan bilangan basis yang ada di dalam kurung.\n$10^3$."
+  },
+  {
+    "questionText": "Nilai dari $8^{\\dfrac{1}{3}}$ adalah ...",
+    "options": [
+      "A. $2$",
+      "B. $\\dfrac{8}{3}$",
+      "C. $4$",
+      "D. $24$"
+    ],
+    "correctAnswer": "A. $2$",
+    "explanation": "Langkah 1: Ubah bilangan bulat 8 menjadi bentuk pangkat berpangkat bilangan prima.\n$8 = 2^3$\n\nLangkah 2: Substitusikan ke dalam soal awal dan gunakan sifat pangkat dipangkatkan.\n$(2^3)^{\\dfrac{1}{3}}$\n\nLangkah 3: Kalikan eksponennya untuk mendapatkan nilai akhir.\n$2^{3 \\times \\dfrac{1}{3}} = 2^1 = 2$."
+  },
+  {
+    "questionText": "Jika $3^x = 81$, maka nilai $x$ adalah ...",
+    "options": [
+      "A. $3$",
+      "B. $9$",
+      "C. $27$",
+      "D. $4$"
+    ],
+    "correctAnswer": "D. $4$",
+    "explanation": "Langkah 1: Samakan basis di kedua ruas. Ubah bilangan 81 menjadi bilangan berpangkat dengan basis 3.\n$81 = 3 \\times 3 \\times 3 \\times 3 = 3^4$\n\nLangkah 2: Substitusikan kembali ke persamaan.\n$3^x = 3^4$\n\nLangkah 3: Karena basisnya di ruas kiri dan kanan sudah sama, maka nilai pangkat/eksponennya pasti sama besar.\n$x = 4$."
+  },
+  {
+    "questionText": "Bentuk sederhana dari $a^4 \\times a \\times a^2$ adalah ...",
+    "options": [
+      "A. $a^6$",
+      "B. $a^7$",
+      "C. $a^8$",
+      "D. $a^9$"
+    ],
+    "correctAnswer": "B. $a^7$",
+    "explanation": "Langkah 1: Ingat kembali bahwa variabel yang berdiri sendiri memiliki eksponen bernilai 1 yang tidak tertulis.\n$a = a^1$\n\nLangkah 2: Tulis ulang bentuk perkalian eksponensial tersebut agar lebih jelas.\n$a^4 \\times a^1 \\times a^2$\n\nLangkah 3: Gunakan sifat perkalian eksponen dengan basis sama dengan menjumlahkan semua pangkatnya.\n$a^{4+1+2} = a^7$."
+  }
         ]
     },
     {
