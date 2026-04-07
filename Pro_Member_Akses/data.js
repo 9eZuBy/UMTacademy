@@ -2358,18 +2358,18 @@ const allContentData = {
       "D. $64$"
     ],
     "correctAnswer": "C. $32$",
-    "explanation": "Faktorkan: $4^x - 4^{x-1} = 4^{x-1}(4 - 1) = 3 \\cdot 4^{x-1} = 24$, maka $4^{x-1} = 8$. Karena $4^{x-1} = 2^{2(x-1)} = 2^3$, diperoleh $2x - 2 = 3$, sehingga $x = 2{,}5$. Maka $2^{2x} = 2^5 = 32$."
+    "explanation": "Langkah 1: Faktorkan persamaan eksponensial.\n$4^x - 4^{x-1} = 24$\n$4^{x-1}(4^1 - 1) = 24$\n$4^{x-1}(3) = 24$\n$4^{x-1} = 8$\n\nLangkah 2: Samakan basis di kedua ruas menjadi 2.\n$(2^2)^{x-1} = 2^3$\n$2^{2x-2} = 2^3$\n\nLangkah 3: Samakan nilai pangkat eksponennya.\n$2x - 2 = 3$\n$2x = 5$\n$x = 2{,}5$\n\nLangkah 4: Substitusi nilai $x$ ke dalam $2^{2x}$.\n$2^{2(2{,}5)} = 2^5 = 32$."
   },
   {
     "questionText": "Nilai $x$ yang memenuhi $9^x - 10 \\cdot 3^x + 9 = 0$ adalah ...",
     "options": [
-      "A. $x = 0$ atau $x = 1$",
-      "B. $x = 0$ atau $x = 2$",
+      "A. $x = 0$ atau $x = 2$",
+      "B. $x = 0$ atau $x = 1$",
       "C. $x = 1$ atau $x = 3$",
       "D. $x = 2$ atau $x = 3$"
     ],
-    "correctAnswer": "B. $x = 0$ atau $x = 2$",
-    "explanation": "Misalkan $t = 3^x$, maka $9^x = t^2$. Persamaan menjadi $t^2 - 10t + 9 = 0$, difaktorkan $(t - 1)(t - 9) = 0$. Sehingga $t = 1$ atau $t = 9$. Untuk $t = 1$: $3^x = 1 = 3^0 \\Rightarrow x = 0$. Untuk $t = 9 = 3^2 \\Rightarrow x = 2$."
+    "correctAnswer": "A. $x = 0$ atau $x = 2$",
+    "explanation": "Langkah 1: Gunakan pemisalan.\nMisalkan $t = 3^x$, sehingga $9^x = (3^2)^x = (3^x)^2 = t^2$.\n\nLangkah 2: Substitusi pemisalan ke dalam persamaan.\n$t^2 - 10t + 9 = 0$\n\nLangkah 3: Faktorkan persamaan kuadrat yang terbentuk.\n$(t - 1)(t - 9) = 0$\nDiperoleh nilai $t = 1$ atau $t = 9$.\n\nLangkah 4: Kembalikan nilai $t$ ke dalam bentuk $3^x$.\n- Untuk $t = 1 \\Rightarrow 3^x = 1 \\Rightarrow 3^x = 3^0 \\Rightarrow x = 0$\n- Untuk $t = 9 \\Rightarrow 3^x = 9 \\Rightarrow 3^x = 3^2 \\Rightarrow x = 2$"
   },
   {
     "questionText": "Jika $2^a = 3^b = 6^c$, maka hubungan yang benar antara $a$, $b$, dan $c$ adalah ...",
@@ -2380,29 +2380,29 @@ const allContentData = {
       "D. $\\dfrac{1}{a} + \\dfrac{1}{b} = \\dfrac{1}{c}$"
     ],
     "correctAnswer": "D. $\\dfrac{1}{a} + \\dfrac{1}{b} = \\dfrac{1}{c}$",
-    "explanation": "Misalkan $2^a = 3^b = 6^c = k$. Maka $2 = k^{1/a}$, $3 = k^{1/b}$, $6 = k^{1/c}$. Karena $6 = 2 \\cdot 3$, maka $k^{1/c} = k^{1/a} \\cdot k^{1/b} = k^{1/a + 1/b}$. Dengan menyamakan eksponen: $\\dfrac{1}{c} = \\dfrac{1}{a} + \\dfrac{1}{b}$."
+    "explanation": "Langkah 1: Buat pemisalan konstanta.\nMisalkan $2^a = 3^b = 6^c = k$.\n\nLangkah 2: Nyatakan bilangan 2, 3, dan 6 dalam bentuk $k$.\n$2 = k^{1/a}$\n$3 = k^{1/b}$\n$6 = k^{1/c}$\n\nLangkah 3: Gunakan hubungan perkalian dasar $2 \\cdot 3 = 6$.\n$k^{1/a} \\cdot k^{1/b} = k^{1/c}$\n\nLangkah 4: Sederhanakan berdasarkan sifat pangkat.\n$k^{(1/a + 1/b)} = k^{1/c}$\nDengan menyamakan eksponennya, diperoleh: $\\dfrac{1}{a} + \\dfrac{1}{b} = \\dfrac{1}{c}$."
   },
   {
     "questionText": "Bentuk sederhana dari $\\dfrac{6^n \\cdot 10^{n+1} \\cdot 15^{n-1}}{12^n \\cdot 25^n}$ adalah ...",
     "options": [
-      "A. $\\dfrac{3}{5}$",
-      "B. $\\dfrac{1}{5}$",
-      "C. $\\dfrac{2}{5}$",
-      "D. $\\dfrac{2}{3}$"
+      "A. $3 \\cdot 2^{n-1}$",
+      "B. $2 \\cdot 3^{n-1}$",
+      "C. $2 \\cdot 3^n$",
+      "D. $6^{n-1}$"
     ],
-    "correctAnswer": "C. $\\dfrac{2}{5}$",
-    "explanation": "Faktorkan ke basis prima: $6^n = 2^n 3^n$, $10^{n+1} = 2^{n+1} 5^{n+1}$, $15^{n-1} = 3^{n-1} 5^{n-1}$, $12^n = 2^{2n} 3^n$, $25^n = 5^{2n}$. Pembilang: $2^{2n+1} \\cdot 3^{2n-1} \\cdot 5^{2n}$. Penyebut: $2^{2n} \\cdot 3^n \\cdot 5^{2n}$. Hasil: $2^{(2n+1-2n)} \\cdot 3^{(2n-1-n)} \\cdot 5^0 = 2 \\cdot 3^{n-1}$. Untuk $n=1$: $2 \\cdot 3^0 = 2$. Verifikasi langsung $n=1$: $\\dfrac{6 \\cdot 100 \\cdot 1}{12 \\cdot 25} = \\dfrac{600}{300} = 2$. Dari opsi, $\\dfrac{2}{5}$ mendekati bila ada faktor tambahan, namun soal ini paling tepat jawabannya $\\dfrac{2}{5}$ untuk bentuk umum jika ada perbedaan penulisan eksponen."
+    "correctAnswer": "B. $2 \\cdot 3^{n-1}$",
+    "explanation": "Langkah 1: Faktorkan setiap basis menjadi perkalian bilangan prima.\n- $6^n = 2^n \\cdot 3^n$\n- $10^{n+1} = 2^{n+1} \\cdot 5^{n+1}$\n- $15^{n-1} = 3^{n-1} \\cdot 5^{n-1}$\n- $12^n = (2^2 \\cdot 3)^n = 2^{2n} \\cdot 3^n$\n- $25^n = (5^2)^n = 5^{2n}$\n\nLangkah 2: Susun perkalian pada pembilang dan penyebut.\n- Pembilang: $2^n \\cdot 3^n \\cdot 2^{n+1} \\cdot 5^{n+1} \\cdot 3^{n-1} \\cdot 5^{n-1} = 2^{2n+1} \\cdot 3^{2n-1} \\cdot 5^{2n}$\n- Penyebut: $2^{2n} \\cdot 3^n \\cdot 5^{2n}$\n\nLangkah 3: Bagi pembilang dengan penyebut dengan mengurangkan pangkat untuk basis yang sama.\n- Basis 2: $2^{(2n+1) - 2n} = 2^1 = 2$\n- Basis 3: $3^{(2n-1) - n} = 3^{n-1}$\n- Basis 5: $5^{2n - 2n} = 5^0 = 1$\n\nLangkah 4: Kalikan hasil yang diperoleh.\nBentuk sederhananya adalah $2 \\cdot 3^{n-1} \\cdot 1 = 2 \\cdot 3^{n-1}$."
   },
   {
-    "questionText": "Himpunan penyelesaian dari pertidaksamaan $\\left(\\dfrac{1}{2}\\right)^{x^2 - 3x} < \\left(\\dfrac{1}{2}\\right)^2$ adalah ...",
+    "questionText": "Himpunan penyelesaian dari pertidaksamaan $\\left(\\dfrac{1}{2}\\right)^{x^2 - 3x} < \\left(\\dfrac{1}{2}\\right)^{-2}$ adalah ...",
     "options": [
       "A. $\\{x \\mid 1 < x < 2\\}$",
-      "B. $\\{x \\mid x < 1 \\text{ atau } x > 2\\}$",
-      "C. $\\{x \\mid x < -1 \\text{ atau } x > 4\\}$",
+      "B. $\\{x \\mid x < -1 \\text{ atau } x > 4\\}$",
+      "C. $\\{x \\mid x < 1 \\text{ atau } x > 2\\}$",
       "D. $\\{x \\mid -1 < x < 4\\}$"
     ],
-    "correctAnswer": "B. $\\{x \\mid x < 1 \\text{ atau } x > 2\\}$",
-    "explanation": "Ruas kanan: $\\left(\\dfrac{1}{2}\\right)^2$. Karena basis $\\dfrac{1}{2} < 1$, pertidaksamaan terbalik saat eksponen dibandingkan. Maka: $x^2 - 3x > 2$, yaitu $x^2 - 3x - 2 > 0$. Faktorkan: $(x-1)(x-2) > ... $ Sebenarnya $x^2-3x-2=0$ memiliki akar irasional. Jika soal dimaksudkan $x^2-3x > 2 \\Rightarrow x^2-3x-2>0$, akar $\\left(\\dfrac{3 \\pm \\sqrt{17}}{2}\\right)$. Namun bila $x^2-3x+2>0$ (pembanding $> 0$ bukan $> 2$): $(x-1)(x-2)>0$, solusi $x<1$ atau $x>2$."
+    "correctAnswer": "C. $\\{x \\mid x < 1 \\text{ atau } x > 2\\}$",
+    "explanation": "Langkah 1: Perhatikan basis pertidaksamaan, yaitu $\\dfrac{1}{2}$.\nKarena nilai basis berada di antara $0$ dan $1$ ($0 < a < 1$), maka tanda pertidaksamaan untuk pangkatnya dibalik.\n\nLangkah 2: Samakan eksponennya dengan membalikkan tanda.\n$x^2 - 3x > -2$\n$x^2 - 3x + 2 > 0$\n\nLangkah 3: Faktorkan pertidaksamaan kuadrat tersebut.\n$(x - 1)(x - 2) > 0$\nAkar-akarnya adalah $x = 1$ dan $x = 2$.\n\nLangkah 4: Tentukan daerah penyelesaian.\nKarena tanda pertidaksamaan adalah '>' (lebih dari nol), maka daerah himpunan penyelesaiannya adalah $x < 1$ atau $x > 2$."
   },
   {
     "questionText": "Jika $\\log_4 x = p$, maka nilai $\\log_2 (8x^2)$ adalah ...",
@@ -2413,40 +2413,40 @@ const allContentData = {
       "D. $4p + 3$"
     ],
     "correctAnswer": "D. $4p + 3$",
-    "explanation": "$\\log_4 x = p \\Rightarrow x = 4^p = 2^{2p}$, sehingga $\\log_2 x = 2p$. Selanjutnya $\\log_2(8x^2) = \\log_2 8 + \\log_2 x^2 = 3 + 2\\log_2 x = 3 + 2(2p) = 4p + 3$."
+    "explanation": "Langkah 1: Ubah logaritma awal menjadi bentuk pangkat.\n$\\log_4 x = p \\Rightarrow x = 4^p$\n\nLangkah 2: Ubah basis pangkat menjadi 2.\n$x = (2^2)^p = 2^{2p}$\nDari sini, dapat dituliskan kembali ke logaritma basis 2: $\\log_2 x = 2p$.\n\nLangkah 3: Uraikan bentuk $\\log_2 (8x^2)$ dengan sifat logaritma.\n$\\log_2 (8x^2) = \\log_2 8 + \\log_2 x^2$\n$\\log_2 (8x^2) = 3 + 2 \\cdot \\log_2 x$\n\nLangkah 4: Substitusi nilai $\\log_2 x$.\n$3 + 2(2p) = 4p + 3$."
   },
   {
-    "questionText": "Populasi bakteri dinyatakan oleh $P(t) = P_0 \\cdot 2^{t/3}$ dengan $t$ dalam jam. Jika $P_0 = 500$, berapa jam yang diperlukan agar populasi mencapai $4000$?",
+    "questionText": "Populasi bakteri dinyatakan oleh fungsi $P(t) = P_0 \\cdot 2^{t/3}$ dengan $t$ dalam jam. Jika $P_0 = 500$, berapa jam yang diperlukan agar populasi mencapai $4000$?",
     "options": [
       "A. $6$ jam",
-      "B. $12$ jam",
-      "C. $9$ jam",
+      "B. $9$ jam",
+      "C. $12$ jam",
       "D. $15$ jam"
     ],
-    "correctAnswer": "C. $9$ jam",
-    "explanation": "Substitusi: $4000 = 500 \\cdot 2^{t/3}$. Bagi kedua ruas dengan $500$: $2^{t/3} = 8 = 2^3$. Samakan eksponen: $\\dfrac{t}{3} = 3$, maka $t = 9$."
+    "correctAnswer": "B. $9$ jam",
+    "explanation": "Langkah 1: Substitusi data yang diketahui ke dalam persamaan.\n$4000 = 500 \\cdot 2^{t/3}$\n\nLangkah 2: Pindahkan konstanta dengan membagi kedua ruas dengan 500.\n$\\dfrac{4000}{500} = 2^{t/3}$\n$8 = 2^{t/3}$\n\nLangkah 3: Samakan basis eksponen.\n$2^3 = 2^{t/3}$\n\nLangkah 4: Samakan nilai pangkat dan cari nilai $t$.\n$\\dfrac{t}{3} = 3 \\Rightarrow t = 9$."
   },
   {
     "questionText": "Nilai dari $\\dfrac{8^{\\,2/3} + 27^{\\,2/3}}{4^{\\,3/2} + 9^{\\,3/2}}$ adalah ...",
     "options": [
-      "A. $\\dfrac{13}{19}$",
-      "B. $\\dfrac{13}{35}$",
+      "A. $\\dfrac{13}{35}$",
+      "B. $\\dfrac{13}{19}$",
       "C. $\\dfrac{4}{9}$",
       "D. $\\dfrac{1}{3}$"
     ],
-    "correctAnswer": "B. $\\dfrac{13}{35$",
-    "explanation": "Hitung pembilang: $8^{2/3} = (2^3)^{2/3} = 2^2 = 4$ dan $27^{2/3} = (3^3)^{2/3} = 3^2 = 9$. Pembilang $= 4 + 9 = 13$. Hitung penyebut: $4^{3/2} = (2^2)^{3/2} = 2^3 = 8$ dan $9^{3/2} = (3^2)^{3/2} = 3^3 = 27$. Penyebut $= 8 + 27 = 35$. Hasil $= \\dfrac{13}{35}$."
+    "correctAnswer": "A. $\\dfrac{13}{35}$",
+    "explanation": "Langkah 1: Sederhanakan nilai pada pembilang.\n$8^{2/3} = (2^3)^{2/3} = 2^2 = 4$\n$27^{2/3} = (3^3)^{2/3} = 3^2 = 9$\nTotal pembilang: $4 + 9 = 13$.\n\nLangkah 2: Sederhanakan nilai pada penyebut.\n$4^{3/2} = (2^2)^{3/2} = 2^3 = 8$\n$9^{3/2} = (3^2)^{3/2} = 3^3 = 27$\nTotal penyebut: $8 + 27 = 35$.\n\nLangkah 3: Gabungkan pembilang dan penyebut.\nHasil akhirnya adalah $\\dfrac{13}{35}$."
   },
   {
     "questionText": "Diketahui $f(x) = 3^x - 3^{-x}$. Jika $f(a) = 8$, maka nilai $3^{2a} + 3^{-2a}$ adalah ...",
     "options": [
       "A. $64$",
       "B. $80$",
-      "C. $82$",
-      "D. $66$"
+      "C. $66$",
+      "D. $82$"
     ],
-    "correctAnswer": "D. $66$",
-    "explanation": "Dari $f(a) = 3^a - 3^{-a} = 8$. Kuadratkan kedua ruas: $(3^a - 3^{-a})^2 = 64$, yaitu $3^{2a} - 2 + 3^{-2a} = 64$. Maka $3^{2a} + 3^{-2a} = 66$."
+    "correctAnswer": "C. $66$",
+    "explanation": "Langkah 1: Tuliskan persamaan yang diketahui.\n$f(a) = 3^a - 3^{-a} = 8$\n\nLangkah 2: Kuadratkan kedua ruas persamaan.\n$(3^a - 3^{-a})^2 = 8^2$\n\nLangkah 3: Jabarkan bentuk pengkuadratan tersebut.\n$(3^a)^2 - 2(3^a)(3^{-a}) + (3^{-a})^2 = 64$\n$3^{2a} - 2(3^0) + 3^{-2a} = 64$\n$3^{2a} - 2(1) + 3^{-2a} = 64$\n\nLangkah 4: Pindahkan bilangan konstanta untuk memperoleh jawaban.\n$3^{2a} + 3^{-2a} = 64 + 2 = 66$."
   },
   {
     "questionText": "Solusi dari persamaan $4^x + 2^{x+1} - 8 = 0$ adalah ...",
@@ -2457,7 +2457,7 @@ const allContentData = {
       "D. $x = 3$"
     ],
     "correctAnswer": "B. $x = 1$",
-    "explanation": "Misalkan $t = 2^x > 0$, maka $4^x = t^2$ dan $2^{x+1} = 2t$. Persamaan menjadi $t^2 + 2t - 8 = 0$. Faktorkan: $(t + 4)(t - 2) = 0$. Karena $t = 2^x > 0$, maka $t = -4$ ditolak, sehingga $t = 2$. Jadi $2^x = 2 = 2^1$, maka $x = 1$."
+    "explanation": "Langkah 1: Ubah bentuk persamaan agar menggunakan basis 2.\n$(2^2)^x + 2^x \\cdot 2^1 - 8 = 0$\n$(2^x)^2 + 2(2^x) - 8 = 0$\n\nLangkah 2: Gunakan pemisalan variabel.\nMisalkan $t = 2^x$ (ingat syarat bahwa $t > 0$). Persamaan menjadi:\n$t^2 + 2t - 8 = 0$\n\nLangkah 3: Faktorkan persamaan kuadrat.\n$(t + 4)(t - 2) = 0$\nMaka nilai $t = -4$ atau $t = 2$. Karena $t > 0$, maka $t = -4$ tidak memenuhi syarat (ditolak).\n\nLangkah 4: Selesaikan untuk $x$.\nAmbil $t = 2$.\n$2^x = 2^1 \\Rightarrow x = 1$."
   }
         ]
     },    
