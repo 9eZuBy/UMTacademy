@@ -4813,119 +4813,116 @@ const allContentData = {
         subject: "Matematika",
         totalQuestions: 10,
         questions: [
-  {
-    "questionText": "Perhatikan diagram panah berikut. Manakah pernyataan yang benar mengenai relasi pada diagram tersebut?",
-    "svg": "<svg width=\"300\" height=\"220\" viewBox=\"0 0 300 220\" xmlns=\"http://www.w3.org/2000/svg\"><!-- Domain: elips pusat (70,110), rx=40 ry=72. Elemen domain: a(x=70,y=74), b(x=70,y=110), c(x=70,y=146). Kodomain: elips pusat (230,110), rx=40 ry=72. Elemen kodomain: 1(x=230,y=74), 2(x=230,y=110), 3(x=230,y=146). Panah dari x=100 ke x=200, y sesuai pasangan: a->1, b->2, c->3 --><defs><marker id=\"arr\" markerWidth=\"6\" markerHeight=\"6\" refX=\"5\" refY=\"3\" orient=\"auto\"><path d=\"M0,0 L6,3 L0,6 Z\" fill=\"#d4a843\"/></marker></defs><ellipse cx=\"70\" cy=\"110\" rx=\"40\" ry=\"72\" stroke=\"#d4a843\" stroke-width=\"1.5\" fill=\"rgba(212,168,67,0.08)\"/><ellipse cx=\"230\" cy=\"110\" rx=\"40\" ry=\"72\" stroke=\"#d4a843\" stroke-width=\"1.5\" fill=\"rgba(212,168,67,0.08)\"/><text x=\"70\" y=\"22\" text-anchor=\"middle\" fill=\"#7a7870\" font-size=\"11\" font-family=\"sans-serif\">Domain</text><text x=\"230\" y=\"22\" text-anchor=\"middle\" fill=\"#7a7870\" font-size=\"11\" font-family=\"sans-serif\">Kodomain</text><text x=\"70\" y=\"78\" text-anchor=\"middle\" fill=\"#e8e4dc\" font-size=\"13\" font-family=\"sans-serif\">a</text><text x=\"70\" y=\"114\" text-anchor=\"middle\" fill=\"#e8e4dc\" font-size=\"13\" font-family=\"sans-serif\">b</text><text x=\"70\" y=\"150\" text-anchor=\"middle\" fill=\"#e8e4dc\" font-size=\"13\" font-family=\"sans-serif\">c</text><text x=\"230\" y=\"78\" text-anchor=\"middle\" fill=\"#e8e4dc\" font-size=\"13\" font-family=\"sans-serif\">1</text><text x=\"230\" y=\"114\" text-anchor=\"middle\" fill=\"#e8e4dc\" font-size=\"13\" font-family=\"sans-serif\">2</text><text x=\"230\" y=\"150\" text-anchor=\"middle\" fill=\"#e8e4dc\" font-size=\"13\" font-family=\"sans-serif\">3</text><line x1=\"100\" y1=\"74\" x2=\"197\" y2=\"74\" stroke=\"#d4a843\" stroke-width=\"1.5\" marker-end=\"url(#arr)\"/><line x1=\"100\" y1=\"110\" x2=\"197\" y2=\"110\" stroke=\"#d4a843\" stroke-width=\"1.5\" marker-end=\"url(#arr)\"/><line x1=\"100\" y1=\"146\" x2=\"197\" y2=\"146\" stroke=\"#d4a843\" stroke-width=\"1.5\" marker-end=\"url(#arr)\"/><text x=\"150\" y=\"210\" text-anchor=\"middle\" fill=\"#7a7870\" font-size=\"11\" font-family=\"sans-serif\">a&#8594;1,  b&#8594;2,  c&#8594;3</text></svg>",
-    "options": [
-      "A. Relasi tersebut adalah fungsi karena setiap anggota domain tepat memiliki satu pasangan di kodomain",
-      "B. Relasi tersebut bukan fungsi karena ada anggota kodomain yang tidak berpasangan",
-      "C. Relasi tersebut bukan fungsi karena ada anggota domain yang berpasangan lebih dari satu",
-      "D. Relasi tersebut adalah fungsi karena semua anggota kodomain berpasangan"
-    ],
-    "correctAnswer": "A. Relasi tersebut adalah fungsi karena setiap anggota domain tepat memiliki satu pasangan di kodomain",
-    "explanation": "Langkah 1: Ingat syarat suatu relasi disebut fungsi, yaitu setiap anggota domain harus memiliki tepat satu pasangan di kodomain.\n\nLangkah 2: Periksa setiap anggota domain dari diagram panah.\n- a memetakan ke 1 (tepat satu pasangan)\n- b memetakan ke 2 (tepat satu pasangan)\n- c memetakan ke 3 (tepat satu pasangan)\n\nLangkah 3: Karena setiap anggota domain (a, b, c) memiliki tepat satu pasangan, syarat fungsi terpenuhi.\n\nJadi, relasi tersebut adalah fungsi."
-  },
-  {
-    "questionText": "Diketahui himpunan pasangan berurutan suatu relasi: $\\{(2, 4),\\ (3, 9),\\ (4, 16),\\ (5, 25)\\}$. Domain dari relasi tersebut adalah ...",
-    "options": [
-      "A. $\\{4, 9, 16, 25\\}$",
-      "B. $\\{2, 3, 4, 5\\}$",
-      "C. $\\{2, 4, 9, 16\\}$",
-      "D. $\\{2, 3, 4, 5, 9, 16, 25\\}$"
-    ],
-    "correctAnswer": "B. $\\{2, 3, 4, 5\\}$",
-    "explanation": "Langkah 1: Ingat definisi domain, yaitu himpunan semua komponen pertama dari setiap pasangan berurutan.\n\nLangkah 2: Ambil komponen pertama dari setiap pasangan.\n- $(2, 4) \\Rightarrow 2$\n- $(3, 9) \\Rightarrow 3$\n- $(4, 16) \\Rightarrow 4$\n- $(5, 25) \\Rightarrow 5$\n\nLangkah 3: Kumpulkan semua komponen pertama menjadi satu himpunan.\nDomain $= \\{2, 3, 4, 5\\}$.\n\nJadi, domain relasi tersebut adalah $\\{2, 3, 4, 5\\}$."
-  },
-  {
-    "questionText": "Diketahui fungsi $f(x) = 2x + 3$. Nilai $f(4)$ adalah ...",
-    "options": [
-      "A. $9$",
-      "B. $10$",
-      "C. $11$",
-      "D. $14$"
-    ],
-    "correctAnswer": "C. $11$",
-    "explanation": "Langkah 1: Substitusi nilai $x = 4$ ke dalam fungsi $f(x) = 2x + 3$.\n$f(4) = 2(4) + 3$\n\nLangkah 2: Selesaikan operasi perkalian terlebih dahulu.\n$f(4) = 8 + 3$\n\nLangkah 3: Jumlahkan hasilnya.\n$f(4) = 11$\n\nJadi, nilai $f(4)$ adalah $11$."
-  },
-  {
-    "questionText": "Fungsi $f$ didefinisikan dengan $f(x) = 3x$. Jika domain fungsi tersebut adalah $\\{1, 2, 3\\}$, maka range (daerah hasil) fungsi tersebut adalah ...",
-    "options": [
-      "A. $\\{1, 2, 3\\}$",
-      "B. $\\{2, 4, 6\\}$",
-      "C. $\\{4, 5, 6\\}$",
-      "D. $\\{3, 6, 9\\}$"
-    ],
-    "correctAnswer": "D. $\\{3, 6, 9\\}$",
-    "explanation": "Langkah 1: Hitung nilai $f(x) = 3x$ untuk setiap anggota domain.\n\nLangkah 2: Substitusi satu per satu.\n- $f(1) = 3(1) = 3$\n- $f(2) = 3(2) = 6$\n- $f(3) = 3(3) = 9$\n\nLangkah 3: Kumpulkan semua hasil yang diperoleh menjadi satu himpunan.\nRange $= \\{3, 6, 9\\}$.\n\nJadi, range fungsi tersebut adalah $\\{3, 6, 9\\}$."
-  },
-  {
-    "questionText": "Perhatikan diagram panah berikut. Diagram tersebut menggambarkan relasi yang ...",
-    "svg": "<svg width=\"300\" height=\"220\" viewBox=\"0 0 300 220\" xmlns=\"http://www.w3.org/2000/svg\"><!-- Domain: elips pusat (70,110), rx=40 ry=72. Elemen domain: p(x=70,y=74), q(x=70,y=110), r(x=70,y=146). Kodomain: elips pusat (230,110), rx=40 ry=72. Elemen: 1(x=230,y=74), 2(x=230,y=110), 3(x=230,y=146). Panah: p->1(74->74), p->2(74->110) highlight biru sebab bukan fungsi, q->3(110->146), r->3(146->146) --><defs><marker id=\"ar2\" markerWidth=\"6\" markerHeight=\"6\" refX=\"5\" refY=\"3\" orient=\"auto\"><path d=\"M0,0 L6,3 L0,6 Z\" fill=\"#d4a843\"/></marker><marker id=\"ar2b\" markerWidth=\"6\" markerHeight=\"6\" refX=\"5\" refY=\"3\" orient=\"auto\"><path d=\"M0,0 L6,3 L0,6 Z\" fill=\"#5b9cf6\"/></marker></defs><ellipse cx=\"70\" cy=\"110\" rx=\"40\" ry=\"72\" stroke=\"#d4a843\" stroke-width=\"1.5\" fill=\"rgba(212,168,67,0.08)\"/><ellipse cx=\"230\" cy=\"110\" rx=\"40\" ry=\"72\" stroke=\"#d4a843\" stroke-width=\"1.5\" fill=\"rgba(212,168,67,0.08)\"/><text x=\"70\" y=\"22\" text-anchor=\"middle\" fill=\"#7a7870\" font-size=\"11\" font-family=\"sans-serif\">Domain</text><text x=\"230\" y=\"22\" text-anchor=\"middle\" fill=\"#7a7870\" font-size=\"11\" font-family=\"sans-serif\">Kodomain</text><text x=\"70\" y=\"78\" text-anchor=\"middle\" fill=\"#5b9cf6\" font-size=\"13\" font-family=\"sans-serif\">p</text><text x=\"70\" y=\"114\" text-anchor=\"middle\" fill=\"#e8e4dc\" font-size=\"13\" font-family=\"sans-serif\">q</text><text x=\"70\" y=\"150\" text-anchor=\"middle\" fill=\"#e8e4dc\" font-size=\"13\" font-family=\"sans-serif\">r</text><text x=\"230\" y=\"78\" text-anchor=\"middle\" fill=\"#e8e4dc\" font-size=\"13\" font-family=\"sans-serif\">1</text><text x=\"230\" y=\"114\" text-anchor=\"middle\" fill=\"#e8e4dc\" font-size=\"13\" font-family=\"sans-serif\">2</text><text x=\"230\" y=\"150\" text-anchor=\"middle\" fill=\"#e8e4dc\" font-size=\"13\" font-family=\"sans-serif\">3</text><line x1=\"100\" y1=\"74\" x2=\"197\" y2=\"74\" stroke=\"#5b9cf6\" stroke-width=\"1.5\" marker-end=\"url(#ar2b)\"/><line x1=\"100\" y1=\"74\" x2=\"197\" y2=\"110\" stroke=\"#5b9cf6\" stroke-width=\"1.5\" marker-end=\"url(#ar2b)\"/><line x1=\"100\" y1=\"110\" x2=\"197\" y2=\"146\" stroke=\"#d4a843\" stroke-width=\"1.5\" marker-end=\"url(#ar2)\"/><line x1=\"100\" y1=\"146\" x2=\"197\" y2=\"146\" stroke=\"#d4a843\" stroke-width=\"1.5\" marker-end=\"url(#ar2)\"/><text x=\"150\" y=\"210\" text-anchor=\"middle\" fill=\"#5b9cf6\" font-size=\"11\" font-family=\"sans-serif\">p memiliki 2 pasangan (ditandai biru)</text></svg>",
-    "options": [
-      "A. Bukan fungsi, karena ada anggota domain yang tidak berpasangan",
-      "B. Fungsi, karena semua anggota domain berpasangan",
-      "C. Bukan fungsi, karena elemen p memetakan ke dua anggota kodomain sekaligus",
-      "D. Fungsi, karena ada anggota kodomain yang berpasangan lebih dari satu"
-    ],
-    "correctAnswer": "C. Bukan fungsi, karena elemen p memetakan ke dua anggota kodomain sekaligus",
-    "explanation": "Langkah 1: Ingat syarat fungsi — setiap anggota domain harus memiliki tepat SATU pasangan di kodomain.\n\nLangkah 2: Periksa setiap anggota domain dari diagram.\n- p memetakan ke 1 dan ke 2 (dua panah keluar dari p — ditandai biru)\n- q memetakan ke 3 (tepat satu pasangan)\n- r memetakan ke 3 (tepat satu pasangan)\n\nLangkah 3: Karena elemen p memiliki lebih dari satu pasangan di kodomain, syarat fungsi tidak terpenuhi.\n\nJadi, relasi tersebut bukan merupakan fungsi."
-  },
-  {
-    "questionText": "Perhatikan grafik fungsi $f(x) = x + 1$ untuk $x \\in \\{0, 1, 2, 3\\}$ berikut. Nilai $f(2)$ berdasarkan grafik adalah ...",
-    "svg": "<svg width=\"300\" height=\"220\" viewBox=\"0 0 300 220\" xmlns=\"http://www.w3.org/2000/svg\"><!-- Origin di (55,185). Skala: 1 unit = 35px sumbu X dan Y. Titik f(x)=x+1: x=0,y=1 -> piksel(55,150). x=1,y=2 -> piksel(90,115). x=2,y=3 -> piksel(125,80) highlight biru. x=3,y=4 -> piksel(160,45). Label sumbu X: 0 di x=55, 1 di x=90, 2 di x=125, 3 di x=160. Label sumbu Y: 1 di y=150, 2 di y=115, 3 di y=80, 4 di y=45. --><defs><marker id=\"axx\" markerWidth=\"6\" markerHeight=\"6\" refX=\"5\" refY=\"3\" orient=\"auto\"><path d=\"M0,0 L6,3 L0,6 Z\" fill=\"#7a7870\"/></marker></defs><line x1=\"55\" y1=\"185\" x2=\"255\" y2=\"185\" stroke=\"#7a7870\" stroke-width=\"1\" marker-end=\"url(#axx)\"/><line x1=\"55\" y1=\"185\" x2=\"55\" y2=\"20\" stroke=\"#7a7870\" stroke-width=\"1\" marker-end=\"url(#axx)\"/><text x=\"258\" y=\"189\" fill=\"#e8e4dc\" font-size=\"12\" font-family=\"sans-serif\">x</text><text x=\"48\" y=\"16\" fill=\"#e8e4dc\" font-size=\"12\" font-family=\"sans-serif\">y</text><text x=\"55\" y=\"200\" text-anchor=\"middle\" fill=\"#7a7870\" font-size=\"11\" font-family=\"sans-serif\">0</text><text x=\"90\" y=\"200\" text-anchor=\"middle\" fill=\"#7a7870\" font-size=\"11\" font-family=\"sans-serif\">1</text><text x=\"125\" y=\"200\" text-anchor=\"middle\" fill=\"#7a7870\" font-size=\"11\" font-family=\"sans-serif\">2</text><text x=\"160\" y=\"200\" text-anchor=\"middle\" fill=\"#7a7870\" font-size=\"11\" font-family=\"sans-serif\">3</text><text x=\"42\" y=\"154\" text-anchor=\"middle\" fill=\"#7a7870\" font-size=\"11\" font-family=\"sans-serif\">1</text><text x=\"42\" y=\"119\" text-anchor=\"middle\" fill=\"#7a7870\" font-size=\"11\" font-family=\"sans-serif\">2</text><text x=\"42\" y=\"84\" text-anchor=\"middle\" fill=\"#7a7870\" font-size=\"11\" font-family=\"sans-serif\">3</text><text x=\"42\" y=\"49\" text-anchor=\"middle\" fill=\"#7a7870\" font-size=\"11\" font-family=\"sans-serif\">4</text><line x1=\"55\" y1=\"150\" x2=\"90\" y2=\"115\" stroke=\"#d4a843\" stroke-width=\"1.5\"/><line x1=\"90\" y1=\"115\" x2=\"125\" y2=\"80\" stroke=\"#d4a843\" stroke-width=\"1.5\"/><line x1=\"125\" y1=\"80\" x2=\"160\" y2=\"45\" stroke=\"#d4a843\" stroke-width=\"1.5\"/><circle cx=\"55\" cy=\"150\" r=\"4\" fill=\"#d4a843\"/><circle cx=\"90\" cy=\"115\" r=\"4\" fill=\"#d4a843\"/><circle cx=\"125\" cy=\"80\" r=\"5\" fill=\"#5b9cf6\"/><circle cx=\"160\" cy=\"45\" r=\"4\" fill=\"#d4a843\"/><line x1=\"125\" y1=\"80\" x2=\"125\" y2=\"185\" stroke=\"#5b9cf6\" stroke-width=\"1\" stroke-dasharray=\"4,3\"/><line x1=\"55\" y1=\"80\" x2=\"125\" y2=\"80\" stroke=\"#5b9cf6\" stroke-width=\"1\" stroke-dasharray=\"4,3\"/><text x=\"138\" y=\"76\" fill=\"#5b9cf6\" font-size=\"11\" font-family=\"sans-serif\">(2, 3)</text></svg>",
-    "options": [
-      "A. $2$",
-      "B. $4$",
-      "C. $5$",
-      "D. $3$"
-    ],
-    "correctAnswer": "D. $3$",
-    "explanation": "Langkah 1: Substitusi $x = 2$ ke dalam fungsi $f(x) = x + 1$.\n$f(2) = 2 + 1$\n\nLangkah 2: Selesaikan penjumlahannya.\n$f(2) = 3$\n\nLangkah 3: Konfirmasi melalui grafik — garis putus-putus biru menunjukkan bahwa saat $x = 2$, nilai fungsinya adalah $y = 3$, yaitu titik $(2, 3)$.\n\nJadi, nilai $f(2)$ adalah $3$."
-  },
-  {
-    "questionText": "Diketahui $A = \\{1, 2\\}$ dan $B = \\{a, b, c\\}$. Banyaknya fungsi yang mungkin dari himpunan $A$ ke himpunan $B$ adalah ...",
-    "options": [
-      "A. $6$",
-      "B. $8$",
-      "C. $9$",
-      "D. $12$"
-    ],
-    "correctAnswer": "C. $9$",
-    "explanation": "Langkah 1: Ingat rumus banyaknya fungsi dari himpunan $A$ ke himpunan $B$, yaitu $n(B)^{n(A)}$.\n\nLangkah 2: Tentukan banyak anggota masing-masing himpunan.\n$n(A) = 2$ dan $n(B) = 3$\n\nLangkah 3: Substitusi ke dalam rumus.\nBanyak fungsi $= n(B)^{n(A)} = 3^2 = 9$\n\nJadi, banyaknya fungsi yang mungkin dari $A$ ke $B$ adalah $9$."
-  },
-  {
-    "questionText": "Diketahui fungsi $f(x) = x^2 - 1$. Nilai $f(3)$ adalah ...",
-    "options": [
-      "A. $6$",
-      "B. $7$",
-      "C. $10$",
-      "D. $8$"
-    ],
-    "correctAnswer": "D. $8$",
-    "explanation": "Langkah 1: Substitusi nilai $x = 3$ ke dalam fungsi $f(x) = x^2 - 1$.\n$f(3) = (3)^2 - 1$\n\nLangkah 2: Selesaikan operasi pemangkatan terlebih dahulu.\n$f(3) = 9 - 1$\n\nLangkah 3: Selesaikan pengurangan.\n$f(3) = 8$\n\nJadi, nilai $f(3)$ adalah $8$."
-  },
-  {
-    "questionText": "Diketahui pasangan berurutan suatu fungsi adalah $\\{(2, 4),\\ (3, 9),\\ (4, 16),\\ (5, 25)\\}$. Range (daerah hasil) dari fungsi tersebut adalah ...",
-    "options": [
-      "A. $\\{2, 3, 4, 5\\}$",
-      "B. $\\{4, 6, 8, 10\\}$",
-      "C. $\\{4, 9, 16, 25\\}$",
-      "D. $\\{2, 4, 9, 25\\}$"
-    ],
-    "correctAnswer": "C. $\\{4, 9, 16, 25\\}$",
-    "explanation": "Langkah 1: Ingat definisi range, yaitu himpunan semua komponen kedua dari setiap pasangan berurutan.\n\nLangkah 2: Ambil komponen kedua dari setiap pasangan.\n- $(2, 4) \\Rightarrow 4$\n- $(3, 9) \\Rightarrow 9$\n- $(4, 16) \\Rightarrow 16$\n- $(5, 25) \\Rightarrow 25$\n\nLangkah 3: Kumpulkan semua komponen kedua menjadi satu himpunan.\nRange $= \\{4, 9, 16, 25\\}$.\n\nJadi, range fungsi tersebut adalah $\\{4, 9, 16, 25\\}$."
-  },
-  {
-    "questionText": "Perhatikan relasi berikut: $\\{(1, 2),\\ (1, 3),\\ (2, 4),\\ (3, 5)\\}$. Apakah relasi ini merupakan fungsi?",
-    "options": [
-      "A. Ya, karena setiap anggota kodomain memiliki pasangan di domain",
-      "B. Ya, karena semua pasangan berurutan memiliki tepat dua komponen",
-      "C. Tidak, karena anggota domain $1$ memiliki dua pasangan sekaligus, yaitu $2$ dan $3$",
-      "D. Tidak, karena anggota kodomain $4$ dan $5$ hanya memiliki satu pasangan"
-    ],
-    "correctAnswer": "C. Tidak, karena anggota domain $1$ memiliki dua pasangan sekaligus, yaitu $2$ dan $3$",
-    "explanation": "Langkah 1: Ingat syarat fungsi — setiap anggota domain harus memiliki tepat satu pasangan di kodomain.\n\nLangkah 2: Periksa setiap anggota domain.\n- Domain $1$ muncul pada $(1, 2)$ dan $(1, 3)$, artinya $1$ memiliki dua pasangan: $2$ dan $3$.\n- Domain $2$ muncul hanya pada $(2, 4)$ — memenuhi syarat.\n- Domain $3$ muncul hanya pada $(3, 5)$ — memenuhi syarat.\n\nLangkah 3: Karena domain $1$ memiliki lebih dari satu pasangan, syarat fungsi tidak terpenuhi.\n\nJadi, relasi tersebut bukan merupakan fungsi."
-  }
+        {
+            "questionText": "Perhatikan diagram panah berikut. Manakah pernyataan yang benar mengenai relasi pada diagram tersebut?<br><div style='display:flex;justify-content:center;margin:12px 0'><svg width='300' height='220' viewBox='0 0 300 220' xmlns='http://www.w3.org/2000/svg'><defs><marker id='arr_q1' markerWidth='6' markerHeight='6' refX='5' refY='3' orient='auto'><path d='M0,0 L6,3 L0,6 Z' fill='#d4a843'/></marker></defs><ellipse cx='70' cy='110' rx='40' ry='72' stroke='#d4a843' stroke-width='1.5' fill='rgba(212,168,67,0.08)'/><ellipse cx='230' cy='110' rx='40' ry='72' stroke='#d4a843' stroke-width='1.5' fill='rgba(212,168,67,0.08)'/><text x='70' y='22' text-anchor='middle' fill='#7a7870' font-size='11' font-family='sans-serif'>Domain</text><text x='230' y='22' text-anchor='middle' fill='#7a7870' font-size='11' font-family='sans-serif'>Kodomain</text><text x='70' y='78' text-anchor='middle' fill='#e8e4dc' font-size='13' font-family='sans-serif'>a</text><text x='70' y='114' text-anchor='middle' fill='#e8e4dc' font-size='13' font-family='sans-serif'>b</text><text x='70' y='150' text-anchor='middle' fill='#e8e4dc' font-size='13' font-family='sans-serif'>c</text><text x='230' y='78' text-anchor='middle' fill='#e8e4dc' font-size='13' font-family='sans-serif'>1</text><text x='230' y='114' text-anchor='middle' fill='#e8e4dc' font-size='13' font-family='sans-serif'>2</text><text x='230' y='150' text-anchor='middle' fill='#e8e4dc' font-size='13' font-family='sans-serif'>3</text><line x1='100' y1='74' x2='197' y2='74' stroke='#d4a843' stroke-width='1.5' marker-end='url(#arr_q1)'/><line x1='100' y1='110' x2='197' y2='110' stroke='#d4a843' stroke-width='1.5' marker-end='url(#arr_q1)'/><line x1='100' y1='146' x2='197' y2='146' stroke='#d4a843' stroke-width='1.5' marker-end='url(#arr_q1)'/><text x='150' y='210' text-anchor='middle' fill='#7a7870' font-size='11' font-family='sans-serif'>a&#8594;1,  b&#8594;2,  c&#8594;3</text></svg></div>",
+            "options": [
+                "A. Relasi tersebut adalah fungsi karena setiap anggota domain tepat memiliki satu pasangan di kodomain",
+                "B. Relasi tersebut bukan fungsi karena ada anggota kodomain yang tidak berpasangan",
+                "C. Relasi tersebut bukan fungsi karena ada anggota domain yang berpasangan lebih dari satu",
+                "D. Relasi tersebut adalah fungsi karena semua anggota kodomain berpasangan"
+            ],
+            "correctAnswer": "A. Relasi tersebut adalah fungsi karena setiap anggota domain tepat memiliki satu pasangan di kodomain",
+            "explanation": "Langkah 1: Ingat syarat suatu relasi disebut fungsi, yaitu setiap anggota domain harus memiliki tepat satu pasangan di kodomain.\n\nLangkah 2: Periksa setiap anggota domain dari diagram panah.\n- a memetakan ke 1 (tepat satu pasangan)\n- b memetakan ke 2 (tepat satu pasangan)\n- c memetakan ke 3 (tepat satu pasangan)\n\nLangkah 3: Karena setiap anggota domain (a, b, c) memiliki tepat satu pasangan, syarat fungsi terpenuhi.\n\nJadi, relasi tersebut adalah fungsi."
+        },
+        {
+            "questionText": "Diketahui himpunan pasangan berurutan suatu relasi: $\\{(2, 4),\\ (3, 9),\\ (4, 16),\\ (5, 25)\\}$. Domain dari relasi tersebut adalah ...",
+            "options": [
+                "A. $\\{4, 9, 16, 25\\}$",
+                "B. $\\{2, 3, 4, 5\\}$",
+                "C. $\\{2, 4, 9, 16\\}$",
+                "D. $\\{2, 3, 4, 5, 9, 16, 25\\}$"
+            ],
+            "correctAnswer": "B. $\\{2, 3, 4, 5\\}$",
+            "explanation": "Langkah 1: Ingat definisi domain, yaitu himpunan semua komponen pertama dari setiap pasangan berurutan.\n\nLangkah 2: Ambil komponen pertama dari setiap pasangan.\n- $(2, 4) \\Rightarrow 2$\n- $(3, 9) \\Rightarrow 3$\n- $(4, 16) \\Rightarrow 4$\n- $(5, 25) \\Rightarrow 5$\n\nLangkah 3: Kumpulkan semua komponen pertama menjadi satu himpunan.\nDomain $= \\{2, 3, 4, 5\\}$.\n\nJadi, domain relasi tersebut adalah $\\{2, 3, 4, 5\\}$."
+        },
+        {
+            "questionText": "Diketahui fungsi $f(x) = 2x + 3$. Nilai $f(4)$ adalah ...",
+            "options": [
+                "A. $9$",
+                "B. $10$",
+                "C. $11$",
+                "D. $14$"
+            ],
+            "correctAnswer": "C. $11$",
+            "explanation": "Langkah 1: Substitusi nilai $x = 4$ ke dalam fungsi $f(x) = 2x + 3$.\n$f(4) = 2(4) + 3$\n\nLangkah 2: Selesaikan operasi perkalian terlebih dahulu.\n$f(4) = 8 + 3$\n\nLangkah 3: Jumlahkan hasilnya.\n$f(4) = 11$\n\nJadi, nilai $f(4)$ adalah $11$."
+        },
+        {
+            "questionText": "Fungsi $f$ didefinisikan dengan $f(x) = 3x$. Jika domain fungsi tersebut adalah $\\{1, 2, 3\\}$, maka range (daerah hasil) fungsi tersebut adalah ...",
+            "options": [
+                "A. $\\{1, 2, 3\\}$",
+                "B. $\\{2, 4, 6\\}$",
+                "C. $\\{4, 5, 6\\}$",
+                "D. $\\{3, 6, 9\\}$"
+            ],
+            "correctAnswer": "D. $\\{3, 6, 9\\}$",
+            "explanation": "Langkah 1: Hitung nilai $f(x) = 3x$ untuk setiap anggota domain.\n\nLangkah 2: Substitusi satu per satu.\n- $f(1) = 3(1) = 3$\n- $f(2) = 3(2) = 6$\n- $f(3) = 3(3) = 9$\n\nLangkah 3: Kumpulkan semua hasil yang diperoleh menjadi satu himpunan.\nRange $= \\{3, 6, 9\\}$.\n\nJadi, range fungsi tersebut adalah $\\{3, 6, 9\\}$."
+        },
+        {
+            "questionText": "Perhatikan diagram panah berikut. Diagram tersebut menggambarkan relasi yang ...<br><div style='display:flex;justify-content:center;margin:12px 0'><svg width='300' height='220' viewBox='0 0 300 220' xmlns='http://www.w3.org/2000/svg'><defs><marker id='arr_q5a' markerWidth='6' markerHeight='6' refX='5' refY='3' orient='auto'><path d='M0,0 L6,3 L0,6 Z' fill='#d4a843'/></marker><marker id='arr_q5b' markerWidth='6' markerHeight='6' refX='5' refY='3' orient='auto'><path d='M0,0 L6,3 L0,6 Z' fill='#5b9cf6'/></marker></defs><ellipse cx='70' cy='110' rx='40' ry='72' stroke='#d4a843' stroke-width='1.5' fill='rgba(212,168,67,0.08)'/><ellipse cx='230' cy='110' rx='40' ry='72' stroke='#d4a843' stroke-width='1.5' fill='rgba(212,168,67,0.08)'/><text x='70' y='22' text-anchor='middle' fill='#7a7870' font-size='11' font-family='sans-serif'>Domain</text><text x='230' y='22' text-anchor='middle' fill='#7a7870' font-size='11' font-family='sans-serif'>Kodomain</text><text x='70' y='78' text-anchor='middle' fill='#5b9cf6' font-size='13' font-family='sans-serif'>p</text><text x='70' y='114' text-anchor='middle' fill='#e8e4dc' font-size='13' font-family='sans-serif'>q</text><text x='70' y='150' text-anchor='middle' fill='#e8e4dc' font-size='13' font-family='sans-serif'>r</text><text x='230' y='78' text-anchor='middle' fill='#e8e4dc' font-size='13' font-family='sans-serif'>1</text><text x='230' y='114' text-anchor='middle' fill='#e8e4dc' font-size='13' font-family='sans-serif'>2</text><text x='230' y='150' text-anchor='middle' fill='#e8e4dc' font-size='13' font-family='sans-serif'>3</text><line x1='100' y1='74' x2='197' y2='74' stroke='#5b9cf6' stroke-width='1.5' marker-end='url(#arr_q5b)'/><line x1='100' y1='74' x2='197' y2='110' stroke='#5b9cf6' stroke-width='1.5' marker-end='url(#arr_q5b)'/><line x1='100' y1='110' x2='197' y2='146' stroke='#d4a843' stroke-width='1.5' marker-end='url(#arr_q5a)'/><line x1='100' y1='146' x2='197' y2='146' stroke='#d4a843' stroke-width='1.5' marker-end='url(#arr_q5a)'/><text x='150' y='210' text-anchor='middle' fill='#5b9cf6' font-size='11' font-family='sans-serif'>p memiliki 2 pasangan (ditandai biru)</text></svg></div>",
+            "options": [
+                "A. Bukan fungsi, karena ada anggota domain yang tidak berpasangan",
+                "B. Fungsi, karena semua anggota domain berpasangan",
+                "C. Bukan fungsi, karena elemen p memetakan ke dua anggota kodomain sekaligus",
+                "D. Fungsi, karena ada anggota kodomain yang berpasangan lebih dari satu"
+            ],
+            "correctAnswer": "C. Bukan fungsi, karena elemen p memetakan ke dua anggota kodomain sekaligus",
+            "explanation": "Langkah 1: Ingat syarat fungsi — setiap anggota domain harus memiliki tepat SATU pasangan di kodomain.\n\nLangkah 2: Periksa setiap anggota domain dari diagram.\n- p memetakan ke 1 dan ke 2 (dua panah keluar dari p — ditandai biru)\n- q memetakan ke 3 (tepat satu pasangan)\n- r memetakan ke 3 (tepat satu pasangan)\n\nLangkah 3: Karena elemen p memiliki lebih dari satu pasangan di kodomain, syarat fungsi tidak terpenuhi.\n\nJadi, relasi tersebut bukan merupakan fungsi."
+        },
+        {
+            "questionText": "Perhatikan grafik fungsi $f(x) = x + 1$ untuk $x \\in \\{0, 1, 2, 3\\}$ berikut. Nilai $f(2)$ berdasarkan grafik adalah ...<br><div style='display:flex;justify-content:center;margin:12px 0'><svg width='300' height='220' viewBox='0 0 300 220' xmlns='http://www.w3.org/2000/svg'><defs><marker id='arr_q6' markerWidth='6' markerHeight='6' refX='5' refY='3' orient='auto'><path d='M0,0 L6,3 L0,6 Z' fill='#7a7870'/></marker></defs><line x1='55' y1='185' x2='255' y2='185' stroke='#7a7870' stroke-width='1' marker-end='url(#arr_q6)'/><line x1='55' y1='185' x2='55' y2='20' stroke='#7a7870' stroke-width='1' marker-end='url(#arr_q6)'/><text x='258' y='189' fill='#e8e4dc' font-size='12' font-family='sans-serif'>x</text><text x='48' y='16' fill='#e8e4dc' font-size='12' font-family='sans-serif'>y</text><text x='55' y='200' text-anchor='middle' fill='#7a7870' font-size='11' font-family='sans-serif'>0</text><text x='90' y='200' text-anchor='middle' fill='#7a7870' font-size='11' font-family='sans-serif'>1</text><text x='125' y='200' text-anchor='middle' fill='#7a7870' font-size='11' font-family='sans-serif'>2</text><text x='160' y='200' text-anchor='middle' fill='#7a7870' font-size='11' font-family='sans-serif'>3</text><text x='42' y='154' text-anchor='middle' fill='#7a7870' font-size='11' font-family='sans-serif'>1</text><text x='42' y='119' text-anchor='middle' fill='#7a7870' font-size='11' font-family='sans-serif'>2</text><text x='42' y='84' text-anchor='middle' fill='#7a7870' font-size='11' font-family='sans-serif'>3</text><text x='42' y='49' text-anchor='middle' fill='#7a7870' font-size='11' font-family='sans-serif'>4</text><line x1='55' y1='150' x2='90' y2='115' stroke='#d4a843' stroke-width='1.5'/><line x1='90' y1='115' x2='125' y2='80' stroke='#d4a843' stroke-width='1.5'/><line x1='125' y1='80' x2='160' y2='45' stroke='#d4a843' stroke-width='1.5'/><circle cx='55' cy='150' r='4' fill='#d4a843'/><circle cx='90' cy='115' r='4' fill='#d4a843'/><circle cx='125' cy='80' r='5' fill='#5b9cf6'/><circle cx='160' cy='45' r='4' fill='#d4a843'/><line x1='125' y1='80' x2='125' y2='185' stroke='#5b9cf6' stroke-width='1' stroke-dasharray='4,3'/><line x1='55' y1='80' x2='125' y2='80' stroke='#5b9cf6' stroke-width='1' stroke-dasharray='4,3'/><text x='138' y='76' fill='#5b9cf6' font-size='11' font-family='sans-serif'>(2, 3)</text></svg></div>",
+            "options": [
+                "A. $2$",
+                "B. $4$",
+                "C. $5$",
+                "D. $3$"
+            ],
+            "correctAnswer": "D. $3$",
+            "explanation": "Langkah 1: Substitusi $x = 2$ ke dalam fungsi $f(x) = x + 1$.\n$f(2) = 2 + 1$\n\nLangkah 2: Selesaikan penjumlahannya.\n$f(2) = 3$\n\nLangkah 3: Konfirmasi melalui grafik — garis putus-putus biru menunjukkan bahwa saat $x = 2$, nilai fungsinya adalah $y = 3$, yaitu titik $(2, 3)$.\n\nJadi, nilai $f(2)$ adalah $3$."
+        },
+        {
+            "questionText": "Diketahui $A = \\{1, 2\\}$ dan $B = \\{a, b, c\\}$. Banyaknya fungsi yang mungkin dari himpunan $A$ ke himpunan $B$ adalah ...",
+            "options": [
+                "A. $6$",
+                "B. $8$",
+                "C. $9$",
+                "D. $12$"
+            ],
+            "correctAnswer": "C. $9$",
+            "explanation": "Langkah 1: Ingat rumus banyaknya fungsi dari himpunan $A$ ke himpunan $B$, yaitu $n(B)^{n(A)}$.\n\nLangkah 2: Tentukan banyak anggota masing-masing himpunan.\n$n(A) = 2$ dan $n(B) = 3$\n\nLangkah 3: Substitusi ke dalam rumus.\nBanyak fungsi $= n(B)^{n(A)} = 3^2 = 9$\n\nJadi, banyaknya fungsi yang mungkin dari $A$ ke $B$ adalah $9$."
+        },
+        {
+            "questionText": "Diketahui fungsi $f(x) = x^2 - 1$. Nilai $f(3)$ adalah ...",
+            "options": [
+                "A. $6$",
+                "B. $7$",
+                "C. $10$",
+                "D. $8$"
+            ],
+            "correctAnswer": "D. $8$",
+            "explanation": "Langkah 1: Substitusi nilai $x = 3$ ke dalam fungsi $f(x) = x^2 - 1$.\n$f(3) = (3)^2 - 1$\n\nLangkah 2: Selesaikan operasi pemangkatan terlebih dahulu.\n$f(3) = 9 - 1$\n\nLangkah 3: Selesaikan pengurangan.\n$f(3) = 8$\n\nJadi, nilai $f(3)$ adalah $8$."
+        },
+        {
+            "questionText": "Diketahui pasangan berurutan suatu fungsi adalah $\\{(2, 4),\\ (3, 9),\\ (4, 16),\\ (5, 25)\\}$. Range (daerah hasil) dari fungsi tersebut adalah ...",
+            "options": [
+                "A. $\\{2, 3, 4, 5\\}$",
+                "B. $\\{4, 6, 8, 10\\}$",
+                "C. $\\{4, 9, 16, 25\\}$",
+                "D. $\\{2, 4, 9, 25\\}$"
+            ],
+            "correctAnswer": "C. $\\{4, 9, 16, 25\\}$",
+            "explanation": "Langkah 1: Ingat definisi range, yaitu himpunan semua komponen kedua dari setiap pasangan berurutan.\n\nLangkah 2: Ambil komponen kedua dari setiap pasangan.\n- $(2, 4) \\Rightarrow 4$\n- $(3, 9) \\Rightarrow 9$\n- $(4, 16) \\Rightarrow 16$\n- $(5, 25) \\Rightarrow 25$\n\nLangkah 3: Kumpulkan semua komponen kedua menjadi satu himpunan.\nRange $= \\{4, 9, 16, 25\\}$.\n\nJadi, range fungsi tersebut adalah $\\{4, 9, 16, 25\\}$."
+        },
+        {
+            "questionText": "Perhatikan relasi berikut: $\\{(1, 2),\\ (1, 3),\\ (2, 4),\\ (3, 5)\\}$. Apakah relasi ini merupakan fungsi?",
+            "options": [
+                "A. Ya, karena setiap anggota kodomain memiliki pasangan di domain",
+                "B. Ya, karena semua pasangan berurutan memiliki tepat dua komponen",
+                "C. Tidak, karena anggota domain $1$ memiliki dua pasangan sekaligus, yaitu $2$ dan $3$",
+                "D. Tidak, karena anggota kodomain $4$ dan $5$ hanya memiliki satu pasangan"
+            ],
+            "correctAnswer": "C. Tidak, karena anggota domain $1$ memiliki dua pasangan sekaligus, yaitu $2$ dan $3$",
+            "explanation": "Langkah 1: Ingat syarat fungsi — setiap anggota domain harus memiliki tepat satu pasangan di kodomain.\n\nLangkah 2: Periksa setiap anggota domain.\n- Domain $1$ muncul pada $(1, 2)$ dan $(1, 3)$, artinya $1$ memiliki dua pasangan: $2$ dan $3$.\n- Domain $2$ muncul hanya pada $(2, 4)$ — memenuhi syarat.\n- Domain $3$ muncul hanya pada $(3, 5)$ — memenuhi syarat.\n\nLangkah 3: Karena domain $1$ memiliki lebih dari satu pasangan, syarat fungsi tidak terpenuhi.\n\nJadi, relasi tersebut bukan merupakan fungsi."
+        }
         ]
     },
     {
