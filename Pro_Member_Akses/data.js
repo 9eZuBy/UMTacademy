@@ -4806,7 +4806,7 @@ const allContentData = {
             }
         ]
     },
-    {
+        {
         id: "lots-relasi-fungsi",
         title: "LOTS - Relasi dan Fungsi",
         "category": "LOTS",
@@ -5526,7 +5526,6 @@ const allContentData = {
             }
         ]
     },
-// Olimpiade
     {
     "id": "osn-matematika-sekolah-01",
     "title": "OSN Matematika Tingkat Sekolah (OSN-S) - Set 1",
