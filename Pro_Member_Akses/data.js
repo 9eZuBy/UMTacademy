@@ -2343,7 +2343,7 @@ const allContentData = {
     },
     {
         id: "hots-eksponen",
-        title: "HOTS Eksponensial",
+        title: "HOTS - Eksponensial",
         "category": "HOTS",
         description: "Kumpulan soal HOTS untuk memperdalam pemahaman materi eksponensial.",
         subject: "Matematika",
@@ -2464,7 +2464,7 @@ const allContentData = {
     {
         id: "hots-polinomial",
         "category": "HOTS",
-        title: "HOTS Suku Banyak (Polinomial)",
+        title: "HOTS - Suku Banyak (Polinomial)",
         description: "Kumpulan soal HOTS untuk memperdalam pemahaman materi suku banyak (polinomial).",
         subject: "Matematika",
         totalQuestions: 10,
@@ -2533,7 +2533,7 @@ const allContentData = {
     },
     {
         id: "hots-matriks",
-        title: "HOTS Matriks",
+        title: "HOTS - Matriks",
         "category": "HOTS",
         description: "Kumpulan soal HOTS untuk memperdalam pemahaman materi matriks kelas 10 SMA.",
         subject: "Matematika",
@@ -2615,7 +2615,7 @@ const allContentData = {
     },    
     {
         id: "hots-persamaan-kuadrat",
-        title: "HOTS Persamaan Kuadrat",
+        title: "HOTS - Persamaan Kuadrat",
         "category": "HOTS",
         description: "Kumpulan soal HOTS untuk memperdalam pemahaman materi persamaan kuadrat kelas 10 semester ganjil.",
         subject: "Matematika",
@@ -2705,7 +2705,7 @@ const allContentData = {
     },
     {
         id: "hots-pola-bilangan",
-        title: "HOTS Pola Bilangan",
+        title: "HOTS - Pola Bilangan",
         "category": "HOTS",
         description: "Kumpulan soal HOTS untuk memperdalam pemahaman materi pola bilangan kelas 10 semester ganjil.",
         subject: "Matematika",
@@ -2775,7 +2775,7 @@ const allContentData = {
     },
     {
         id: "hots-logika-matematika",
-        title: "HOTS Logika Matematika",
+        title: "HOTS - Logika Matematika",
         "category": "HOTS",
         description: "Kumpulan soal HOTS untuk memperdalam pemahaman materi logika matematika kelas 10 semester ganjil.",
         subject: "Matematika",
@@ -2895,7 +2895,7 @@ const allContentData = {
     },
     {
         id: "hots-induksi-matematika",
-        title: "HOTS Induksi Matematika",
+        title: "HOTS - Induksi Matematika",
         "category": "HOTS",
         description: "Kumpulan soal HOTS untuk memperdalam pemahaman materi induksi matematika kelas 10 semester ganjil.",
         subject: "Matematika",
@@ -3015,7 +3015,7 @@ const allContentData = {
     },
     {
         id: "hots-fungsi-trigonometri",
-        title: "HOTS Trigonometri",
+        title: "HOTS - Trigonometri",
         "category": "HOTS",
         description: "Kumpulan soal HOTS untuk memperdalam pemahaman materi trigonometri kelas 10 semester ganjil.",
         subject: "Matematika",
@@ -3125,7 +3125,7 @@ const allContentData = {
     },
     {
         "id": "hots-akar-pangkat",
-        "title": "HOTS Akar Pangkat",
+        "title": "HOTS - Akar Pangkat",
         "category": "HOTS",
         "description": "Kumpulan soal HOTS untuk memperdalam pemahaman materi akar pangkat kelas 10 semester ganjil.",
         "subject": "Matematika",
@@ -3246,7 +3246,7 @@ const allContentData = {
 // MOTS 
     {
         "id": "mots-akar-pangkat",
-        "title": "MOTS Akar Pangkat 2",
+        "title": "MOTS - Akar Pangkat",
         "category": "MOTS",
         "description": "Kumpulan soal MOTS untuk memperdalam pemahaman materi akar pangkat kelas 10 semester ganjil.",
         "subject": "Matematika",
@@ -3366,7 +3366,7 @@ const allContentData = {
     },
     {
         "id": "mots-eksponen",
-        "title": "MOTS Eksponensial",
+        "title": "MOTS - Eksponensial",
         "category": "MOTS",
         "description": "Kumpulan soal MOTS untuk memperdalam pemahaman materi eksponensial (perpangkatan) kelas 10 semester ganjil.",
         "subject": "Matematika",
@@ -3486,7 +3486,7 @@ const allContentData = {
     },
     {
         "id": "mots-fungsi-kuadrat",
-        "title": "MOTS Fungsi Kuadrat",
+        "title": "MOTS - Fungsi Kuadrat",
         "category": "MOTS",
         "description": "Kumpulan soal MOTS untuk memperdalam pemahaman materi fungsi kuadrat kelas 10 semester ganjil.",
         "subject": "Matematika",
@@ -3606,7 +3606,7 @@ const allContentData = {
     },
     {
         "id": "mots-fungsi-trigonometri",
-        "title": "MOTS Fungsi Trigonometri",
+        "title": "MOTS - Fungsi Trigonometri",
         "category": "MOTS",
         "description": "Kumpulan soal MOTS untuk memperdalam pemahaman materi fungsi trigonometri kelas 10 semester ganjil.",
         "subject": "Matematika",
@@ -3726,7 +3726,7 @@ const allContentData = {
     },
     {
         "id": "mots-induksi-matematika",
-        "title": "MOTS Induksi Matematika",
+        "title": "MOTS - Induksi Matematika",
         "category": "MOTS",
         "description": "Kumpulan soal MOTS untuk memperdalam pemahaman materi induksi matematika kelas 10 semester ganjil.",
         "subject": "Matematika",
@@ -3846,7 +3846,7 @@ const allContentData = {
     },
     {
         "id": "mots-logika-matematika",
-        "title": "MOTS Logika Matematika",
+        "title": "MOTS - Logika Matematika",
         "category": "MOTS",
         "description": "Kumpulan soal MOTS untuk memperdalam pemahaman materi logika matematika kelas 10 semester ganjil.",
         "subject": "Matematika",
@@ -3966,7 +3966,7 @@ const allContentData = {
     },
     {
         "id": "mots-matriks",
-        "title": "MOTS Matriks",
+        "title": "MOTS - Matriks",
         "category": "MOTS",
         "description": "Kumpulan soal MOTS untuk memperdalam pemahaman materi matriks kelas 11 semester ganjil.",
         "subject": "Matematika",
@@ -4086,7 +4086,7 @@ const allContentData = {
     },
     {
         "id": "mots-persamaan-kuadrat",
-        "title": "MOTS Persamaan Kuadrat",
+        "title": "MOTS - Persamaan Kuadrat",
         "category": "MOTS",
         "description": "Kumpulan soal MOTS untuk memperdalam pemahaman materi persamaan kuadrat kelas 10 semester ganjil.",
         "subject": "Matematika",
@@ -4206,7 +4206,7 @@ const allContentData = {
     },
     {
         "id": "mots-persamaan-trigonometri",
-        "title": "MOTS Persamaan Trigonometri",
+        "title": "MOTS - Persamaan Trigonometri",
         "category": "MOTS",
         "description": "Kumpulan soal MOTS untuk memperdalam pemahaman materi persamaan trigonometri kelas 10 semester ganjil.",
         "subject": "Matematika",
@@ -4326,7 +4326,7 @@ const allContentData = {
     },
     {
         "id": "mots-pola-bilangan",
-        "title": "MOTS Pola Bilangan",
+        "title": "MOTS - Pola Bilangan",
         "category": "MOTS",
         "description": "Kumpulan soal MOTS untuk memperdalam pemahaman materi pola bilangan kelas 10 semester ganjil.",
         "subject": "Matematika",
@@ -4447,7 +4447,7 @@ const allContentData = {
     {
         "id": "mots-polinomial",
         "category": "MOTS",
-        "title": "MOTS Suku Banyak (Polinomial)",
+        "title": "MOTS - Suku Banyak (Polinomial)",
         "description": "Kumpulan soal MOTS untuk memperdalam pemahaman materi suku banyak (polinomial) kelas 11 semester ganjil.",
         "subject": "Matematika",
         "totalQuestions": 10,
@@ -4567,7 +4567,7 @@ const allContentData = {
     {
         "id": "mots-relasi-fungsi",
         "category": "MOTS",
-        "title": "MOTS Relasi dan Fungsi",
+        "title": "MOTS - Relasi dan Fungsi",
         "description": "Kumpulan soal MOTS untuk memperdalam pemahaman materi relasi dan fungsi kelas 10 semester ganjil.",
         "subject": "Matematika",
         "totalQuestions": 10,
@@ -4687,7 +4687,7 @@ const allContentData = {
 // LOTS 
     {
         "id": "lots-akar-pangkat",
-        "title": "LOTS Akar Pangkat",
+        "title": "LOTS - Akar Pangkat",
         "category": "LOTS",
         "description": "Kumpulan soal LOTS untuk memperdalam pemahaman materi akar pangkat kelas 10 semester ganjil.",
         "subject": "Matematika",
@@ -4927,7 +4927,7 @@ const allContentData = {
     },
     {
         "id": "lots-eksponen",
-        "title": "LOTS Eksponensial (Perpangkatan)",
+        "title": "LOTS - Eksponensial (Perpangkatan)",
         "category": "LOTS",
         "description": "Kumpulan soal LOTS untuk memperdalam pemahaman materi eksponensial (perpangkatan) kelas 10 semester ganjil.",
         "subject": "Matematika",
@@ -5047,7 +5047,7 @@ const allContentData = {
     },
     {
         "id": "lots-fungsi-kuadrat",
-        "title": "LOTS Fungsi Kuadrat",
+        "title": "LOTS - Fungsi Kuadrat",
         "category": "LOTS",
         "description": "Kumpulan soal LOTS untuk memperdalam pemahaman materi fungsi kuadrat kelas 10 semester ganjil.",
         "subject": "Matematika",
@@ -5168,7 +5168,7 @@ const allContentData = {
     {
         "id": "lots-induksi-matematika",
         "category": "LOTS",
-        "title": "LOTS Induksi Matematika",
+        "title": "LOTS - Induksi Matematika",
         "description": "Kumpulan soal LOTS untuk memperdalam pemahaman materi induksi matematika kelas 11 semester ganjil.",
         "subject": "Matematika",
         "totalQuestions": 10,
@@ -5288,7 +5288,7 @@ const allContentData = {
     {
         "id": "lots-logika-matematika",
         "category": "LOTS",
-        "title": "LOTS Logika Matematika",
+        "title": "LOTS - Logika Matematika",
         "description": "Kumpulan soal LOTS untuk memperdalam pemahaman materi logika matematika kelas 10 semester ganjil.",
         "subject": "Matematika",
         "totalQuestions": 10,
@@ -5408,7 +5408,7 @@ const allContentData = {
     {
         "id": "lots-matriks",
         "category": "LOTS",
-        "title": "LOTS Matriks",
+        "title": "LOTS - Matriks",
         "description": "Kumpulan soal LOTS untuk memperdalam pemahaman materi matriks kelas 11 semester ganjil.",
         "subject": "Matematika",
         "totalQuestions": 10,
