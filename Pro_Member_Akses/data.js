@@ -4806,7 +4806,7 @@ const allContentData = {
             }
         ]
     },
-        {
+    {
         id: "lots-relasi-fungsi",
         title: "LOTS - Relasi dan Fungsi",
         "category": "LOTS",
