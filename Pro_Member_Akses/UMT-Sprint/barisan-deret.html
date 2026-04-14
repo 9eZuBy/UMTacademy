@@ -703,6 +703,11 @@
 <div id="toast"></div>
 
 <script>
+
+if (!sessionStorage.getItem('sessionToken')) {
+            window.location.href = '../../Login/';
+        }
+
 // ═══════════════════════════════════════════════════════════════
 //  KONFIGURASI — GANTI BAGIAN INI SESUAI TOPIK SPRINT
 // ═══════════════════════════════════════════════════════════════
