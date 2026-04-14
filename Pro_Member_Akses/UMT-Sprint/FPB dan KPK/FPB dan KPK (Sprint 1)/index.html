@@ -1,1 +1,1699 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sprint — FPB & KPK</title>
+    <script>
+      MathJax = { tex: { inlineMath: [['\\(','\\)'],['$','$']] } };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        /* ── RESET & BASE ── */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
+        :root {
+            --bg-main:    #080C14;
+            --bg-panel:   #0D1520;
+            --bg-panel2:  #111A28;
+            --border:     #1A2840;
+            --border2:    #1E3050;
+            --text:       #E2EAF4;
+            --text2:      #637A96;
+            --text3:      #3A4F68;
+            --cyan:       #22D3EE;
+            --cyan2:      #0EA5E9;
+            --cyan-dim:   rgba(34,211,238,0.08);
+            --green:      #34D399;
+            --amber:      #FBBF24;
+            --red:        #F87171;
+            --purple:     #A78BFA;
+            --radius-sm:  8px;
+            --radius-md:  12px;
+            --radius-lg:  16px;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg-main);
+            color: var(--text);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            padding: 16px;
+        }
+
+        /* ── IMPORT FONT ── */
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* ── LAYOUT ── */
+        .wrap { max-width: 760px; margin: 0 auto; }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        .back-btn {
+            display: flex; align-items: center; gap: 6px;
+            background: var(--bg-panel2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 7px 12px;
+            color: var(--text2);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: border-color .2s, color .2s;
+            flex-shrink: 0;
+        }
+        .back-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+        .topbar-title { font-size: 14px; font-weight: 700; color: var(--text); }
+        .topbar-sub   { font-size: 11px; color: var(--text2); margin-top: 1px; }
+
+        /* ── PANEL ── */
+        .panel {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 14px;
+        }
+        @media (min-width: 600px) { .panel { padding: 24px; } }
+
+        /* ── PROGRESS TRACK ── */
+        .stage-track {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin-bottom: 20px;
+        }
+        .stage-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+        .stage-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: var(--border);
+            z-index: 0;
+            transition: background .4s;
+        }
+        .stage-item.done:not(:last-child)::after { background: var(--cyan2); }
+        .stage-dot {
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            background: var(--bg-panel2);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 700;
+            color: var(--text3);
+            transition: all .3s;
+            position: relative;
+            z-index: 2;
+        }
+        .stage-item.active .stage-dot {
+            border-color: var(--cyan);
+            color: var(--cyan);
+            background: var(--bg-panel);
+            box-shadow: 0 0 0 4px rgba(34,211,238,0.12);
+        }
+        .stage-item.done .stage-dot {
+            border-color: var(--green);
+            background: rgba(52,211,153,0.12);
+            color: var(--green);
+        }
+        .stage-lbl {
+            font-size: 10px; font-weight: 600;
+            color: var(--text3);
+            margin-top: 5px;
+            transition: color .3s;
+        }
+        .stage-item.active .stage-lbl { color: var(--cyan); }
+        .stage-item.done  .stage-lbl  { color: var(--green); }
+
+        /* ── STAT ROW ── */
+        .stat-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .stat-card {
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            text-align: center;
+        }
+        .stat-val {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--cyan);
+            font-family: 'JetBrains Mono', monospace;
+            line-height: 1.2;
+        }
+        .stat-lbl { font-size: 10px; color: var(--text2); margin-top: 3px; }
+
+        /* ── BUTTONS ── */
+        .btn {
+            display: inline-flex; align-items: center; gap: 7px;
+            padding: 9px 20px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all .2s;
+            font-family: inherit;
+        }
+        .btn-primary { background: var(--cyan2); color: #000; border-color: var(--cyan2); }
+        .btn-primary:hover { background: var(--cyan); border-color: var(--cyan); }
+        .btn-ghost {
+            background: transparent;
+            color: var(--text2);
+            border-color: var(--border);
+        }
+        .btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); }
+        .btn-danger { background: rgba(248,113,113,.1); color: var(--red); border-color: rgba(248,113,113,.25); }
+        .btn-danger:hover { background: rgba(248,113,113,.2); }
+        .btn:disabled { opacity: .4; cursor: not-allowed; }
+        .btn-sm { padding: 6px 14px; font-size: 12px; }
+
+        .btn-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+        .btn-group.center { justify-content: center; }
+
+        /* ── BADGE ── */
+        .badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            font-size: 10px; font-weight: 700;
+            padding: 3px 8px; border-radius: 20px;
+            letter-spacing: .04em;
+        }
+        .badge-cyan   { background: var(--cyan-dim);           color: var(--cyan);   border: 1px solid rgba(34,211,238,.2); }
+        .badge-green  { background: rgba(52,211,153,.08);      color: var(--green);  border: 1px solid rgba(52,211,153,.2); }
+        .badge-amber  { background: rgba(251,191,36,.08);      color: var(--amber);  border: 1px solid rgba(251,191,36,.2); }
+        .badge-red    { background: rgba(248,113,113,.08);     color: var(--red);    border: 1px solid rgba(248,113,113,.2); }
+        .badge-purple { background: rgba(167,139,250,.08);     color: var(--purple); border: 1px solid rgba(167,139,250,.2); }
+
+        /* ── MATERIAL ── */
+        .mat-heading {
+            font-size: 14px; font-weight: 700; color: var(--cyan);
+            margin: 20px 0 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .mat-heading::before {
+            content: '';
+            display: inline-block;
+            width: 3px; height: 14px;
+            background: var(--cyan);
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+        .mat-text { font-size: 13px; color: var(--text2); line-height: 1.7; margin-bottom: 10px; }
+        .rule-box {
+            background: rgba(0,0,0,.2);
+            border-left: 3px solid var(--cyan2);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            padding: 14px 16px;
+            margin: 10px 0;
+            font-size: 13px;
+            color: var(--text2);
+            line-height: 1.8;
+        }
+        .rule-box ul { list-style: none; padding: 0; }
+        .rule-box li { margin-bottom: 8px; }
+        .key { color: var(--amber); font-weight: 600; }
+        .info-box {
+            background: rgba(251,191,36,.06);
+            border: 1px solid rgba(251,191,36,.2);
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            font-size: 12px;
+            color: var(--amber);
+            line-height: 1.6;
+            margin-top: 16px;
+        }
+
+        /* ── LEVEL CARDS ── */
+        .level-card {
+            background: var(--bg-panel2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            margin-bottom: 10px;
+            transition: border-color .2s;
+        }
+        .level-card.unlocked:hover { border-color: var(--border2); }
+        .level-card.locked { opacity: .55; }
+
+        .level-header {
+            display: flex; align-items: center; gap: 12px;
+            padding: 14px 16px;
+            cursor: pointer;
+        }
+        .level-card.locked .level-header { cursor: not-allowed; }
+
+        .level-icon {
+            width: 36px; height: 36px;
+            border-radius: var(--radius-sm);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        .level-meta { flex: 1; min-width: 0; }
+        .level-name { font-size: 14px; font-weight: 700; color: var(--text); }
+        .level-sub  { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+        /* attempt dots */
+        .attempt-dots { display: flex; gap: 4px; margin-top: 6px; }
+        .adot {
+            width: 9px; height: 9px; border-radius: 50%;
+            background: var(--border2);
+            transition: background .3s;
+        }
+        .adot.pass { background: var(--green); }
+        .adot.fail { background: var(--red); }
+
+        .level-chevron { color: var(--text3); font-size: 11px; transition: transform .25s; }
+        .level-card.open .level-chevron { transform: rotate(180deg); }
+
+        .level-body {
+            display: none;
+            padding: 0 16px 14px;
+            border-top: 1px solid var(--border);
+        }
+        .level-card.open .level-body { display: block; }
+
+        .level-info-row {
+            display: flex; align-items: center; justify-content: space-between;
+            padding-top: 12px;
+            flex-wrap: wrap; gap: 8px;
+        }
+        .level-info-text { font-size: 12px; color: var(--text2); }
+
+        /* ── QUIZ ── */
+        .q-nav { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+        .q-dot {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            border: 1.5px solid var(--border);
+            font-size: 11px; font-weight: 700;
+            color: var(--text3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all .2s;
+            font-family: 'JetBrains Mono', monospace;
+            flex-shrink: 0;
+        }
+        .q-dot:hover       { border-color: var(--cyan); color: var(--cyan); }
+        .q-dot.current     { background: var(--cyan); border-color: var(--cyan); color: #000; }
+        .q-dot.ans-correct { background: rgba(52,211,153,.12); border-color: var(--green); color: var(--green); }
+        .q-dot.ans-wrong   { background: rgba(248,113,113,.12); border-color: var(--red); color: var(--red); }
+
+        .q-num    { font-size: 11px; color: var(--text2); margin-bottom: 10px; }
+        .q-text   { font-size: 15px; color: var(--text); line-height: 1.65; margin-bottom: 16px; }
+
+        .opt-btn {
+            width: 100%;
+            text-align: left;
+            background: var(--bg-panel2);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 12px 14px;
+            color: var(--text2);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all .2s;
+            margin-bottom: 8px;
+            display: flex; align-items: center; gap: 10px;
+            font-family: inherit;
+        }
+        .opt-btn:hover:not(:disabled) { border-color: var(--cyan); color: var(--text); background: var(--cyan-dim); }
+        .opt-btn.selected  { border-color: var(--cyan);  color: var(--text); background: var(--cyan-dim); }
+        .opt-btn.correct   { border-color: var(--green); color: #d4edda;    background: rgba(52,211,153,.1); }
+        .opt-btn.wrong     { border-color: var(--red);   color: #f8d7da;    background: rgba(248,113,113,.1); }
+        .opt-btn:disabled  { cursor: not-allowed; }
+        .opt-letter {
+            width: 22px; height: 22px;
+            border-radius: 50%;
+            border: 1.5px solid currentColor;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px; font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .explanation {
+            background: var(--cyan-dim);
+            border-left: 3px solid var(--cyan);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            padding: 12px 14px;
+            margin-top: 14px;
+            font-size: 13px;
+            color: var(--text2);
+            line-height: 1.7;
+        }
+        .explanation strong { color: var(--cyan); font-size: 11px; letter-spacing: .04em; }
+
+        .quiz-footer {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+            gap: 8px;
+        }
+
+        /* ── RESULT ── */
+        .result-hero { text-align: center; padding: 16px 0 20px; }
+        .score-ring-wrap { position: relative; display: inline-block; margin-bottom: 12px; }
+        .score-ring-text {
+            position: absolute; inset: 0;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+        }
+        .score-big { font-size: 28px; font-weight: 700; line-height: 1; font-family: 'JetBrains Mono', monospace; }
+        .score-pct { font-size: 11px; color: var(--text2); }
+        .result-verdict { font-size: 17px; font-weight: 700; margin-top: 4px; }
+        .result-sub    { font-size: 12px; color: var(--text2); margin-top: 4px; }
+
+        .result-stats {
+            display: grid; grid-template-columns: repeat(3,1fr);
+            gap: 8px; margin: 16px 0;
+        }
+        .rs-card {
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 10px;
+            text-align: center;
+        }
+        .rs-val { font-size: 16px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+        .rs-lbl { font-size: 10px; color: var(--text2); margin-top: 2px; }
+
+        .notice-box {
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            font-size: 13px;
+            line-height: 1.6;
+            margin: 12px 0;
+        }
+        .notice-box.green  { background: rgba(52,211,153,.06); border: 1px solid rgba(52,211,153,.2); color: var(--green); }
+        .notice-box.red    { background: rgba(248,113,113,.06); border: 1px solid rgba(248,113,113,.2); color: var(--red); }
+        .notice-box.cyan   { background: var(--cyan-dim);       border: 1px solid rgba(34,211,238,.2);  color: var(--cyan); }
+        .notice-box .n-title { font-weight: 700; margin-bottom: 4px; }
+        .notice-box .n-sub   { font-size: 12px; opacity: .8; }
+
+        /* ── CERTIFICATE ── */
+        .cert {
+            text-align: center;
+            padding: 28px 20px;
+            border: 1px solid rgba(34,211,238,.3);
+            border-radius: var(--radius-lg);
+            background: var(--bg-panel2);
+            position: relative;
+            overflow: hidden;
+        }
+        .cert::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(34,211,238,.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .cert-icon { font-size: 40px; margin-bottom: 12px; }
+        .cert-title { font-size: 20px; font-weight: 700; color: var(--cyan); margin-bottom: 8px; }
+        .cert-text  { font-size: 13px; color: var(--text2); line-height: 1.7; }
+
+        /* ── TOAST ── */
+        #toast {
+            position: fixed; bottom: 20px; right: 20px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            font-size: 13px;
+            color: var(--text);
+            z-index: 9999;
+            display: none;
+            align-items: center; gap: 10px;
+            max-width: 300px;
+            box-shadow: 0 8px 24px rgba(0,0,0,.4);
+            animation: toastIn .3s ease;
+        }
+        @keyframes toastIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+        /* ── VIEWS ── */
+        .view { display: none; }
+        .view.active { display: block; }
+
+        /* ── SECTION HEADER ── */
+        .sec-hdr {
+            display: flex; align-items: center; gap: 8px;
+            margin-bottom: 14px;
+        }
+        .sec-accent { width: 3px; height: 16px; background: var(--cyan); border-radius: 2px; flex-shrink: 0; }
+        .sec-title  { font-size: 14px; font-weight: 700; color: var(--text); }
+
+        /* ── MOBILE ── */
+        @media (max-width: 480px) {
+            body { padding: 12px 10px; }
+            .stat-row { grid-template-columns: 1fr 1fr; }
+            .result-stats { grid-template-columns: 1fr 1fr; }
+            .quiz-footer { flex-direction: column; }
+            .quiz-footer .btn { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrap">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+        <a href="javascript:history.back()" class="back-btn">&#8592; Kembali</a>
+        <div>
+            <div class="topbar-title" id="page-title">⚡ Sprint — Barisan & Deret</div>
+            <div class="topbar-sub" id="page-sub">Latihan Sprint · 3 Level</div>
+        </div>
+    </div>
+
+    <!-- STAGE TRACK -->
+    <div class="panel" style="padding:16px 20px">
+        <div class="stage-track" id="stage-track">
+            <div class="stage-item" id="st-materi">
+                <div class="stage-dot">📚</div>
+                <div class="stage-lbl">Materi</div>
+            </div>
+            <div class="stage-item" id="st-lots">
+                <div class="stage-dot mono">①</div>
+                <div class="stage-lbl">LOTS</div>
+            </div>
+            <div class="stage-item" id="st-mots">
+                <div class="stage-dot mono">②</div>
+                <div class="stage-lbl">MOTS</div>
+            </div>
+            <div class="stage-item" id="st-hots">
+                <div class="stage-dot mono">③</div>
+                <div class="stage-lbl">HOTS</div>
+            </div>
+            <div class="stage-item" id="st-selesai">
+                <div class="stage-dot">🏆</div>
+                <div class="stage-lbl">Selesai</div>
+            </div>
+        </div>
+        <div class="stat-row" id="global-stats">
+            <div class="stat-card">
+                <div class="stat-val" id="gs-level">Materi</div>
+                <div class="stat-lbl">Tahap</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val" id="gs-attempts">—</div>
+                <div class="stat-lbl">Percobaan Tersisa</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val" id="gs-pass">0/2</div>
+                <div class="stat-lbl">Kali Lulus</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── VIEW: MATERI ── -->
+    <div class="view active" id="view-materi">
+        <div class="panel">
+            <div class="sec-hdr">
+                <div class="sec-accent"></div>
+                <div class="sec-title">Materi Ringkas</div>
+                <span class="badge badge-cyan">Baca Dulu</span>
+            </div>
+
+            <!-- ═══════════════════════════════════════════
+                 GANTI KONTEN MATERI DI SINI
+            ═══════════════════════════════════════════ -->
+            <div id="materi-content">
+<div class="mat-heading">1. Metode Faktorisasi Prima</div>
+    <p class="mat-text">
+        Cara paling efektif untuk mencari FPB & KPK adalah dengan <span class="key">faktorisasi prima</span>, yaitu menguraikan bilangan menjadi perkalian bilangan-bilangan prima.
+    </p>
+    <div class="rule-box">
+        Contoh: \(12 = 2^2 \times 3\) dan \(18 = 2 \times 3^2\)
+    </div>
+
+    <div class="mat-heading">2. Aturan Mencari FPB & KPK</div>
+    <div class="rule-box">
+        <ul>
+            <li>
+                <strong>FPB (Faktor Persekutuan Terbesar):</strong><br>
+                Ambil <span class="key">hanya faktor prima yang sama</span>, lalu pilih <span class="key">pangkat terkecil</span>.<br>
+                Contoh FPB dari 12 dan 18: Faktor yang sama adalah 2 dan 3. Pangkat terkecil 2 adalah \(2^1\). Pangkat terkecil 3 adalah \(3^1\). Maka FPB = \(2 \times 3 = 6\).
+            </li>
+            <li>
+                <strong>KPK (Kelipatan Persekutuan Terkecil):</strong><br>
+                Ambil <span class="key">semua faktor prima</span> yang ada. Jika ada faktor yang sama, pilih <span class="key">pangkat terbesar</span>.<br>
+                Contoh KPK dari 12 dan 18: Semua faktornya adalah 2 dan 3. Pangkat terbesar 2 adalah \(2^2\). Pangkat terbesar 3 adalah \(3^2\). Maka KPK = \(2^2 \times 3^2 = 4 \times 9 = 36\).
+            </li>
+        </ul>
+    </div>
+
+    <div class="mat-heading">3. Aplikasi Soal Cerita</div>
+    <p class="mat-text">Perhatikan kata kunci dalam soal untuk menentukan metode yang digunakan:</p>
+    <div class="rule-box">
+        <ul>
+            <li>
+                <strong>Soal FPB:</strong> Menanyakan jumlah <span class="key">maksimal</span>, pembagian <span class="key">sama rata</span>, atau ukuran <span class="key">terbesar</span>.
+            </li>
+            <li>
+                <strong>Soal KPK:</strong> Menanyakan kapan terjadi <span class="key">bersama-sama lagi</span> atau jadwal pertemuan yang berulang.
+            </li>
+        </ul>
+    </div>
+            </div>
+            <!-- ═══════════════════════════════════════════ -->
+
+            <div class="info-box">
+                ⚠️ <strong>Aturan Sprint:</strong> Setiap percobaan berisi <strong>5 soal acak</strong>.
+                Lulus jika skor ≥ 80% (minimal 4 benar). Harus lulus <strong>2 kali</strong> untuk membuka level berikutnya.
+                Gagal 3x berturut-turut atau habis percobaan (5x) → gugur di level itu.
+            </div>
+
+            <div class="btn-group center" style="margin-top:20px">
+                <button class="btn btn-primary" onclick="APP.goToLevels()">
+                    Mulai Latihan →
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── VIEW: LEVEL SELECT ── -->
+    <div class="view" id="view-levels">
+        <div class="panel">
+            <div class="sec-hdr">
+                <div class="sec-accent"></div>
+                <div class="sec-title">Pilih Level</div>
+            </div>
+
+            <!-- LOTS -->
+            <div class="level-card unlocked" id="lcard-LOTS">
+                <div class="level-header" onclick="APP.toggleLevel('LOTS')">
+                    <div class="level-icon" style="background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.2)">
+                        <span style="color:var(--green);font-weight:700;font-family:monospace">①</span>
+                    </div>
+                    <div class="level-meta">
+                        <div class="level-name">
+                            LOTS
+                            <span id="badge-LOTS" class="badge badge-cyan" style="margin-left:6px;vertical-align:middle"></span>
+                        </div>
+                        <div class="level-sub">Lower Order Thinking Skill — Level Dasar</div>
+                        <div class="attempt-dots" id="dots-LOTS"></div>
+                    </div>
+                    <div class="level-chevron" id="chev-LOTS">▾</div>
+                </div>
+                <div class="level-body" id="lbody-LOTS">
+                    <div class="level-info-row">
+                        <div class="level-info-text" id="linfo-LOTS">5 soal acak · skor lulus ≥ 80%</div>
+                        <button class="btn btn-primary btn-sm" id="lbtn-LOTS" onclick="APP.startQuiz('LOTS')">Mulai →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MOTS -->
+            <div class="level-card locked" id="lcard-MOTS">
+                <div class="level-header" onclick="APP.toggleLevel('MOTS')">
+                    <div class="level-icon" style="background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.2)">
+                        <span style="color:var(--amber);font-weight:700;font-family:monospace">②</span>
+                    </div>
+                    <div class="level-meta">
+                        <div class="level-name">
+                            MOTS
+                            <span id="badge-MOTS" class="badge badge-amber" style="margin-left:6px;vertical-align:middle"></span>
+                        </div>
+                        <div class="level-sub">Medium Order Thinking Skill — Level Menengah</div>
+                        <div class="attempt-dots" id="dots-MOTS"></div>
+                    </div>
+                    <div class="level-chevron" id="chev-MOTS">▾</div>
+                </div>
+                <div class="level-body" id="lbody-MOTS">
+                    <div class="level-info-row">
+                        <div class="level-info-text" id="linfo-MOTS">5 soal acak · skor lulus ≥ 80%</div>
+                        <button class="btn btn-primary btn-sm" id="lbtn-MOTS" onclick="APP.startQuiz('MOTS')">Mulai →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HOTS -->
+            <div class="level-card locked" id="lcard-HOTS">
+                <div class="level-header" onclick="APP.toggleLevel('HOTS')">
+                    <div class="level-icon" style="background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.2)">
+                        <span style="color:var(--red);font-weight:700;font-family:monospace">③</span>
+                    </div>
+                    <div class="level-meta">
+                        <div class="level-name">
+                            HOTS
+                            <span id="badge-HOTS" class="badge badge-red" style="margin-left:6px;vertical-align:middle"></span>
+                        </div>
+                        <div class="level-sub">Higher Order Thinking Skill — Level Tinggi</div>
+                        <div class="attempt-dots" id="dots-HOTS"></div>
+                    </div>
+                    <div class="level-chevron" id="chev-HOTS">▾</div>
+                </div>
+                <div class="level-body" id="lbody-HOTS">
+                    <div class="level-info-row">
+                        <div class="level-info-text" id="linfo-HOTS">5 soal acak · skor lulus ≥ 80%</div>
+                        <button class="btn btn-primary btn-sm" id="lbtn-HOTS" onclick="APP.startQuiz('HOTS')">Mulai →</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group" style="margin-top:16px;justify-content:space-between">
+                <button class="btn btn-ghost btn-sm" onclick="APP.goToMateri()">← Baca Materi</button>
+                <button class="btn btn-danger btn-sm" onclick="APP.resetConfirm()">Reset Progress</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── VIEW: QUIZ ── -->
+    <div class="view" id="view-quiz">
+        <div class="panel">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+                <div>
+                    <div id="quiz-title" style="font-size:15px;font-weight:700;color:var(--text)"></div>
+                    <div id="quiz-meta" style="font-size:11px;color:var(--text2);margin-top:2px"></div>
+                </div>
+                <button class="btn btn-ghost btn-sm" onclick="APP.exitQuiz()">✕ Keluar</button>
+            </div>
+
+            <div class="q-nav" id="q-nav"></div>
+            <div id="question-area"></div>
+
+            <div class="quiz-footer">
+                <button class="btn btn-ghost btn-sm" id="q-prev" onclick="APP.prevQ()">← Prev</button>
+                <button class="btn btn-primary btn-sm" id="q-next" onclick="APP.nextOrFinish()">Next →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── VIEW: RESULT ── -->
+    <div class="view" id="view-result">
+        <div class="panel" id="result-panel"></div>
+    </div>
+
+</div><!-- /wrap -->
+
+<div id="toast"></div>
+
+<script>
+
+if (!sessionStorage.getItem('sessionToken')) {
+            window.location.href = '../../Login/';
+        }
+
+// ═══════════════════════════════════════════════════════════════
+//  KONFIGURASI — GANTI BAGIAN INI SESUAI TOPIK SPRINT
+// ═══════════════════════════════════════════════════════════════
+
+const SPRINT_CONFIG = {
+    // Key localStorage — HARUS UNIK per file sprint
+    storageKey: 'fpb_kpk_v1',
+
+    // Nama topik untuk ditampilkan
+    title: 'Sprint — FPB dan KPK',
+    sub:   'Latihan Sprint · 3 Level',
+};
+
+// ═══════════════════════════════════════════════════════════════
+//  BANK SOAL — GANTI/TAMBAH SOAL DI SINI
+//  Format setiap soal:
+//  {
+//    q:    "teks pertanyaan",
+//    opts: ["opsi A","opsi B","opsi C"],   ← minimal 2, maks 5
+//    ans:  0,                               ← index jawaban benar (0-based)
+//    exp:  "teks pembahasan"
+//  }
+// ═══════════════════════════════════════════════════════════════
+
+const QUESTIONS = {
+    LOTS: [
+        {
+            q: "Faktorisasi prima dari 12 adalah...",
+            opts: ["\\(2^2 \\times 3\\)", "\\(2 \\times 6\\)", "\\(3 \\times 4\\)"],
+            ans: 0,
+            exp: "12 dibagi 2 hasilnya 6, 6 dibagi 2 hasilnya 3. Jadi, \\(12 = 2 \\times 2 \\times 3 = 2^2 \\times 3\\)."
+        },
+        {
+            q: "Manakah di bawah ini yang merupakan bilangan prima?",
+            opts: ["7", "9", "4"],
+            ans: 0,
+            exp: "Bilangan prima adalah bilangan yang hanya memiliki dua faktor, yaitu 1 dan dirinya sendiri. 7 hanya bisa dibagi 1 dan 7."
+        },
+        {
+            q: "FPB dari 8 dan 12 adalah...",
+            opts: ["4", "2", "8"],
+            ans: 0,
+            exp: "Faktor dari 8: {1,2,4,8}. Faktor dari 12: {1,2,3,4,6,12}. Faktor persekutuan terbesarnya adalah 4."
+        },
+        {
+            q: "KPK dari 4 dan 6 adalah...",
+            opts: ["12", "24", "2"],
+            ans: 0,
+            exp: "Kelipatan 4: {4,8,12,16,...}. Kelipatan 6: {6,12,18,...}. Kelipatan persekutuan terkecilnya adalah 12."
+        },
+        {
+            q: "Faktor dari 10 adalah...",
+            opts: ["1, 2, 5, 10", "1, 10", "2, 5"],
+            ans: 0,
+            exp: "Faktor adalah semua bilangan yang dapat membagi habis suatu bilangan. 10 bisa dibagi 1, 2, 5, dan 10."
+        },
+        {
+            q: "Kelipatan 3 yang pertama adalah...",
+            opts: ["3, 6, 9", "1, 3, 6", "3, 5, 7"],
+            ans: 0,
+            exp: "Kelipatan didapat dari mengalikan bilangan tersebut dengan bilangan asli (1, 2, 3, ...)."
+        },
+        {
+            q: "Faktorisasi prima dari 30 adalah...",
+            opts: ["\\(2 \\times 3 \\times 5\\)", "\\(3 \\times 10\\)", "\\(2 \\times 15\\)"],
+            ans: 0,
+            exp: "\\(30 = 2 \\times 15 = 2 \\times 3 \\times 5\\)."
+        },
+        {
+            q: "FPB dari 15 dan 25 adalah...",
+            opts: ["5", "3", "1"],
+            ans: 0,
+            exp: "\\(15=3 \\times 5\\), \\(25=5^2\\). Faktor prima yang sama adalah 5, pangkat terkecilnya \\(5^1\\). FPB = 5."
+        },
+        {
+            q: "KPK dari 5 dan 7 adalah...",
+            opts: ["35", "1", "12"],
+            ans: 0,
+            exp: "Karena 5 dan 7 keduanya bilangan prima, KPK-nya adalah hasil kali keduanya: \\(5 \\times 7 = 35\\)."
+        },
+        {
+            q: "Bilangan prima setelah 11 adalah...",
+            opts: ["13", "12", "15"],
+            ans: 0,
+            exp: "13 adalah bilangan selanjutnya yang hanya bisa dibagi 1 and 13."
+        },
+        {
+            q: "FPB dari 18 dan 24 adalah...",
+            opts: ["6", "3", "2"],
+            ans: 0,
+            exp: "\\(18 = 2 \\times 3^2\\), \\(24 = 2^3 \\times 3\\). FPB = \\(2^1 \\times 3^1 = 6\\)."
+        },
+        {
+            q: "KPK dari 8 dan 10 adalah...",
+            opts: ["40", "80", "2"],
+            ans: 0,
+            exp: "\\(8 = 2^3\\), \\(10 = 2 \\times 5\\). KPK = \\(2^3 \\times 5 = 8 \\times 5 = 40\\)."
+        },
+        {
+            q: "Faktorisasi prima dari 45 adalah...",
+            opts: ["\\(3^2 \\times 5\\)", "\\(5 \\times 9\\)", "\\(3 \\times 15\\)"],
+            ans: 0,
+            exp: "\\(45 = 5 \\times 9 = 5 \\times 3 \\times 3 = 3^2 \\times 5\\)."
+        },
+        {
+            q: "FPB dari 7 dan 11 adalah...",
+            opts: ["1", "77", "0"],
+            ans: 0,
+            exp: "Karena 7 dan 11 adalah bilangan prima, satu-satunya faktor persekutuan mereka adalah 1."
+        },
+        {
+            q: "KPK dari 9 dan 12 adalah...",
+            opts: ["36", "3", "108"],
+            ans: 0,
+            exp: "\\(9=3^2\\), \\(12=2^2 \\times 3\\). KPK = \\(2^2 \\times 3^2 = 4 \\times 9 = 36\\)."
+        },
+        {
+            q: "Faktor persekutuan dari 10 dan 20 adalah...",
+            opts: ["1, 2, 5, 10", "1, 2, 4, 5, 10, 20", "1, 2, 5"],
+            ans: 0,
+            exp: "Faktor 10: {1,2,5,10}. Faktor 20: {1,2,4,5,10,20}. Yang sama adalah {1,2,5,10}."
+        },
+        {
+            q: "Kelipatan persekutuan pertama dari 4 dan 5 adalah...",
+            opts: ["20", "10", "40"],
+            ans: 0,
+            exp: "Kelipatan 4: {4,8,12,16,20,...}. Kelipatan 5: {5,10,15,20,...}. Yang pertama kali sama adalah 20."
+        },
+        {
+            q: "FPB dari 20 dan 30 adalah...",
+            opts: ["10", "5", "2"],
+            ans: 0,
+            exp: "\\(20 = 2^2 \\times 5\\), \\(30 = 2 \\times 3 \\times 5\\). FPB = \\(2 \\times 5 = 10\\)."
+        },
+        {
+            q: "KPK dari 6 dan 15 adalah...",
+            opts: ["30", "90", "3"],
+            ans: 0,
+            exp: "\\(6 = 2 \\times 3\\), \\(15 = 3 \\times 5\\). KPK = \\(2 \\times 3 \\times 5 = 30\\)."
+        },
+        {
+            q: "Faktorisasi prima dari 50 adalah...",
+            opts: ["\\(2 \\times 5^2\\)", "\\(2 \\times 25\\)", "\\(5 \\times 10\\)"],
+            ans: 0,
+            exp: "\\(50 = 2 \\times 25 = 2 \\times 5 \\times 5 = 2 \\times 5^2\\)."
+        },
+        {
+            q: "FPB dari 16 dan 40 adalah...",
+            opts: ["8", "4", "2"],
+            ans: 0,
+            exp: "\\(16=2^4\\), \\(40=2^3 \\times 5\\). FPB = \\(2^3 = 8\\)."
+        },
+        {
+            q: "KPK dari 2, 3, dan 5 adalah...",
+            opts: ["30", "1", "60"],
+            ans: 0,
+            exp: "Karena ketiganya bilangan prima, KPK-nya adalah hasil kali ketiganya: \\(2 \\times 3 \\times 5 = 30\\)."
+        },
+        {
+            q: "Apakah 1 merupakan bilangan prima?",
+            opts: ["Bukan", "Ya", "Kadang-kadang"],
+            ans: 0,
+            exp: "Bukan. Bilangan prima didefinisikan memiliki TEPAT dua faktor. Angka 1 hanya memiliki satu faktor, yaitu 1."
+        },
+        {
+            q: "FPB dari 100 dan 150 adalah...",
+            opts: ["50", "25", "10"],
+            ans: 0,
+            exp: "\\(100 = 2^2 \\times 5^2\\), \\(150 = 2 \\times 3 \\times 5^2\\). FPB = \\(2 \\times 5^2 = 50\\)."
+        },
+        {
+            q: "KPK dari 20 dan 25 adalah...",
+            opts: ["100", "50", "5"],
+            ans: 0,
+            exp: "\\(20 = 2^2 \\times 5\\), \\(25 = 5^2\\). KPK = \\(2^2 \\times 5^2 = 4 \\times 25 = 100\\)."
+        }
+    ],
+
+    MOTS: [
+        {
+            q: "FPB dari 48, 72, dan 96 adalah...",
+            opts: ["24", "12", "48"],
+            ans: 0,
+            exp: "\\(48=2^4 \\times 3\\), \\(72=2^3 \\times 3^2\\), \\(96=2^5 \\times 3\\). FPB = \\(2^3 \\times 3^1 = 8 \\times 3 = 24\\)."
+        },
+        {
+            q: "KPK dari 15, 20, dan 30 adalah...",
+            opts: ["60", "120", "5"],
+            ans: 0,
+            exp: "\\(15=3 \\times 5\\), \\(20=2^2 \\times 5\\), \\(30=2 \\times 3 \\times 5\\). KPK = \\(2^2 \\times 3 \\times 5 = 4 \\times 3 \\times 5 = 60\\)."
+        },
+        {
+            q: "Lampu A menyala setiap 6 detik, lampu B setiap 8 detik. Kapan keduanya menyala bersama lagi?",
+            opts: ["24 detik", "48 detik", "2 detik"],
+            ans: 0,
+            exp: "Soal 'bersama lagi' menandakan KPK. KPK dari 6 dan 8 adalah 24."
+        },
+        {
+            q: "Ibu punya 24 apel dan 30 jeruk. Akan dibagikan ke sebanyak mungkin anak dengan jumlah sama. Berapa anak yang akan menerima?",
+            opts: ["6 anak", "5 anak", "2 anak"],
+            ans: 0,
+            exp: "Soal 'sebanyak mungkin' dan 'jumlah sama' menandakan FPB. FPB dari 24 dan 30 adalah 6."
+        },
+        {
+            q: "FPB dari \\(2^3 \\times 3^2 \\times 5\\) dan \\(2^2 \\times 3^3 \\times 7\\) adalah...",
+            opts: ["\\(2^2 \\times 3^2\\)", "\\(2^3 \\times 3^3\\)", "\\(2^2 \\times 3^2 \\times 5 \\times 7\\)"],
+            ans: 0,
+            exp: "Ambil faktor yang sama (2 dan 3) dengan pangkat terkecil. Pangkat terkecil 2 adalah \\(2^2\\). Pangkat terkecil 3 adalah \\(3^2\\)."
+        },
+        {
+            q: "KPK dari \\(2^4 \\times 3\\) dan \\(2^2 \\times 3^2 \\times 5\\) adalah...",
+            opts: ["\\(2^4 \\times 3^2 \\times 5\\)", "\\(2^2 \\times 3\\)", "\\(2^6 \\times 3^3 \\times 5\\)"],
+            ans: 0,
+            exp: "Ambil semua faktor (2, 3, 5) dengan pangkat terbesar. Pangkat terbesar 2 adalah \\(2^4\\), 3 adalah \\(3^2\\), 5 adalah \\(5^1\\)."
+        },
+        {
+            q: "Ani, Budi, dan Cici les renang. Ani setiap 3 hari, Budi 4 hari, Cici 6 hari. Kapan mereka les bersama lagi?",
+            opts: ["12 hari", "24 hari", "72 hari"],
+            ans: 0,
+            exp: "Mencari KPK dari 3, 4, dan 6. \\(3=3\\), \\(4=2^2\\), \\(6=2 \\times 3\\). KPK = \\(2^2 \\times 3 = 12\\)."
+        },
+        {
+            q: "Panitia kurban memiliki 48 sapi dan 60 kambing. Hewan akan dibagi menjadi beberapa kelompok dengan jenis dan jumlah sama. Berapa kelompok maksimal yang bisa dibuat?",
+            opts: ["12 kelompok", "6 kelompok", "10 kelompok"],
+            ans: 0,
+            exp: "Mencari FPB dari 48 dan 60. \\(48=2^4 \\times 3\\), \\(60=2^2 \\times 3 \\times 5\\). FPB = \\(2^2 \\times 3 = 12\\)."
+        },
+        {
+            q: "FPB dari 100 dan 120 adalah...",
+            opts: ["20", "10", "4"],
+            ans: 0,
+            exp: "\\(100 = 2^2 \\times 5^2\\), \\(120 = 2^3 \\times 3 \\times 5\\). FPB = \\(2^2 \\times 5 = 20\\)."
+        },
+        {
+            q: "KPK dari 50 dan 75 adalah...",
+            opts: ["150", "25", "300"],
+            ans: 0,
+            exp: "\\(50 = 2 \\times 5^2\\), \\(75 = 3 \\times 5^2\\). KPK = \\(2 \\times 3 \\times 5^2 = 150\\)."
+        },
+        {
+            q: "Bus A berangkat setiap 15 menit, bus B setiap 25 menit. Jika keduanya berangkat bersama pukul 08.00, pukul berapa mereka berangkat bersama lagi?",
+            opts: ["09.15", "09.00", "08.40"],
+            ans: 0,
+            exp: "KPK dari 15 dan 25 adalah 75 menit. 75 menit = 1 jam 15 menit. 08.00 + 1 jam 15 menit = 09.15."
+        },
+        {
+            q: "Ada 36 pulpen merah dan 42 pulpen biru. Akan dimasukkan ke kotak kecil dengan isi sama. Berapa pulpen merah di setiap kotak?",
+            opts: ["6", "7", "12"],
+            ans: 0,
+            exp: "Pertama, cari jumlah kotak (FPB dari 36 dan 42), yaitu 6. Lalu, jumlah pulpen merah per kotak adalah \\(36 \div 6 = 6\\)."
+        },
+        {
+            q: "FPB dari 60, 84, dan 108 adalah...",
+            opts: ["12", "6", "4"],
+            ans: 0,
+            exp: "\\(60 = 2^2 \\times 3 \\times 5\\), \\(84=2^2 \\times 3 \\times 7\\), \\(108=2^2 \\times 3^3\\). FPB = \\(2^2 \\times 3 = 12\\)."
+        },
+        {
+            q: "KPK dari 18, 24, dan 36 adalah...",
+            opts: ["72", "36", "144"],
+            ans: 0,
+            exp: "\\(18=2 \\times 3^2\\), \\(24=2^3 \\times 3\\), \\(36=2^2 \\times 3^2\\). KPK = \\(2^3 \\times 3^2 = 8 \\times 9 = 72\\)."
+        },
+        {
+            q: "FPB dari 144 dan 180 adalah...",
+            opts: ["36", "18", "720"],
+            ans: 0,
+            exp: "\\(144 = 2^4 \\times 3^2\\), \\(180 = 2^2 \\times 3^2 \\times 5\\). FPB = \\(2^2 \\times 3^2 = 36\\)."
+        },
+        {
+            q: "KPK dari 42 dan 56 adalah...",
+            opts: ["168", "14", "112"],
+            ans: 0,
+            exp: "\\(42 = 2 \\times 3 \\times 7\\), \\(56 = 2^3 \\times 7\\). KPK = \\(2^3 \\times 3 \\times 7 = 168\\)."
+        },
+        {
+            q: "Jam dinding A berdentang tiap 30 menit, jam B tiap 45 menit. Jika jam 10.00 berdentang bersama, kapan selanjutnya mereka berdentang bersama?",
+            opts: ["11.30", "11.00", "10.45"],
+            ans: 0,
+            exp: "KPK dari 30 dan 45 adalah 90 menit (1.5 jam). 10.00 + 1.5 jam = 11.30."
+        },
+        {
+            q: "Berapa banyak ubin persegi ukuran terbesar yang bisa menutupi lantai 3m x 4.2m?",
+            opts: ["35 ubin", "30 ubin", "60 ubin"],
+            ans: 0,
+            exp: "Ubah ke cm: 300cm x 420cm. Ukuran ubin terbesar adalah FPB(300, 420)=60cm. Jumlah ubin = (300/60) x (420/60) = 5 x 7 = 35 ubin."
+        },
+        {
+            q: "FPB dari \\(2^2 \\times 3\\) dan \\(2 \\times 3^2\\) adalah...",
+            opts: ["6", "12", "36"],
+            ans: 0,
+            exp: "Faktor sama 2 and 3. Pangkat terkecil 2 adalah \\(2^1\\). Pangkat terkecil 3 adalah \\(3^1\\). FPB = \\(2 \\times 3 = 6\\)."
+        },
+        {
+            q: "KPK dari \\(3^2 \\times 5\\) dan \\(2 \\times 3 \\times 5\\) adalah...",
+            opts: ["90", "15", "45"],
+            ans: 0,
+            exp: "Semua faktor 2,3,5. Pangkat terbesar 2 adalah \\(2^1\\), 3 adalah \\(3^2\\), 5 adalah \\(5^1\\). KPK = \\(2 \\times 9 \\times 5 = 90\\)."
+        },
+        {
+            q: "FPB dari 52 dan 91 adalah...",
+            opts: ["13", "7", "4"],
+            ans: 0,
+            exp: "52 dan 91 adalah kelipatan 13. \\(52 = 4 \\times 13\\), \\(91 = 7 \\times 13\\). FPB = 13."
+        },
+        {
+            q: "KPK dari 14 dan 21 adalah...",
+            opts: ["42", "7", "84"],
+            ans: 0,
+            exp: "\\(14 = 2 \\times 7\\), \\(21 = 3 \\times 7\\). KPK = \\(2 \\times 3 \\times 7 = 42\\)."
+        },
+        {
+            q: "Rina membeli 40 kue keju dan 60 kue coklat. Jika setiap teman mendapat jumlah yang sama, berapa jumlah maksimal teman yang bisa ia bagikan?",
+            opts: ["20 teman", "10 teman", "40 teman"],
+            ans: 0,
+            exp: "Mencari FPB dari 40 dan 60. \\(40=2^3 \\times 5\\), \\(60=2^2 \\times 3 \\times 5\\). FPB = \\(2^2 \\times 5 = 20\\)."
+        },
+        {
+            q: "Bus X berangkat setiap 20 menit dan bus Y setiap 30 menit. Pukul 07.00 keduanya berangkat bersama. Kapan mereka akan berangkat bersama lagi?",
+            opts: ["08.00", "07.50", "08.30"],
+            ans: 0,
+            exp: "Mencari KPK dari 20 dan 30. KPK nya adalah 60 menit atau 1 jam. 07.00 + 1 jam = 08.00."
+        },
+        {
+            q: "FPB dari 250 dan 300 adalah...",
+            opts: ["50", "25", "10"],
+            ans: 0,
+            exp: "\\(250=2 \\times 5^3\\), \\(300=2^2 \\times 3 \\times 5^2\\). FPB = \\(2 \\times 5^2 = 50\\)."
+        }
+    ],
+
+    HOTS: [
+        {
+            q: "FPB dari \\(12a^2b\\) dan \\(18ab^3\\) adalah...",
+            opts: ["\\(6ab\\)", "\\(36a^2b^3\\)", "\\(6a^2b\\)"],
+            ans: 0,
+            exp: "FPB bilangan: FPB(12,18)=6. FPB variabel: ambil pangkat terkecil, yaitu \\(a^1\\) and \\(b^1\\). Jadi FPB = \\(6ab\\)."
+        },
+        {
+            q: "KPK dari \\(8x^2y^3z\\) dan \\(6xy^4\\) adalah...",
+            opts: ["\\(24x^2y^4z\\)", "\\(2xy^3\\)", "\\(48x^3y^7z\\)"],
+            ans: 0,
+            exp: "KPK bilangan: KPK(8,6)=24. KPK variabel: ambil semua variabel dengan pangkat terbesar, yaitu \\(x^2, y^4, z^1\\). Jadi KPK = \\(24x^2y^4z\\)."
+        },
+        {
+            q: "FPB dua bilangan adalah 6 dan KPK-nya 36. Jika salah satu bilangan 12, bilangan lainnya adalah...",
+            opts: ["18", "24", "6"],
+            ans: 0,
+            exp: "Gunakan rumus \\(a \\times b = FPB(a,b) \\times KPK(a,b)\\). \\(12 \\times b = 6 \\times 36 \implies 12b = 216 \implies b = 18\\)."
+        },
+        {
+            q: "Sebuah bilangan jika dibagi 4, 5, dan 6 selalu bersisa 1. Bilangan terkecil tersebut adalah...",
+            opts: ["61", "60", "121"],
+            ans: 0,
+            exp: "Cari KPK dari 4, 5, dan 6, yaitu 60. Karena selalu bersisa 1, maka bilangan tersebut adalah \\(KPK + 1 = 60 + 1 = 61\\)."
+        },
+        {
+            q: "Ada 54 bola merah, 72 bola biru, 90 bola hijau. Akan dimasukkan ke keranjang dengan jumlah dan warna sama. Berapa total bola dalam satu keranjang?",
+            opts: ["12", "18", "216"],
+            ans: 0,
+            exp: "Jumlah keranjang = FPB(54,72,90) = 18. Isi per keranjang: Merah=54/18=3, Biru=72/18=4, Hijau=90/18=5. Total = 3+4+5=12 bola."
+        },
+        {
+            q: "KPK dari \\(15p^3q^2\\) dan \\(20p^2q^4r\\) adalah...",
+            opts: ["\\(60p^3q^4r\\)", "\\(5p^2q^2\\)", "\\(300p^5q^6r\\)"],
+            ans: 0,
+            exp: "KPK(15,20)=60. Variabel pangkat terbesar: \\(p^3, q^4, r^1\\). Jadi KPK = \\(60p^3q^4r\\)."
+        },
+        {
+            q: "FPB dari \\(16x^2y^3\\) dan \\(24x^3y^2\\) adalah...",
+            opts: ["\\(8x^2y^2\\)", "\\(48x^3y^3\\)", "\\(4x^2y^2\\)"],
+            ans: 0,
+            exp: "FPB(16,24)=8. Variabel pangkat terkecil: \\(x^2, y^2\\). Jadi FPB = \\(8x^2y^2\\)."
+        },
+        {
+            q: "Dua bilangan memiliki FPB 12 dan KPK 180. Pasangan bilangan yang mungkin adalah...",
+            opts: ["(36, 60)", "(12, 180)", "(24, 72)"],
+            ans: 0,
+            exp: "Gunakan rumus \\(a \\times b = 12 \\times 180 = 2160\\). Cek pilihan: \\(36 \\times 60 = 2160\\). Pilihan lain tidak cocok."
+        },
+        {
+            q: "Bilangan terkecil yang jika dibagi 5, 6, 7 akan bersisa 3 adalah...",
+            opts: ["213", "210", "108"],
+            ans: 0,
+            exp: "KPK(5,6,7) = 210. Bilangan tersebut adalah \\(KPK + sisa = 210 + 3 = 213\\)."
+        },
+        {
+            q: "Ada 3 lonceng berbunyi tiap 45, 60, and 90 detik. Jika pukul 12.00 berbunyi bersama, kapan mereka berbunyi bersama lagi?",
+            opts: ["12.03", "12.02", "12.05"],
+            ans: 0,
+            exp: "KPK(45,60,90) = 180 detik = 3 menit. Jadi berbunyi bersama lagi pada pukul 12.03."
+        },
+        {
+            q: "KPK dari \\(a^2b, ab^2, abc\\) adalah...",
+            opts: ["\\(a^2b^2c\\)", "\\(ab\\)", "\\(a^3b^3c\\)"],
+            ans: 0,
+            exp: "Ambil semua variabel \\((a,b,c)\\) dengan pangkat tertinggi masing-masing: \\(a^2, b^2, c^1\\)."
+        },
+        {
+            q: "FPB dari \\(x^2-1\\) dan \\(x^2+2x+1\\) adalah...",
+            opts: ["\\(x+1\\)", "1", "\\((x-1)(x+1)^2\\)"],
+            ans: 0,
+            exp: "\\(x^2-1 = (x-1)(x+1)\\). \\(x^2+2x+1 = (x+1)^2\\). Faktor persekutuan pangkat terkecil adalah \\((x+1)\\)."
+        },
+        {
+            q: "FPB dua bilangan adalah 9. KPK-nya 270. Jika satu bilangan 45, bilangan lainnya?",
+            opts: ["54", "30", "60"],
+            ans: 0,
+            exp: "\\(45 \\times b = 9 \\times 270 \implies 45b = 2430 \implies b = 54\\)."
+        },
+        {
+            q: "Bilangan \\(N\\) jika dibagi 3 sisa 2, dibagi 4 sisa 3, dibagi 5 sisa 4. Nilai terkecil \\(N\\) adalah...",
+            opts: ["59", "60", "61"],
+            ans: 0,
+            exp: "Ini berarti \\(N+1\\) habis dibagi 3, 4, and 5. Cari KPK(3,4,5) = 60. Maka \\(N+1=60 \implies N=59\\)."
+        },
+        {
+            q: "Lantai 6.4m x 4.8m akan dipasangi keramik persegi terbesar. Jika harga 1 keramik Rp 25.000, total biayanya adalah...",
+            opts: ["Rp 300.000", "Rp 400.000", "Rp 250.000"],
+            ans: 0,
+            exp: "FPB(640,480)=160cm. Jumlah keramik = (640/160)x(480/160) = 4x3 = 12 buah. Biaya = 12 x 25.000 = 300.000."
+        },
+        {
+            q: "KPK dari \\(12x^3y\\) and \\(15x^2z\\) adalah...",
+            opts: ["\\(60x^3yz\\)", "\\(3x^2\\)", "\\(180x^5yz\\)"],
+            ans: 0,
+            exp: "KPK(12,15)=60. Variabel pangkat terbesar: \\(x^3, y^1, z^1\\). KPK = \\(60x^3yz\\)."
+        },
+        {
+            q: "FPB dari \\(50a^4b^2c\\) and \\(75a^3b^3\\) adalah...",
+            opts: ["\\(25a^3b^2\\)", "\\(150a^4b^3c\\)", "\\(25abc\\)"],
+            ans: 0,
+            exp: "FPB(50,75)=25. Variabel pangkat terkecil: \\(a^3, b^2\\). FPB = \\(25a^3b^2\\)."
+        },
+        {
+            q: "FPB(A, B) = 4, KPK(A, B) = 24. A dan B > 4. Maka A+B=...",
+            opts: ["20", "16", "28"],
+            ans: 0,
+            exp: "A dan B kelipatan 4, dan faktor dari 24. Pasangan yang mungkin: (8, 12). FPB(8,12)=4, KPK(8,12)=24. Maka 8+12=20."
+        },
+        {
+            q: "Bilangan terkecil yang habis dibagi 8 and 12, dan juga merupakan bilangan kuadrat sempurna adalah...",
+            opts: ["144", "24", "36"],
+            ans: 0,
+            exp: "KPK(8,12) = 24 = \\(2^3 \\times 3^1\\). Agar jadi kuadrat sempurna, pangkat harus genap. Kalikan dengan \\(2 \\times 3 = 6\\). Jadi, \\(24 \\times 6 = 144\\)."
+        },
+        {
+            q: "Tiga pelari A (20 detik), B (30 detik), C (36 detik). Berapa putaran diselesaikan A saat mereka bertemu di start lagi?",
+            opts: ["9 putaran", "6 putaran", "5 putaran"],
+            ans: 0,
+            exp: "Waktu bertemu = KPK(20,30,36) = 180 detik. Putaran A = 180 / 20 = 9 putaran."
+        },
+        {
+            q: "KPK dari \\(x^2-4\\) and \\(x^2-x-6\\) adalah...",
+            opts: ["\\((x-2)(x+2)(x-3)\\)", "\\(x-2\\)", "\\(x+2\\)"],
+            ans: 0,
+            exp: "Faktorkan: \\((x-2)(x+2)\\) dan \\((x-3)(x+2)\\). KPK-nya adalah perkalian semua faktor unik dengan pangkat tertinggi."
+        },
+        {
+            q: "Bilangan \\(X\\) jika dibagi 10 sisa 9, dibagi 9 sisa 8, dibagi 8 sisa 7. Bilangan terkecil \\(X\\) adalah...",
+            opts: ["359", "360", "361"],
+            ans: 0,
+            exp: "Berarti \\(X+1\\) habis dibagi 10, 9, dan 8. KPK(10,9,8)=360. Maka \\(X+1=360 \implies X=359\\)."
+        },
+        {
+            q: "Jika FPB(x, y) = 1, manakah pernyataan yang pasti benar?",
+            opts: ["KPK(x, y) = xy", "x dan y bilangan prima", "x dan y bilangan ganjil"],
+            ans: 0,
+            exp: "Jika dua bilangan relatif prima (FPB=1), maka KPK-nya adalah hasil kali kedua bilangan tersebut."
+        },
+        {
+            q: "FPB dari \\(6(x+1)^2\\) and \\(9(x^2-1))\\) adalah...",
+            opts: ["\\(3(x+1)\\)", "\\(18(x+1)^2(x-1)\\)", "\\(3(x-1)\\)"],
+            ans: 0,
+            exp: "FPB(6,9)=3. Faktor yang sama adalah \\((x+1)\\) dengan pangkat terkecil 1. Jadi FPB = \\(3(x+1)\\)."
+        },
+        {
+            q: "KPK dari tiga bilangan prima berbeda \\(p, q, r\\) adalah...",
+            opts: ["\\(pqr\\)", "1", "\\(p+q+r\\)"],
+            ans: 0,
+            exp: "Bilangan prima berbeda tidak punya faktor persekutuan selain 1. Maka KPK-nya adalah hasil perkalian ketiganya."
+        }
+    ]
+};
+
+// ═══════════════════════════════════════════════════════════════
+//  ENGINE — JANGAN DIUBAH KECUALI TAHU APA YANG DILAKUKAN
+// ═══════════════════════════════════════════════════════════════
+
+const PASS_THRESHOLD  = 0.8;
+const MAX_ATTEMPTS    = 5;
+const PASSES_NEEDED   = 2;
+
+const LEVEL_ORDER = ['LOTS','MOTS','HOTS'];
+
+const defaultLevelState = () => ({ attempts: 0, passes: 0, failStreak: 0 });
+
+function loadProgress() {
+    try {
+        const raw = localStorage.getItem(SPRINT_CONFIG.storageKey);
+        if (!raw) return null;
+        return JSON.parse(raw);
+    } catch { return null; }
+}
+
+function saveProgress(data) {
+    localStorage.setItem(SPRINT_CONFIG.storageKey, JSON.stringify(data));
+}
+
+function initProgress() {
+    const saved = loadProgress();
+    if (saved) return saved;
+    return {
+        LOTS: defaultLevelState(),
+        MOTS: defaultLevelState(),
+        HOTS: defaultLevelState(),
+    };
+}
+
+// Helpers
+function getLevelStatus(prog, level) {
+    const lp = prog[level];
+    const prevIdx = LEVEL_ORDER.indexOf(level) - 1;
+    if (prevIdx >= 0) {
+        const prevLevel = LEVEL_ORDER[prevIdx];
+        if (prog[prevLevel].passes < PASSES_NEEDED) return 'locked';
+    }
+    if (lp.passes >= PASSES_NEEDED) return 'completed';
+    if (lp.failStreak >= 3 || (lp.attempts >= MAX_ATTEMPTS && lp.passes < PASSES_NEEDED)) return 'failed';
+    return 'unlocked';
+}
+
+function isAllDone(prog) {
+    return LEVEL_ORDER.every(l => prog[l].passes >= PASSES_NEEDED);
+}
+
+function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+// ── APP STATE ──
+let progress = initProgress();
+let quizState = null;
+
+const $ = id => document.getElementById(id);
+
+const APP = {
+
+    // ── VIEWS ──
+    showView(name) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        $('view-' + name).classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+
+    goToMateri() {
+        this.updateStageTrack('materi');
+        this.showView('materi');
+        if (window.MathJax) MathJax.typesetPromise();
+    },
+
+    goToLevels() {
+        this.updateStageTrack('levels');
+        this.renderLevelCards();
+        this.updateGlobalStats(null);
+        this.showView('levels');
+    },
+
+    // ── STAGE TRACK ──
+    updateStageTrack(activeView) {
+        const stageMap = {
+            materi:  'st-materi',
+            levels:  null,
+            quiz:    null,
+            result:  null,
+        };
+        const prog = progress;
+        const stagesOrder = ['st-materi','st-lots','st-mots','st-hots','st-selesai'];
+        stagesOrder.forEach(id => {
+            const el = $(id);
+            el.classList.remove('active','done');
+        });
+
+        if (isAllDone(prog)) {
+            stagesOrder.forEach(id => $(id).classList.add('done'));
+            return;
+        }
+
+        $('st-materi').classList.add('done');
+
+        ['LOTS','MOTS','HOTS'].forEach((lvl,i) => {
+            const stId = ['st-lots','st-mots','st-hots'][i];
+            const st = getLevelStatus(prog, lvl);
+            if (st === 'completed') $(stId).classList.add('done');
+        });
+
+        if (activeView === 'materi') {
+            $('st-materi').classList.remove('done');
+            $('st-materi').classList.add('active');
+        }
+    },
+
+    // ── GLOBAL STATS ──
+    updateGlobalStats(activeLevel) {
+        if (!activeLevel) {
+            $('gs-level').textContent = 'Level';
+            $('gs-attempts').textContent = '—';
+            $('gs-pass').textContent = '—';
+            return;
+        }
+        const lp = progress[activeLevel];
+        $('gs-level').textContent = activeLevel;
+        $('gs-attempts').textContent = MAX_ATTEMPTS - lp.attempts;
+        $('gs-pass').textContent = lp.passes + '/' + PASSES_NEEDED;
+    },
+
+    // ── LEVEL CARDS ──
+    renderLevelCards() {
+        const prog = progress;
+        const levelColors = {
+            LOTS: { dot:'var(--green)',  badgeClass:'badge-green'  },
+            MOTS: { dot:'var(--amber)',  badgeClass:'badge-amber'  },
+            HOTS: { dot:'var(--red)',    badgeClass:'badge-red'    },
+        };
+
+        LEVEL_ORDER.forEach(level => {
+            const lp   = prog[level];
+            const st   = getLevelStatus(prog, level);
+            const card = $('lcard-' + level);
+            const lc   = levelColors[level];
+
+            // Card state
+            card.classList.remove('locked','unlocked','open');
+            card.classList.add(st === 'locked' ? 'locked' : 'unlocked');
+
+            // Badge
+            const badge = $('badge-' + level);
+            badge.className = 'badge ' + lc.badgeClass;
+            badge.style.verticalAlign = 'middle';
+            badge.style.marginLeft = '6px';
+            if (st === 'completed') { badge.textContent = '✓ Lulus'; }
+            else if (st === 'locked') { badge.textContent = '🔒 Terkunci'; badge.className = 'badge'; badge.style.background='rgba(58,79,104,.15)'; badge.style.color='var(--text3)'; badge.style.border='1px solid var(--border)'; }
+            else if (st === 'failed') { badge.textContent = '✕ Gugur'; badge.className = 'badge badge-red'; }
+            else { badge.textContent = (MAX_ATTEMPTS - lp.attempts) + ' percobaan'; }
+
+            // Attempt dots
+            const dotsEl = $('dots-' + level);
+            dotsEl.innerHTML = '';
+            for (let i = 0; i < MAX_ATTEMPTS; i++) {
+                const d = document.createElement('div');
+                d.className = 'adot';
+                if (i < lp.attempts) d.classList.add(i < lp.passes ? 'pass' : 'fail');
+                dotsEl.appendChild(d);
+            }
+
+            // Info text & button
+            const infoEl = $('linfo-' + level);
+            const btnEl  = $('lbtn-' + level);
+
+            if (st === 'failed') {
+                infoEl.textContent = 'Gugur — percobaan habis atau gagal 3x berturut-turut';
+                btnEl.style.display = 'none';
+            } else if (st === 'locked') {
+                infoEl.textContent = 'Selesaikan level sebelumnya terlebih dahulu';
+                btnEl.style.display = 'none';
+            } else if (st === 'completed') {
+                infoEl.textContent = 'Sudah lulus! Bisa review soal jika mau.';
+                btnEl.textContent = 'Review';
+                btnEl.style.display = '';
+            } else {
+                const att = MAX_ATTEMPTS - lp.attempts;
+                infoEl.textContent = '5 soal acak · Skor lulus ≥ 80% · ' + att + ' percobaan tersisa';
+                btnEl.textContent = lp.attempts === 0 ? 'Mulai →' : 'Coba Lagi →';
+                btnEl.style.display = '';
+            }
+        });
+    },
+
+    // ── LEVEL TOGGLE ──
+    toggleLevel(level) {
+        const st = getLevelStatus(progress, level);
+        if (st === 'locked') { this.toast('Level ini masih terkunci!', 'warn'); return; }
+        const card = $('lcard-' + level);
+        const isOpen = card.classList.contains('open');
+        // Tutup semua dulu
+        LEVEL_ORDER.forEach(l => $('lcard-' + l).classList.remove('open'));
+        if (!isOpen) card.classList.add('open');
+    },
+
+    // ── START QUIZ ──
+    startQuiz(level) {
+        const st = getLevelStatus(progress, level);
+        if (st === 'locked') { this.toast('Level masih terkunci!', 'warn'); return; }
+        if (st === 'failed')  { this.toast('Kamu sudah gugur di level ini. Reset untuk mencoba lagi.', 'warn'); return; }
+
+        const pool = shuffle(QUESTIONS[level]).slice(0, 5);
+        quizState = {
+            level,
+            questions: pool,
+            answers:   Array(pool.length).fill(null),
+            submitted: Array(pool.length).fill(false),
+            current:   0,
+            reviewMode: st === 'completed',
+        };
+
+        this.updateGlobalStats(level);
+        this.updateStageTrack('quiz');
+
+        const levelColors = { LOTS:'var(--green)', MOTS:'var(--amber)', HOTS:'var(--red)' };
+        const lp = progress[level];
+        $('quiz-title').innerHTML = `<span style="color:${levelColors[level]}">${level}</span> — ${SPRINT_CONFIG.title.replace('Sprint — ','')}`;
+        $('quiz-meta').textContent = pool.length + ' soal · Percobaan ke-' + (lp.attempts + 1) + ' dari ' + MAX_ATTEMPTS;
+
+        this.renderQuizQuestion();
+        this.showView('quiz');
+    },
+
+    // ── QUIZ QUESTION ──
+    renderQuizQuestion() {
+        const qs = quizState;
+        const idx = qs.current;
+        const q   = qs.questions[idx];
+
+        // Nav dots
+        $('q-nav').innerHTML = qs.questions.map((_, i) => {
+            let cls = 'q-dot';
+            if (i === idx) cls += ' current';
+            else if (qs.submitted[i]) {
+                cls += qs.answers[i] === qs.questions[i].ans ? ' ans-correct' : ' ans-wrong';
+            }
+            return `<div class="${cls}" onclick="APP.jumpQ(${i})">${i+1}</div>`;
+        }).join('');
+
+        // Question area
+        const letters = ['A','B','C','D','E'];
+        const isSubmitted = qs.submitted[idx];
+        const optsHTML = q.opts.map((opt, oi) => {
+            let cls = 'opt-btn';
+            if (isSubmitted) {
+                if (oi === q.ans) cls += ' correct';
+                else if (oi === qs.answers[idx]) cls += ' wrong';
+            } else if (oi === qs.answers[idx]) cls += ' selected';
+            return `<button class="${cls}" ${isSubmitted ? 'disabled' : ''} onclick="APP.selectOpt(${oi})">
+                <span class="opt-letter">${letters[oi]}</span>
+                <span>${opt}</span>
+            </button>`;
+        }).join('');
+
+        const expHTML = isSubmitted
+            ? `<div class="explanation"><strong>💡 PEMBAHASAN</strong><br>${q.exp}</div>`
+            : '';
+
+        const allAnswered = qs.answers.every(a => a !== null);
+        const allSubmitted = qs.submitted.every(s => s);
+
+        $('question-area').innerHTML = `
+            <div class="q-num">Soal ${idx+1} dari ${qs.questions.length}</div>
+            <div class="q-text">${q.q}</div>
+            <div>${optsHTML}</div>
+            ${!isSubmitted && qs.answers[idx] !== null
+                ? `<div style="margin-top:10px"><button class="btn btn-primary btn-sm" onclick="APP.submitOne(${idx})">Konfirmasi Jawaban ✓</button></div>`
+                : ''}
+            ${expHTML}
+            ${allSubmitted
+                ? `<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">
+                       <button class="btn btn-primary" onclick="APP.finishQuiz()">Lihat Hasil →</button>
+                   </div>`
+                : ''}
+        `;
+
+        $('q-prev').disabled = idx === 0;
+        const nextBtn = $('q-next');
+        if (idx === qs.questions.length - 1) {
+            nextBtn.textContent = 'Selesai ✓';
+            nextBtn.onclick = () => APP.finishQuiz();
+        } else {
+            nextBtn.textContent = 'Next →';
+            nextBtn.onclick = () => APP.nextOrFinish();
+        }
+
+        if (window.MathJax) MathJax.typesetPromise([$('question-area')]);
+    },
+
+    selectOpt(oi) {
+        if (quizState.submitted[quizState.current]) return;
+        quizState.answers[quizState.current] = oi;
+        this.renderQuizQuestion();
+    },
+
+    submitOne(idx) {
+        if (quizState.answers[idx] === null) { this.toast('Pilih jawaban dulu!','warn'); return; }
+        quizState.submitted[idx] = true;
+        this.renderQuizQuestion();
+    },
+
+    prevQ() {
+        if (quizState.current > 0) { quizState.current--; this.renderQuizQuestion(); }
+    },
+
+    nextOrFinish() {
+        const qs = quizState;
+        if (qs.current < qs.questions.length - 1) { qs.current++; this.renderQuizQuestion(); }
+        else this.finishQuiz();
+    },
+
+    jumpQ(i) { quizState.current = i; this.renderQuizQuestion(); },
+
+    exitQuiz() {
+        if (!quizState.submitted.every(s => s)) {
+            if (!confirm('Keluar sebelum selesai? Percobaan ini tidak akan dihitung.')) return;
+        }
+        this.goToLevels();
+    },
+
+    // ── FINISH QUIZ ──
+    finishQuiz() {
+        const qs = quizState;
+        // Auto-submit yang belum di-submit tapi sudah dijawab
+        qs.questions.forEach((_,i) => { if (!qs.submitted[i] && qs.answers[i] !== null) qs.submitted[i] = true; });
+
+        let correct = 0;
+        qs.questions.forEach((q,i) => { if (qs.answers[i] === q.ans) correct++; });
+        const pct    = Math.round(correct / qs.questions.length * 100);
+        const passed = pct >= PASS_THRESHOLD * 100;
+
+        if (!qs.reviewMode) {
+            const lp = progress[qs.level];
+            lp.attempts++;
+            if (passed) { lp.passes++; lp.failStreak = 0; }
+            else lp.failStreak++;
+            saveProgress(progress);
+        }
+
+        this.renderResult(correct, qs.questions.length, pct, passed);
+        this.updateGlobalStats(qs.level);
+        this.updateStageTrack('result');
+        this.showView('result');
+    },
+
+    // ── RESULT ──
+    renderResult(correct, total, pct, passed) {
+        const qs    = quizState;
+        const level = qs.level;
+        const lp    = progress[level];
+        const st    = getLevelStatus(progress, level);
+
+        const color = passed ? 'var(--green)' : pct >= 60 ? 'var(--amber)' : 'var(--red)';
+
+        const circ  = Math.round(2 * Math.PI * 44);
+        const dash  = Math.round(pct / 100 * circ);
+
+        // notice box
+        let noticeHTML = '';
+        if (st === 'completed') {
+            const nextLvl = LEVEL_ORDER[LEVEL_ORDER.indexOf(level) + 1];
+            if (nextLvl) {
+                noticeHTML = `<div class="notice-box green">
+                    <div class="n-title">🔓 Level ${nextLvl} Terbuka!</div>
+                    <div class="n-sub">Kamu sudah lulus ${PASSES_NEEDED}x di level ini.</div>
+                </div>`;
+            } else if (isAllDone(progress)) {
+                noticeHTML = `<div class="cert">
+                    <div class="cert-icon">🏆</div>
+                    <div class="cert-title">Sprint Selesai!</div>
+                    <div class="cert-text">Kamu berhasil menyelesaikan semua level:<br>LOTS ✓ &nbsp; MOTS ✓ &nbsp; HOTS ✓</div>
+                </div>`;
+            }
+        } else if (st === 'failed') {
+            noticeHTML = `<div class="notice-box red">
+                <div class="n-title">Gugur di Level Ini</div>
+                <div class="n-sub">${lp.failStreak >= 3 ? 'Gagal 3x berturut-turut.' : 'Percobaan habis.'} Reset untuk mencoba ulang.</div>
+            </div>`;
+        } else if (passed) {
+            const need = PASSES_NEEDED - lp.passes;
+            if (need > 0) {
+                noticeHTML = `<div class="notice-box cyan">
+                    <div class="n-title">Lulus! ${lp.passes}/${PASSES_NEEDED}</div>
+                    <div class="n-sub">Butuh ${need} kali lulus lagi untuk naik level.</div>
+                </div>`;
+            }
+        }
+
+        // action buttons
+        const attLeft = MAX_ATTEMPTS - lp.attempts;
+        let actHTML = `<div class="btn-group">
+            <button class="btn btn-ghost" onclick="APP.goToLevels()">← Kembali ke Level</button>`;
+        if (!qs.reviewMode && attLeft > 0 && st !== 'failed' && st !== 'completed') {
+            actHTML += `<button class="btn btn-primary" onclick="APP.startQuiz('${level}')">Coba Lagi (${attLeft}x) →</button>`;
+        }
+        if (st === 'completed' && !isAllDone(progress)) {
+            const nextLvl = LEVEL_ORDER[LEVEL_ORDER.indexOf(level) + 1];
+            if (nextLvl) actHTML += `<button class="btn btn-primary" onclick="APP.startQuiz('${nextLvl}')">Mulai ${nextLvl} →</button>`;
+        }
+        actHTML += `</div>`;
+
+        $('result-panel').innerHTML = `
+            <div class="result-hero">
+                <div class="score-ring-wrap">
+                    <svg width="110" height="110" viewBox="0 0 110 110" style="transform:rotate(-90deg)">
+                        <circle cx="55" cy="55" r="44" fill="none" stroke="var(--border)" stroke-width="7"/>
+                        <circle cx="55" cy="55" r="44" fill="none"
+                            stroke="${color}" stroke-width="7"
+                            stroke-dasharray="${circ}" stroke-dashoffset="${circ - dash}"
+                            stroke-linecap="round"/>
+                    </svg>
+                    <div class="score-ring-text">
+                        <div class="score-big" style="color:${color}">${pct}</div>
+                        <div class="score-pct">%</div>
+                    </div>
+                </div>
+                <div class="result-verdict" style="color:${passed?'var(--green)':'var(--red)'}">${passed ? '✓ LULUS' : '✗ BELUM LULUS'}</div>
+                <div class="result-sub">${correct} dari ${total} soal benar · Skor lulus ≥ 80%</div>
+            </div>
+
+            <div class="result-stats">
+                <div class="rs-card">
+                    <div class="rs-val" style="color:var(--green)">${lp.passes}/${PASSES_NEEDED}</div>
+                    <div class="rs-lbl">Kali Lulus</div>
+                </div>
+                <div class="rs-card">
+                    <div class="rs-val mono">${lp.attempts}/${MAX_ATTEMPTS}</div>
+                    <div class="rs-lbl">Percobaan</div>
+                </div>
+                <div class="rs-card">
+                    <div class="rs-val" style="color:var(--amber)">${lp.failStreak}/3</div>
+                    <div class="rs-lbl">Gagal Berturut</div>
+                </div>
+            </div>
+
+            ${noticeHTML}
+            ${actHTML}
+        `;
+
+        if (window.MathJax) MathJax.typesetPromise([$('result-panel')]);
+    },
+
+    // ── RESET ──
+    resetConfirm() {
+        if (!confirm('Reset semua progress di sprint ini? Aksi tidak bisa dibatalkan.')) return;
+        progress = {
+            LOTS: defaultLevelState(),
+            MOTS: defaultLevelState(),
+            HOTS: defaultLevelState(),
+        };
+        saveProgress(progress);
+        this.toast('Progress direset!', 'info');
+        this.goToLevels();
+    },
+
+    // ── TOAST ──
+    toast(msg, type = 'info') {
+        const colors = { info:'var(--cyan)', success:'var(--green)', warn:'var(--amber)', error:'var(--red)' };
+        const t = $('toast');
+        t.style.borderColor = colors[type] || colors.info;
+        t.innerHTML = `<span style="color:${colors[type]};font-size:16px">${type==='success'?'✓':type==='error'?'✗':'i'}</span> ${msg}`;
+        t.style.display = 'flex';
+        clearTimeout(APP._toastTimer);
+        APP._toastTimer = setTimeout(() => { t.style.display = 'none'; }, 3500);
+    },
+    _toastTimer: null,
+};
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', () => {
+    $('page-title').textContent = SPRINT_CONFIG.title;
+    $('page-sub').textContent   = SPRINT_CONFIG.sub;
+    APP.goToMateri();
+});
+</script>
+</body>
+</html>
