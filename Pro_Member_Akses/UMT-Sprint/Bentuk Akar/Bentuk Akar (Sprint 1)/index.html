@@ -1,1 +1,1693 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sprint — Barisan & Deret</title>
+    <script>
+      MathJax = { tex: { inlineMath: [['\\(','\\)'],['$','$']] } };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        /* ── RESET & BASE ── */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
+        :root {
+            --bg-main:    #080C14;
+            --bg-panel:   #0D1520;
+            --bg-panel2:  #111A28;
+            --border:     #1A2840;
+            --border2:    #1E3050;
+            --text:       #E2EAF4;
+            --text2:      #637A96;
+            --text3:      #3A4F68;
+            --cyan:       #22D3EE;
+            --cyan2:      #0EA5E9;
+            --cyan-dim:   rgba(34,211,238,0.08);
+            --green:      #34D399;
+            --amber:      #FBBF24;
+            --red:        #F87171;
+            --purple:     #A78BFA;
+            --radius-sm:  8px;
+            --radius-md:  12px;
+            --radius-lg:  16px;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg-main);
+            color: var(--text);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            padding: 16px;
+        }
+
+        /* ── IMPORT FONT ── */
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* ── LAYOUT ── */
+        .wrap { max-width: 760px; margin: 0 auto; }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        .back-btn {
+            display: flex; align-items: center; gap: 6px;
+            background: var(--bg-panel2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 7px 12px;
+            color: var(--text2);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: border-color .2s, color .2s;
+            flex-shrink: 0;
+        }
+        .back-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+        .topbar-title { font-size: 14px; font-weight: 700; color: var(--text); }
+        .topbar-sub   { font-size: 11px; color: var(--text2); margin-top: 1px; }
+
+        /* ── PANEL ── */
+        .panel {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 14px;
+        }
+        @media (min-width: 600px) { .panel { padding: 24px; } }
+
+        /* ── PROGRESS TRACK ── */
+        .stage-track {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin-bottom: 20px;
+        }
+        .stage-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+        .stage-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: var(--border);
+            z-index: 0;
+            transition: background .4s;
+        }
+        .stage-item.done:not(:last-child)::after { background: var(--cyan2); }
+        .stage-dot {
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            background: var(--bg-panel2);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 700;
+            color: var(--text3);
+            transition: all .3s;
+            position: relative;
+            z-index: 2;
+        }
+        .stage-item.active .stage-dot {
+            border-color: var(--cyan);
+            color: var(--cyan);
+            background: var(--bg-panel);
+            box-shadow: 0 0 0 4px rgba(34,211,238,0.12);
+        }
+        .stage-item.done .stage-dot {
+            border-color: var(--green);
+            background: rgba(52,211,153,0.12);
+            color: var(--green);
+        }
+        .stage-lbl {
+            font-size: 10px; font-weight: 600;
+            color: var(--text3);
+            margin-top: 5px;
+            transition: color .3s;
+        }
+        .stage-item.active .stage-lbl { color: var(--cyan); }
+        .stage-item.done  .stage-lbl  { color: var(--green); }
+
+        /* ── STAT ROW ── */
+        .stat-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .stat-card {
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            text-align: center;
+        }
+        .stat-val {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--cyan);
+            font-family: 'JetBrains Mono', monospace;
+            line-height: 1.2;
+        }
+        .stat-lbl { font-size: 10px; color: var(--text2); margin-top: 3px; }
+
+        /* ── BUTTONS ── */
+        .btn {
+            display: inline-flex; align-items: center; gap: 7px;
+            padding: 9px 20px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all .2s;
+            font-family: inherit;
+        }
+        .btn-primary { background: var(--cyan2); color: #000; border-color: var(--cyan2); }
+        .btn-primary:hover { background: var(--cyan); border-color: var(--cyan); }
+        .btn-ghost {
+            background: transparent;
+            color: var(--text2);
+            border-color: var(--border);
+        }
+        .btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); }
+        .btn-danger { background: rgba(248,113,113,.1); color: var(--red); border-color: rgba(248,113,113,.25); }
+        .btn-danger:hover { background: rgba(248,113,113,.2); }
+        .btn:disabled { opacity: .4; cursor: not-allowed; }
+        .btn-sm { padding: 6px 14px; font-size: 12px; }
+
+        .btn-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+        .btn-group.center { justify-content: center; }
+
+        /* ── BADGE ── */
+        .badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            font-size: 10px; font-weight: 700;
+            padding: 3px 8px; border-radius: 20px;
+            letter-spacing: .04em;
+        }
+        .badge-cyan   { background: var(--cyan-dim);           color: var(--cyan);   border: 1px solid rgba(34,211,238,.2); }
+        .badge-green  { background: rgba(52,211,153,.08);      color: var(--green);  border: 1px solid rgba(52,211,153,.2); }
+        .badge-amber  { background: rgba(251,191,36,.08);      color: var(--amber);  border: 1px solid rgba(251,191,36,.2); }
+        .badge-red    { background: rgba(248,113,113,.08);     color: var(--red);    border: 1px solid rgba(248,113,113,.2); }
+        .badge-purple { background: rgba(167,139,250,.08);     color: var(--purple); border: 1px solid rgba(167,139,250,.2); }
+
+        /* ── MATERIAL ── */
+        .mat-heading {
+            font-size: 14px; font-weight: 700; color: var(--cyan);
+            margin: 20px 0 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .mat-heading::before {
+            content: '';
+            display: inline-block;
+            width: 3px; height: 14px;
+            background: var(--cyan);
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+        .mat-text { font-size: 13px; color: var(--text2); line-height: 1.7; margin-bottom: 10px; }
+        .rule-box {
+            background: rgba(0,0,0,.2);
+            border-left: 3px solid var(--cyan2);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            padding: 14px 16px;
+            margin: 10px 0;
+            font-size: 13px;
+            color: var(--text2);
+            line-height: 1.8;
+        }
+        .rule-box ul { list-style: none; padding: 0; }
+        .rule-box li { margin-bottom: 8px; }
+        .key { color: var(--amber); font-weight: 600; }
+        .info-box {
+            background: rgba(251,191,36,.06);
+            border: 1px solid rgba(251,191,36,.2);
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            font-size: 12px;
+            color: var(--amber);
+            line-height: 1.6;
+            margin-top: 16px;
+        }
+
+        /* ── LEVEL CARDS ── */
+        .level-card {
+            background: var(--bg-panel2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            margin-bottom: 10px;
+            transition: border-color .2s;
+        }
+        .level-card.unlocked:hover { border-color: var(--border2); }
+        .level-card.locked { opacity: .55; }
+
+        .level-header {
+            display: flex; align-items: center; gap: 12px;
+            padding: 14px 16px;
+            cursor: pointer;
+        }
+        .level-card.locked .level-header { cursor: not-allowed; }
+
+        .level-icon {
+            width: 36px; height: 36px;
+            border-radius: var(--radius-sm);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        .level-meta { flex: 1; min-width: 0; }
+        .level-name { font-size: 14px; font-weight: 700; color: var(--text); }
+        .level-sub  { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+        /* attempt dots */
+        .attempt-dots { display: flex; gap: 4px; margin-top: 6px; }
+        .adot {
+            width: 9px; height: 9px; border-radius: 50%;
+            background: var(--border2);
+            transition: background .3s;
+        }
+        .adot.pass { background: var(--green); }
+        .adot.fail { background: var(--red); }
+
+        .level-chevron { color: var(--text3); font-size: 11px; transition: transform .25s; }
+        .level-card.open .level-chevron { transform: rotate(180deg); }
+
+        .level-body {
+            display: none;
+            padding: 0 16px 14px;
+            border-top: 1px solid var(--border);
+        }
+        .level-card.open .level-body { display: block; }
+
+        .level-info-row {
+            display: flex; align-items: center; justify-content: space-between;
+            padding-top: 12px;
+            flex-wrap: wrap; gap: 8px;
+        }
+        .level-info-text { font-size: 12px; color: var(--text2); }
+
+        /* ── QUIZ ── */
+        .q-nav { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+        .q-dot {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            border: 1.5px solid var(--border);
+            font-size: 11px; font-weight: 700;
+            color: var(--text3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all .2s;
+            font-family: 'JetBrains Mono', monospace;
+            flex-shrink: 0;
+        }
+        .q-dot:hover       { border-color: var(--cyan); color: var(--cyan); }
+        .q-dot.current     { background: var(--cyan); border-color: var(--cyan); color: #000; }
+        .q-dot.ans-correct { background: rgba(52,211,153,.12); border-color: var(--green); color: var(--green); }
+        .q-dot.ans-wrong   { background: rgba(248,113,113,.12); border-color: var(--red); color: var(--red); }
+
+        .q-num    { font-size: 11px; color: var(--text2); margin-bottom: 10px; }
+        .q-text   { font-size: 15px; color: var(--text); line-height: 1.65; margin-bottom: 16px; }
+
+        .opt-btn {
+            width: 100%;
+            text-align: left;
+            background: var(--bg-panel2);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 12px 14px;
+            color: var(--text2);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all .2s;
+            margin-bottom: 8px;
+            display: flex; align-items: center; gap: 10px;
+            font-family: inherit;
+        }
+        .opt-btn:hover:not(:disabled) { border-color: var(--cyan); color: var(--text); background: var(--cyan-dim); }
+        .opt-btn.selected  { border-color: var(--cyan);  color: var(--text); background: var(--cyan-dim); }
+        .opt-btn.correct   { border-color: var(--green); color: #d4edda;    background: rgba(52,211,153,.1); }
+        .opt-btn.wrong     { border-color: var(--red);   color: #f8d7da;    background: rgba(248,113,113,.1); }
+        .opt-btn:disabled  { cursor: not-allowed; }
+        .opt-letter {
+            width: 22px; height: 22px;
+            border-radius: 50%;
+            border: 1.5px solid currentColor;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px; font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .explanation {
+            background: var(--cyan-dim);
+            border-left: 3px solid var(--cyan);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            padding: 12px 14px;
+            margin-top: 14px;
+            font-size: 13px;
+            color: var(--text2);
+            line-height: 1.7;
+        }
+        .explanation strong { color: var(--cyan); font-size: 11px; letter-spacing: .04em; }
+
+        .quiz-footer {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+            gap: 8px;
+        }
+
+        /* ── RESULT ── */
+        .result-hero { text-align: center; padding: 16px 0 20px; }
+        .score-ring-wrap { position: relative; display: inline-block; margin-bottom: 12px; }
+        .score-ring-text {
+            position: absolute; inset: 0;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+        }
+        .score-big { font-size: 28px; font-weight: 700; line-height: 1; font-family: 'JetBrains Mono', monospace; }
+        .score-pct { font-size: 11px; color: var(--text2); }
+        .result-verdict { font-size: 17px; font-weight: 700; margin-top: 4px; }
+        .result-sub    { font-size: 12px; color: var(--text2); margin-top: 4px; }
+
+        .result-stats {
+            display: grid; grid-template-columns: repeat(3,1fr);
+            gap: 8px; margin: 16px 0;
+        }
+        .rs-card {
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 10px;
+            text-align: center;
+        }
+        .rs-val { font-size: 16px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+        .rs-lbl { font-size: 10px; color: var(--text2); margin-top: 2px; }
+
+        .notice-box {
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            font-size: 13px;
+            line-height: 1.6;
+            margin: 12px 0;
+        }
+        .notice-box.green  { background: rgba(52,211,153,.06); border: 1px solid rgba(52,211,153,.2); color: var(--green); }
+        .notice-box.red    { background: rgba(248,113,113,.06); border: 1px solid rgba(248,113,113,.2); color: var(--red); }
+        .notice-box.cyan   { background: var(--cyan-dim);       border: 1px solid rgba(34,211,238,.2);  color: var(--cyan); }
+        .notice-box .n-title { font-weight: 700; margin-bottom: 4px; }
+        .notice-box .n-sub   { font-size: 12px; opacity: .8; }
+
+        /* ── CERTIFICATE ── */
+        .cert {
+            text-align: center;
+            padding: 28px 20px;
+            border: 1px solid rgba(34,211,238,.3);
+            border-radius: var(--radius-lg);
+            background: var(--bg-panel2);
+            position: relative;
+            overflow: hidden;
+        }
+        .cert::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(34,211,238,.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .cert-icon { font-size: 40px; margin-bottom: 12px; }
+        .cert-title { font-size: 20px; font-weight: 700; color: var(--cyan); margin-bottom: 8px; }
+        .cert-text  { font-size: 13px; color: var(--text2); line-height: 1.7; }
+
+        /* ── TOAST ── */
+        #toast {
+            position: fixed; bottom: 20px; right: 20px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            font-size: 13px;
+            color: var(--text);
+            z-index: 9999;
+            display: none;
+            align-items: center; gap: 10px;
+            max-width: 300px;
+            box-shadow: 0 8px 24px rgba(0,0,0,.4);
+            animation: toastIn .3s ease;
+        }
+        @keyframes toastIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+        /* ── VIEWS ── */
+        .view { display: none; }
+        .view.active { display: block; }
+
+        /* ── SECTION HEADER ── */
+        .sec-hdr {
+            display: flex; align-items: center; gap: 8px;
+            margin-bottom: 14px;
+        }
+        .sec-accent { width: 3px; height: 16px; background: var(--cyan); border-radius: 2px; flex-shrink: 0; }
+        .sec-title  { font-size: 14px; font-weight: 700; color: var(--text); }
+
+        /* ── MOBILE ── */
+        @media (max-width: 480px) {
+            body { padding: 12px 10px; }
+            .stat-row { grid-template-columns: 1fr 1fr; }
+            .result-stats { grid-template-columns: 1fr 1fr; }
+            .quiz-footer { flex-direction: column; }
+            .quiz-footer .btn { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrap">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+        <a href="javascript:history.back()" class="back-btn">&#8592; Kembali</a>
+        <div>
+            <div class="topbar-title" id="page-title">⚡ Sprint — Barisan & Deret</div>
+            <div class="topbar-sub" id="page-sub">Latihan Sprint · 3 Level</div>
+        </div>
+    </div>
+
+    <!-- STAGE TRACK -->
+    <div class="panel" style="padding:16px 20px">
+        <div class="stage-track" id="stage-track">
+            <div class="stage-item" id="st-materi">
+                <div class="stage-dot">📚</div>
+                <div class="stage-lbl">Materi</div>
+            </div>
+            <div class="stage-item" id="st-lots">
+                <div class="stage-dot mono">①</div>
+                <div class="stage-lbl">LOTS</div>
+            </div>
+            <div class="stage-item" id="st-mots">
+                <div class="stage-dot mono">②</div>
+                <div class="stage-lbl">MOTS</div>
+            </div>
+            <div class="stage-item" id="st-hots">
+                <div class="stage-dot mono">③</div>
+                <div class="stage-lbl">HOTS</div>
+            </div>
+            <div class="stage-item" id="st-selesai">
+                <div class="stage-dot">🏆</div>
+                <div class="stage-lbl">Selesai</div>
+            </div>
+        </div>
+        <div class="stat-row" id="global-stats">
+            <div class="stat-card">
+                <div class="stat-val" id="gs-level">Materi</div>
+                <div class="stat-lbl">Tahap</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val" id="gs-attempts">—</div>
+                <div class="stat-lbl">Percobaan Tersisa</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val" id="gs-pass">0/2</div>
+                <div class="stat-lbl">Kali Lulus</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── VIEW: MATERI ── -->
+    <div class="view active" id="view-materi">
+        <div class="panel">
+            <div class="sec-hdr">
+                <div class="sec-accent"></div>
+                <div class="sec-title">Materi Ringkas</div>
+                <span class="badge badge-cyan">Baca Dulu</span>
+            </div>
+
+            <!-- ═══════════════════════════════════════════
+                 GANTI KONTEN MATERI DI SINI
+            ═══════════════════════════════════════════ -->
+            <div id="materi-content">
+    <div class="mat-heading">1. Menyederhanakan Bentuk Akar</div>
+    <p class="mat-text">
+        Gunakan sifat \(\sqrt{ab} = \sqrt{a} \times \sqrt{b}\). Cari 
+        <span class="key">faktor kuadrat terbesar</span> dari bilangan di dalam akar.
+    </p>
+    <div class="rule-box">
+        Contoh: \(\sqrt{48} = \sqrt{16 \times 3} = \sqrt{16} \times \sqrt{3} = 4\sqrt{3}\)
+    </div>
+
+    <div class="mat-heading">2. Operasi Aljabar</div>
+    <p class="mat-text">Bentuk akar dapat dijumlahkan, dikurangkan, dikali, dan dibagi dengan aturan berikut:</p>
+    <div class="rule-box">
+        <ul>
+            <li>
+                <strong>Penjumlahan/Pengurangan:</strong> Hanya bisa dilakukan pada <span class="key">akar sejenis</span>.<br>
+                \(a\sqrt{c} \pm b\sqrt{c} = (a \pm b)\sqrt{c}\)
+            </li>
+            <li>
+                <strong>Perkalian:</strong> Kalikan koefisien dengan koefisien, dan akar dengan akar.<br>
+                \(a\sqrt{b} \times c\sqrt{d} = ac\sqrt{bd}\)
+            </li>
+        </ul>
+    </div>
+
+    <div class="mat-heading">3. Merasionalkan Penyebut</div>
+    <p class="mat-text">
+        Penyebut pecahan tidak boleh dalam bentuk akar. Kalikan pembilang dan penyebut dengan 
+        <span class="key">akar sekawan</span> dari penyebut.
+    </p>
+    <div class="rule-box">
+        <ul>
+            <li><strong>Bentuk \(\frac{a}{\sqrt{b}}\):</strong> Kalikan dengan \(\frac{\sqrt{b}}{\sqrt{b}}\)</li>
+            <li><strong>Bentuk \(\frac{c}{a \pm \sqrt{b}}\):</strong> Kalikan dengan \(\frac{a \mp \sqrt{b}}{a \mp \sqrt{b}}\)</li>
+            <li><strong>Bentuk \(\frac{c}{\sqrt{a} \pm \sqrt{b}}\):</strong> Kalikan dengan \(\frac{\sqrt{a} \mp \sqrt{b}}{\sqrt{a} \mp \sqrt{b}}\)</li>
+        </ul>
+    </div>
+            </div>
+            <!-- ═══════════════════════════════════════════ -->
+
+            <div class="info-box">
+                ⚠️ <strong>Aturan Sprint:</strong> Setiap percobaan berisi <strong>5 soal acak</strong>.
+                Lulus jika skor ≥ 80% (minimal 4 benar). Harus lulus <strong>2 kali</strong> untuk membuka level berikutnya.
+                Gagal 3x berturut-turut atau habis percobaan (5x) → gugur di level itu.
+            </div>
+
+            <div class="btn-group center" style="margin-top:20px">
+                <button class="btn btn-primary" onclick="APP.goToLevels()">
+                    Mulai Latihan →
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── VIEW: LEVEL SELECT ── -->
+    <div class="view" id="view-levels">
+        <div class="panel">
+            <div class="sec-hdr">
+                <div class="sec-accent"></div>
+                <div class="sec-title">Pilih Level</div>
+            </div>
+
+            <!-- LOTS -->
+            <div class="level-card unlocked" id="lcard-LOTS">
+                <div class="level-header" onclick="APP.toggleLevel('LOTS')">
+                    <div class="level-icon" style="background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.2)">
+                        <span style="color:var(--green);font-weight:700;font-family:monospace">①</span>
+                    </div>
+                    <div class="level-meta">
+                        <div class="level-name">
+                            LOTS
+                            <span id="badge-LOTS" class="badge badge-cyan" style="margin-left:6px;vertical-align:middle"></span>
+                        </div>
+                        <div class="level-sub">Lower Order Thinking Skill — Level Dasar</div>
+                        <div class="attempt-dots" id="dots-LOTS"></div>
+                    </div>
+                    <div class="level-chevron" id="chev-LOTS">▾</div>
+                </div>
+                <div class="level-body" id="lbody-LOTS">
+                    <div class="level-info-row">
+                        <div class="level-info-text" id="linfo-LOTS">5 soal acak · skor lulus ≥ 80%</div>
+                        <button class="btn btn-primary btn-sm" id="lbtn-LOTS" onclick="APP.startQuiz('LOTS')">Mulai →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MOTS -->
+            <div class="level-card locked" id="lcard-MOTS">
+                <div class="level-header" onclick="APP.toggleLevel('MOTS')">
+                    <div class="level-icon" style="background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.2)">
+                        <span style="color:var(--amber);font-weight:700;font-family:monospace">②</span>
+                    </div>
+                    <div class="level-meta">
+                        <div class="level-name">
+                            MOTS
+                            <span id="badge-MOTS" class="badge badge-amber" style="margin-left:6px;vertical-align:middle"></span>
+                        </div>
+                        <div class="level-sub">Medium Order Thinking Skill — Level Menengah</div>
+                        <div class="attempt-dots" id="dots-MOTS"></div>
+                    </div>
+                    <div class="level-chevron" id="chev-MOTS">▾</div>
+                </div>
+                <div class="level-body" id="lbody-MOTS">
+                    <div class="level-info-row">
+                        <div class="level-info-text" id="linfo-MOTS">5 soal acak · skor lulus ≥ 80%</div>
+                        <button class="btn btn-primary btn-sm" id="lbtn-MOTS" onclick="APP.startQuiz('MOTS')">Mulai →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HOTS -->
+            <div class="level-card locked" id="lcard-HOTS">
+                <div class="level-header" onclick="APP.toggleLevel('HOTS')">
+                    <div class="level-icon" style="background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.2)">
+                        <span style="color:var(--red);font-weight:700;font-family:monospace">③</span>
+                    </div>
+                    <div class="level-meta">
+                        <div class="level-name">
+                            HOTS
+                            <span id="badge-HOTS" class="badge badge-red" style="margin-left:6px;vertical-align:middle"></span>
+                        </div>
+                        <div class="level-sub">Higher Order Thinking Skill — Level Tinggi</div>
+                        <div class="attempt-dots" id="dots-HOTS"></div>
+                    </div>
+                    <div class="level-chevron" id="chev-HOTS">▾</div>
+                </div>
+                <div class="level-body" id="lbody-HOTS">
+                    <div class="level-info-row">
+                        <div class="level-info-text" id="linfo-HOTS">5 soal acak · skor lulus ≥ 80%</div>
+                        <button class="btn btn-primary btn-sm" id="lbtn-HOTS" onclick="APP.startQuiz('HOTS')">Mulai →</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group" style="margin-top:16px;justify-content:space-between">
+                <button class="btn btn-ghost btn-sm" onclick="APP.goToMateri()">← Baca Materi</button>
+                <button class="btn btn-danger btn-sm" onclick="APP.resetConfirm()">Reset Progress</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── VIEW: QUIZ ── -->
+    <div class="view" id="view-quiz">
+        <div class="panel">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+                <div>
+                    <div id="quiz-title" style="font-size:15px;font-weight:700;color:var(--text)"></div>
+                    <div id="quiz-meta" style="font-size:11px;color:var(--text2);margin-top:2px"></div>
+                </div>
+                <button class="btn btn-ghost btn-sm" onclick="APP.exitQuiz()">✕ Keluar</button>
+            </div>
+
+            <div class="q-nav" id="q-nav"></div>
+            <div id="question-area"></div>
+
+            <div class="quiz-footer">
+                <button class="btn btn-ghost btn-sm" id="q-prev" onclick="APP.prevQ()">← Prev</button>
+                <button class="btn btn-primary btn-sm" id="q-next" onclick="APP.nextOrFinish()">Next →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── VIEW: RESULT ── -->
+    <div class="view" id="view-result">
+        <div class="panel" id="result-panel"></div>
+    </div>
+
+</div><!-- /wrap -->
+
+<div id="toast"></div>
+
+<script>
+
+if (!sessionStorage.getItem('sessionToken')) {
+            window.location.href = '../../Login/';
+        }
+
+// ═══════════════════════════════════════════════════════════════
+//  KONFIGURASI — GANTI BAGIAN INI SESUAI TOPIK SPRINT
+// ═══════════════════════════════════════════════════════════════
+
+const SPRINT_CONFIG = {
+    // Key localStorage — HARUS UNIK per file sprint
+    storageKey: 'nilai_mutlak_v1',
+
+    // Nama topik untuk ditampilkan
+    title: 'Sprint — Nilai Mutlak',
+    sub:   'Latihan Sprint · 3 Level',
+};
+
+// ═══════════════════════════════════════════════════════════════
+//  BANK SOAL — GANTI/TAMBAH SOAL DI SINI
+//  Format setiap soal:
+//  {
+//    q:    "teks pertanyaan",
+//    opts: ["opsi A","opsi B","opsi C"],   ← minimal 2, maks 5
+//    ans:  0,                               ← index jawaban benar (0-based)
+//    exp:  "teks pembahasan"
+//  }
+// ═══════════════════════════════════════════════════════════════
+
+const QUESTIONS = {
+    LOTS: [
+        {
+            q: "Manakah di bawah ini yang merupakan bentuk akar?",
+            opts: ["\\(\\sqrt{8}\\)", "\\(\\sqrt{9}\\)", "\\(\\sqrt{16}\\)"],
+            ans: 0,
+            exp: "Bentuk akar adalah akar dari suatu bilangan yang hasilnya merupakan bilangan irasional. \\(\\sqrt{9}=3\\) dan \\(\\sqrt{16}=4\\) adalah bilangan rasional."
+        },
+        {
+            q: "Bentuk sederhana dari \\(\\sqrt{12}\\) adalah...",
+            opts: ["\\(2\\sqrt{3}\\)", "\\(3\\sqrt{2}\\)", "\\(4\\sqrt{3}\\)"],
+            ans: 0,
+            exp: "\\(\\sqrt{12} = \\sqrt{4 \\times 3} = \\sqrt{4} \\times \\sqrt{3} = 2\\sqrt{3}\\)."
+        },
+        {
+            q: "Hasil dari \\(5\\sqrt{2} + 3\\sqrt{2}\\) adalah...",
+            opts: ["\\(8\\sqrt{2}\\)", "\\(8\\sqrt{4}\\)", "\\(15\\sqrt{2}\\)"],
+            ans: 0,
+            exp: "Karena akarnya sejenis (sama-sama \\(\\sqrt{2}\\)), koefisiennya bisa dijumlahkan: \\((5+3)\\sqrt{2} = 8\\sqrt{2}\\)."
+        },
+        {
+            q: "Hasil dari \\(\\sqrt{3} \\times \\sqrt{5}\\) adalah...",
+            opts: ["\\(\\sqrt{15}\\)", "\\(\\sqrt{8}\\)", "15"],
+            ans: 0,
+            exp: "Gunakan sifat perkalian: \\(\\sqrt{a} \\times \\sqrt{b} = \\sqrt{ab}\\). Maka \\(\\sqrt{3 \\times 5} = \\sqrt{15}\\)."
+        },
+        {
+            q: "Hasil dari \\(\\frac{\\sqrt{20}}{\\sqrt{5}}\\) adalah...",
+            opts: ["2", "\\(\\sqrt{5}\\)", "4"],
+            ans: 0,
+            exp: "Gunakan sifat pembagian: \\(\\frac{\\sqrt{a}}{\\sqrt{b}} = \\sqrt{\\frac{a}{b}}\\). Maka \\(\\sqrt{\\frac{20}{5}} = \\sqrt{4} = 2\\)."
+        },
+        {
+            q: "Manakah yang bukan bentuk akar?",
+            opts: ["\\(\\sqrt{25}\\)", "\\(\\sqrt{24}\\)", "\\(\\sqrt{26}\\)"],
+            ans: 0,
+            exp: "\\(\\sqrt{25} = 5\\), yang merupakan bilangan bulat (rasional), sehingga bukan bentuk akar."
+        },
+        {
+            q: "Bentuk sederhana dari \\(\\sqrt{50}\\) adalah...",
+            opts: ["\\(5\\sqrt{2}\\)", "\\(2\\sqrt{5}\\)", "\\(25\\sqrt{2}\\)"],
+            ans: 0,
+            exp: "\\(\\sqrt{50} = \\sqrt{25 \\times 2} = \\sqrt{25} \\times \\sqrt{2} = 5\\sqrt{2}\\)."
+        },
+        {
+            q: "Hasil dari \\(10\\sqrt{7} - 4\\sqrt{7}\\) adalah...",
+            opts: ["\\(6\\sqrt{7}\\)", "6", "\\(14\\sqrt{7}\\)"],
+            ans: 0,
+            exp: "Karena akarnya sejenis, koefisiennya bisa dikurangkan: \\((10-4)\\sqrt{7} = 6\\sqrt{7}\\)."
+        },
+        {
+            q: "Hasil dari \\(2\\sqrt{3} \\times 4\\sqrt{2}\\) adalah...",
+            opts: ["\\(8\\sqrt{6}\\)", "\\(6\\sqrt{5}\\)", "\\(8\\sqrt{5}\\)"],
+            ans: 0,
+            exp: "Kalikan koefisien \\((2 \\times 4 = 8)\\) dan kalikan akar \\((\\sqrt{3} \\times \\sqrt{2} = \\sqrt{6})\\). Hasilnya \\(8\\sqrt{6}\\)."
+        },
+        {
+            q: "Hasil dari \\(\\sqrt{48} \\div \\sqrt{3}\\) adalah...",
+            opts: ["4", "\\(\\sqrt{16}\\)", "16"],
+            ans: 0,
+            exp: "\\(\\sqrt{\\frac{48}{3}} = \\sqrt{16} = 4\\). Jawaban \\(\\sqrt{16}\\) juga benar, tetapi bentuk paling sederhana adalah 4."
+        },
+        {
+            q: "Nilai dari \\(\\sqrt{81}\\) adalah...",
+            opts: ["9", "\\(9\\sqrt{9}\\)", "Bentuk akar"],
+            ans: 0,
+            exp: "9 adalah bilangan bulat, jadi \\(\\sqrt{81}\\) bukan bentuk akar."
+        },
+        {
+            q: "Sederhanakan \\(\\sqrt{200}\\)!",
+            opts: ["10\\sqrt{2}", "\\(2\\sqrt{10}\\)", "\\(100\\sqrt{2}\\)"],
+            ans: 0,
+            exp: "\\(\\sqrt{200} = \\sqrt{100 \\times 2} = 10\\sqrt{2}\\)."
+        },
+        {
+            q: "Berapakah \\(\\sqrt{5} + \\sqrt{5}\\)?",
+            opts: ["\\(2\\sqrt{5}\\)", "\\(\\sqrt{10}\\)", "5"],
+            ans: 0,
+            exp: "Ini sama dengan \\(1\\sqrt{5} + 1\\sqrt{5} = (1+1)\\sqrt{5} = 2\\sqrt{5}\\)."
+        },
+        {
+            q: "Berapakah \\(\\sqrt{6} \\times \\sqrt{6}\\)?",
+            opts: ["6", "\\(\\sqrt{36}\\)", "36"],
+            ans: 0,
+            exp: "\\(\\sqrt{6} \\times \\sqrt{6} = \\sqrt{36} = 6\\). Sifat \\(\\sqrt{a} \\times \\sqrt{a} = a\\)."
+        },
+        {
+            q: "Berapakah \\(12\\sqrt{10} \\div 4\\sqrt{5}\\)?",
+            opts: ["\\(3\\sqrt{2}\\)", "\\(3\\sqrt{5}\\)", "8"],
+            ans: 0,
+            exp: "Bagi koefisien \\((12 \\div 4 = 3)\\) dan bagi akar \\((\\sqrt{10} \\div \\sqrt{5} = \\sqrt{2})\\). Hasilnya \\(3\\sqrt{2}\\)."
+        },
+        {
+            q: "Faktor kuadrat terbesar dari 72 adalah...",
+            opts: ["36", "9", "4"],
+            ans: 0,
+            exp: "\\(72 = 36 \\times 2\\). 36 adalah bilangan kuadrat terbesar yang bisa membagi 72."
+        },
+        {
+            q: "Bentuk sederhana dari \\(\\sqrt{32}\\) adalah...",
+            opts: ["\\(4\\sqrt{2}\\)", "\\(2\\sqrt{8}\\)", "\\(16\\sqrt{2}\\)"],
+            ans: 0,
+            exp: "\\(\\sqrt{32} = \\sqrt{16 \\times 2} = 4\\sqrt{2}\\)."
+        },
+        {
+            q: "Hasil dari \\(9\\sqrt{3} - \\sqrt{3}\\) adalah...",
+            opts: ["\\(8\\sqrt{3}\\)", "9", "\\(9\\sqrt{2}\\)"],
+            ans: 0,
+            exp: "\\(9\\sqrt{3} - 1\\sqrt{3} = (9-1)\\sqrt{3} = 8\\sqrt{3}\\)."
+        },
+        {
+            q: "Hasil dari \\(5 \\times 3\\sqrt{2}\\) adalah...",
+            opts: ["\\(15\\sqrt{2}\\)", "\\(8\\sqrt{2}\\)", "\\(15\\sqrt{10}\\)"],
+            ans: 0,
+            exp: "Kalikan bilangan di luar akar: \\(5 \\times 3 = 15\\). Hasilnya \\(15\\sqrt{2}\\)."
+        },
+        {
+            q: "Hasil dari \\(\\frac{\\sqrt{54}}{\\sqrt{6}}\\) adalah...",
+            opts: ["3", "\\(\\sqrt{9}\\)", "9"],
+            ans: 0,
+            exp: "\\(\\sqrt{\\frac{54}{6}} = \\sqrt{9} = 3\\)."
+        },
+        {
+            q: "Bentuk \\(3\\sqrt{4}\\) jika disederhanakan menjadi...",
+            opts: ["6", "12", "\\(3\\sqrt{2}\\)"],
+            ans: 0,
+            exp: "\\(\\sqrt{4} = 2\\), maka \\(3 \\times 2 = 6\\)."
+        },
+        {
+            q: "Sederhanakan \\(\\sqrt{98}\\)!",
+            opts: ["\\(7\\sqrt{2}\\)", "\\(2\\sqrt{49}\\)", "\\(49\\sqrt{2}\\)"],
+            ans: 0,
+            exp: "\\(\\sqrt{98} = \\sqrt{49 \\times 2} = 7\\sqrt{2}\\)."
+        },
+        {
+            q: "Manakah yang tidak sejenis dengan \\(2\\sqrt{5}\\)?",
+            opts: ["\\(5\\sqrt{2}\\)", "\\(\\sqrt{5}\\)", "\\(-3\\sqrt{5}\\)"],
+            ans: 0,
+            exp: "Akar sejenis adalah akar yang memiliki bilangan di dalam tanda akar yang sama. \\(5\\sqrt{2}\\) tidak sejenis."
+        },
+        {
+            q: "Hasil dari \\((\\sqrt{7})^2\\) adalah...",
+            opts: ["7", "49", "\\(\\sqrt{14}\\)"],
+            ans: 0,
+            exp: "Kuadrat dari akar kuadrat akan menghilangkan akarnya, sehingga hasilnya adalah 7."
+        },
+        {
+            q: "Hasil dari \\(10\\sqrt{6} \\div 5\\) adalah...",
+            opts: ["\\(2\\sqrt{6}\\)", "\\(2\\sqrt{1}\\)", "\\(5\\sqrt{6}\\)"],
+            ans: 0,
+            exp: "Bagi koefisiennya saja: \\((10 \\div 5)\\sqrt{6} = 2\\sqrt{6}\\)."
+        }
+    ],
+
+    MOTS: [
+        {
+            q: "Hasil dari \\(\\sqrt{12} + \\sqrt{27}\\) adalah...",
+            opts: ["\\(5\\sqrt{3}\\)", "\\(\\sqrt{39}\\)", "\\(6\\sqrt{3}\\)"],
+            ans: 0,
+            exp: "Sederhanakan dulu: \\(2\\sqrt{3} + 3\\sqrt{3} = (2+3)\\sqrt{3} = 5\\sqrt{3}\\)."
+        },
+        {
+            q: "Hasil dari \\(\\sqrt{2}(\\sqrt{8} + \\sqrt{3})\\) adalah...",
+            opts: ["\\(4 + \\sqrt{6}\\)", "\\(4 + \\sqrt{5}\\)", "\\(\\sqrt{16} + \\sqrt{6}\\)"],
+            ans: 0,
+            exp: "Gunakan sifat distributif: \\(\\sqrt{2} \\times \\sqrt{8} + \\sqrt{2} \\times \\sqrt{3} = \\sqrt{16} + \\sqrt{6} = 4 + \\sqrt{6}\\)."
+        },
+        {
+            q: "Bentuk rasional dari \\(\\frac{6}{\\sqrt{3}}\\) adalah...",
+            opts: ["\\(2\\sqrt{3}\\)", "\\(6\\sqrt{3}\\)", "18"],
+            ans: 0,
+            exp: "Kalikan dengan \\(\\frac{\\sqrt{3}}{\\sqrt{3}}\\), menjadi \\(\\frac{6\\sqrt{3}}{3} = 2\\sqrt{3}\\)."
+        },
+        {
+            q: "Bentuk rasional dari \\(\\frac{10}{3+\\sqrt{7}}\\) adalah...",
+            opts: ["\\(5(3-\\sqrt{7})\\)", "\\(10(3-\\sqrt{7})\\)", "\\(5(3+\\sqrt{7})\\)"],
+            ans: 0,
+            exp: "Kalikan dengan sekawan \\(\\frac{3-\\sqrt{7}}{3-\\sqrt{7}}\\). Penyebut menjadi \\(3^2 - (\\sqrt{7})^2 = 9-7=2\\). Hasilnya \\(\\frac{10(3-\\sqrt{7})}{2} = 5(3-\\sqrt{7})\\)."
+        },
+        {
+            q: "Hasil dari \\(3\\sqrt{20} - \\sqrt{45} + \\sqrt{5}\\) adalah...",
+            opts: ["\\(4\\sqrt{5}\\)", "\\(3\\sqrt{5}\\)", "\\(5\\sqrt{5}\\)"],
+            ans: 0,
+            exp: "Sederhanakan: \\(3(2\\sqrt{5}) - 3\\sqrt{5} + 1\\sqrt{5} = 6\\sqrt{5} - 3\\sqrt{5} + 1\\sqrt{5} = 4\\sqrt{5}\\)."
+        },
+        {
+            q: "Hasil dari \\((\\sqrt{5} + \\sqrt{3})^2\\) adalah...",
+            opts: ["\\(8 + 2\\sqrt{15}\\)", "8", "\\(8 + \\sqrt{15}\\)"],
+            ans: 0,
+            exp: "\\((\\sqrt{5})^2 + 2(\\sqrt{5})(\\sqrt{3}) + (\\sqrt{3})^2 = 5 + 2\\sqrt{15} + 3 = 8 + 2\\sqrt{15}\\)."
+        },
+        {
+            q: "Bentuk sederhana dari \\(2\\sqrt{50} - \\sqrt{8}\\) adalah...",
+            opts: ["\\(8\\sqrt{2}\\)", "\\(18\\sqrt{2}\\)", "\\(2\\sqrt{42}\\)"],
+            ans: 0,
+            exp: "\\(2(5\\sqrt{2}) - 2\\sqrt{2} = 10\\sqrt{2} - 2\\sqrt{2} = 8\\sqrt{2}\\)."
+        },
+        {
+            q: "Bentuk rasional dari \\(\\frac{8}{\\sqrt{5}-1}\\) adalah...",
+            opts: ["\\(2(\\sqrt{5}+1)\\)", "\\(8(\\sqrt{5}+1)\\)", "\\(2(\\sqrt{5}-1)\\)"],
+            ans: 0,
+            exp: "Kalikan dengan sekawan \\(\\frac{\\sqrt{5}+1}{\\sqrt{5}+1}\\). Penyebut menjadi \\(5-1=4\\). Hasilnya \\(\\frac{8(\\sqrt{5}+1)}{4} = 2(\\sqrt{5}+1)\\)."
+        },
+        {
+            q: "Hasil dari \\((\\sqrt{7}-2)(\\sqrt{7}+2)\\) adalah...",
+            opts: ["3", "5", "9"],
+            ans: 0,
+            exp: "Ini adalah bentuk \\((a-b)(a+b) = a^2-b^2\\). Maka \\((\\sqrt{7})^2 - 2^2 = 7 - 4 = 3\\)."
+        },
+        {
+            q: "Sederhanakan \\(\\sqrt{108} - \\sqrt{12}\\)!",
+            opts: ["\\(4\\sqrt{3}\\)", "\\(\\sqrt{96}\\)", "\\(6\\sqrt{3}\\)"],
+            ans: 0,
+            exp: "\\(\\sqrt{36 \\times 3} - \\sqrt{4 \\times 3} = 6\\sqrt{3} - 2\\sqrt{3} = 4\\sqrt{3}\\)."
+        },
+        {
+            q: "Bentuk rasional dari \\(\\frac{\\sqrt{2}}{3\\sqrt{5}}\\) adalah...",
+            opts: ["\\(\\frac{\\sqrt{10}}{15}\\)", "\\(\\frac{\\sqrt{10}}{5}\\)", "\\(\\frac{2}{15}\\)"],
+            ans: 0,
+            exp: "Kalikan dengan \\(\\frac{\\sqrt{5}}{\\sqrt{5}}\\). Menjadi \\(\\frac{\\sqrt{10}}{3 \\times 5} = \\frac{\\sqrt{10}}{15}\\)."
+        },
+        {
+            q: "Hasil dari \\(3\\sqrt{2} \\times (\\sqrt{10} - \\sqrt{2})\\) adalah...",
+            opts: ["\\(6\\sqrt{5} - 6\\)", "\\(3\\sqrt{20} - 6\\)", "\\(6\\sqrt{5} - 3\\sqrt{2}\\)"],
+            ans: 0,
+            exp: "Distribusi: \\(3\\sqrt{20} - 3\\sqrt{4} = 3(2\\sqrt{5}) - 3(2) = 6\\sqrt{5} - 6\\)."
+        },
+        {
+            q: "Sederhanakan \\(\\sqrt{27} + \\sqrt{48} - \\sqrt{75}\\)!",
+            opts: ["\\(2\\sqrt{3}\\)", "\\(3\\sqrt{3}\\)", "\\(4\\sqrt{3}\\)"],
+            ans: 0,
+            exp: "\\(3\\sqrt{3} + 4\\sqrt{3} - 5\\sqrt{3} = (3+4-5)\\sqrt{3} = 2\\sqrt{3}\\)."
+        },
+        {
+            q: "Bentuk rasional dari \\(\\frac{12}{3-\\sqrt{3}}\\) adalah...",
+            opts: ["\\(2(3+\\sqrt{3})\\)", "\\(6(3+\\sqrt{3})\\)", "\\(4(3+\\sqrt{3})\\)"],
+            ans: 0,
+            exp: "Kalikan dengan sekawan \\(3+\\sqrt{3}\\). Penyebut menjadi \\(9-3=6\\). Hasilnya \\(\\frac{12(3+\\sqrt{3})}{6} = 2(3+\\sqrt{3})\\)."
+        },
+        {
+            q: "Hasil dari \\((\\sqrt{6}-\\sqrt{2})^2\\) adalah...",
+            opts: ["\\(8 - 4\\sqrt{3}\\)", "4", "\\(8 - 2\\sqrt{12}\\)"],
+            ans: 0,
+            exp: "\\((\\sqrt{6})^2 - 2\\sqrt{6}\\sqrt{2} + (\\sqrt{2})^2 = 6 - 2\\sqrt{12} + 2 = 8 - 4\\sqrt{3}\\)."
+        },
+        {
+            q: "Sederhanakan: \\(5\\sqrt{3} + \\sqrt{12} - 2\\sqrt{27}\\)",
+            opts: ["\\(\\sqrt{3}\\)", "\\(2\\sqrt{3}\\)", "0"],
+            ans: 0,
+            exp: "\\(5\\sqrt{3} + 2\\sqrt{3} - 2(3\\sqrt{3}) = 5\\sqrt{3} + 2\\sqrt{3} - 6\\sqrt{3} = \\sqrt{3}\\)."
+        },
+        {
+            q: "Rasionalkan \\(\\frac{4}{2\\sqrt{3}}\\)!",
+            opts: ["\\(\\frac{2\\sqrt{3}}{3}\\)", "\\(2\\sqrt{3}\\)", "\\(\\frac{\\sqrt{12}}{3}\\)"],
+            ans: 0,
+            exp: "Kalikan dengan \\(\\frac{\\sqrt{3}}{\\sqrt{3}}\\). Menjadi \\(\\frac{4\\sqrt{3}}{2 \\times 3} = \\frac{4\\sqrt{3}}{6} = \\frac{2\\sqrt{3}}{3}\\)."
+        },
+        {
+            q: "Hasil dari \\( (2\\sqrt{3}+1)(2\\sqrt{3}-1) \\) adalah...",
+            opts: ["11", "12", "5"],
+            ans: 0,
+            exp: "Bentuk \\((a+b)(a-b) = a^2-b^2\\). Jadi \\((2\\sqrt{3})^2 - 1^2 = 12 - 1 = 11\\)."
+        },
+        {
+            q: "Sisi miring sebuah segitiga siku-siku adalah \\(\\sqrt{10}\\) cm dan salah satu sisi lainnya 2 cm. Panjang sisi ketiga adalah...",
+            opts: ["\\(\\sqrt{6}\\) cm", "6 cm", "\\(\\sqrt{14}\\) cm"],
+            ans: 0,
+            exp: "\\(a^2+b^2=c^2 \\implies 2^2+b^2=(\\sqrt{10})^2 \\implies 4+b^2=10 \\implies b=\\sqrt{6}\\)."
+        },
+        {
+            q: "Bentuk rasional dari \\(\\frac{7}{4+\\sqrt{2}}\\) adalah...",
+            opts: ["\\(\\frac{4-\\sqrt{2}}{2}\\)", "\\(4-\\sqrt{2}\\)", "\\(\\frac{7(4-\\sqrt{2})}{18}\\)"],
+            ans: 0,
+            exp: "Kalikan dengan \\(4-\\sqrt{2}\\). Penyebut jadi \\(16-2=14\\). Hasilnya \\(\\frac{7(4-\\sqrt{2})}{14} = \\frac{4-\\sqrt{2}}{2}\\)."
+        },
+        {
+            q: "Sederhanakan \\(3\\sqrt{8} + 5\\sqrt{18}\\)!",
+            opts: ["\\(21\\sqrt{2}\\)", "\\(8\\sqrt{26}\\)", "\\(15\\sqrt{2}\\)"],
+            ans: 0,
+            exp: "\\(3(2\\sqrt{2}) + 5(3\\sqrt{2}) = 6\\sqrt{2} + 15\\sqrt{2} = 21\\sqrt{2}\\)."
+        },
+        {
+            q: "Rasionalkan \\(\\frac{15}{\\sqrt{5}}\\)",
+            opts: ["\\(3\\sqrt{5}\\)", "\\(15\\sqrt{5}\\)", "75"],
+            ans: 0,
+            exp: "\\(\\frac{15\\sqrt{5}}{5} = 3\\sqrt{5}\\)."
+        },
+        {
+            q: "Hasil dari \\( (\\sqrt{12}+\\sqrt{2})(\\sqrt{12}-\\sqrt{2}) \\) adalah...",
+            opts: ["10", "14", "12"],
+            ans: 0,
+            exp: "Bentuk \\((a+b)(a-b) = a^2-b^2\\). Hasilnya \\((\\sqrt{12})^2 - (\\sqrt{2})^2 = 12-2=10\\)."
+        },
+        {
+            q: "Sebuah persegi memiliki luas 40 cm². Panjang sisinya adalah...",
+            opts: ["\\(2\\sqrt{10}\\) cm", "\\(4\\sqrt{10}\\) cm", "20 cm"],
+            ans: 0,
+            exp: "Sisi \\(s = \\sqrt{40} = \\sqrt{4 \\times 10} = 2\\sqrt{10}\\)."
+        },
+        {
+            q: "Rasionalkan \\( \\frac{3}{2-\\sqrt{2}} \\)!",
+            opts: ["\\(\\frac{3(2+\\sqrt{2})}{2}\\)", "\\(3(2+\\sqrt{2})\\)", "\\(6+\\sqrt{2}\\)"],
+            ans: 0,
+            exp: "Kalikan dengan \\(2+\\sqrt{2}\\). Penyebut menjadi \\(4-2=2\\). Hasilnya \\(\\frac{3(2+\\sqrt{2})}{2}\\)."
+        }
+    ],
+
+    HOTS: [
+        {
+            q: "Bentuk rasional dari \\(\\frac{4}{\\sqrt{5}+\\sqrt{3}} \\) adalah...",
+            opts: ["\\(2(\\sqrt{5}-\\sqrt{3})\\)", "\\(4(\\sqrt{5}-\\sqrt{3})\\)", "\\(2(\\sqrt{5}+\\sqrt{3})\\)"],
+            ans: 0,
+            exp: "Kalikan dengan sekawan \\(\\sqrt{5}-\\sqrt{3}\\). Penyebut menjadi \\(5-3=2\\). Hasilnya \\(\\frac{4(\\sqrt{5}-\\sqrt{3})}{2} = 2(\\sqrt{5}-\\sqrt{3})\\)."
+        },
+        {
+            q: "Bentuk sederhana dari \\(\\sqrt{7+2\\sqrt{12}}\\) adalah...",
+            opts: ["\\(2+\\sqrt{3}\\)", "\\(\\sqrt{7}+\\sqrt{12}\\)", "\\(1+\\sqrt{6}\\)"],
+            ans: 0,
+            exp: "Gunakan sifat \\(\\sqrt{(a+b)+2\\sqrt{ab}}=\\sqrt{a}+\\sqrt{b}\\). Cari angka yang dijumlah 7, dikali 12, yaitu 4 dan 3. Jadi \\(\\sqrt{4}+\\sqrt{3} = 2+\\sqrt{3}\\)."
+        },
+        {
+            q: "Jika \\(x = \\sqrt{2}+1\\), maka nilai dari \\(x^2 - 2x + 3\\) adalah...",
+            opts: ["4", "5", "\\(\\sqrt{2}+5\\)"],
+            ans: 0,
+            exp: "Karena \\(x-1 = \\sqrt{2}\\), kuadratkan menjadi \\(x^2-2x+1=2\\), sehingga \\(x^2-2x=1\\). Maka \\(1+3=4\\)."
+        },
+        {
+            q: "Penyelesaian dari persamaan \\(\\sqrt{x-2} = 4\\) adalah...",
+            opts: ["x = 18", "x = 14", "x = 6"],
+            ans: 0,
+            exp: "Kuadratkan kedua ruas: \\(x-2 = 16 \\implies x=18\\)."
+        },
+        {
+            q: "Bentuk sederhana dari \\(\\sqrt{10-2\\sqrt{21}}\\) adalah...",
+            opts: ["\\(\\sqrt{7}-\\sqrt{3}\\)", "\\(\\sqrt{21}-1\\)", "\\(\\sqrt{5}-\\sqrt{2}\\)"],
+            ans: 0,
+            exp: "Dua angka yang jumlahnya 10 dan kalinya 21 adalah 7 dan 3. Hasilnya \\(\\sqrt{7}-\\sqrt{3}\\)."
+        },
+        {
+            q: "Bentuk rasional dari \\(\\frac{\\sqrt{3}}{\\sqrt{6}-\\sqrt{2}}\\) adalah...",
+            opts: ["\\(\\frac{3\\sqrt{2}+\\sqrt{6}}{4}\\)", "\\(\\frac{3\\sqrt{2}}{4}\\)", "\\(3\\sqrt{2}+\\sqrt{6}\\)"],
+            ans: 0,
+            exp: "Kalikan sekawan \\(\\sqrt{6}+\\sqrt{2}\\). Pembilang jadi \\(3\\sqrt{2}+\\sqrt{6}\\), penyebut jadi 4."
+        },
+        {
+            q: "Nilai dari \\(x\\) untuk persamaan \\(\\sqrt{x^2+9} = 5\\) adalah...",
+            opts: ["\\(x = \\pm 4\\)", "\\(x=4\\)", "\\(x=16\\)"],
+            ans: 0,
+            exp: "Kuadratkan: \\(x^2+9=25 \\implies x^2=16 \\implies x = \\pm 4\\)."
+        },
+        {
+            q: "Sederhanakan: \\(\\frac{1}{\\sqrt{2}+1} + \\frac{1}{\\sqrt{3}+\\sqrt{2}}\\)",
+            opts: ["\\(\\sqrt{3}-1\\)", "\\(\\sqrt{3}+1\\)", "-1"],
+            ans: 0,
+            exp: "Rasionalkan menjadi \\((\\sqrt{2}-1) + (\\sqrt{3}-\\sqrt{2}) = \\sqrt{3}-1\\)."
+        },
+        {
+            q: "Bentuk sederhana dari \\(\\sqrt{29+12\\sqrt{5}}\\) adalah...",
+            opts: ["\\(3+2\\sqrt{5}\\)", "\\(\\sqrt{20}+\\sqrt{9}\\)", "\\(2+3\\sqrt{5}\\)"],
+            ans: 0,
+            exp: "\\(\\sqrt{29+2\\sqrt{180}}\\). Angka yang jumlahnya 29 dan kalinya 180 adalah 20 dan 9. Jadi \\(2\sqrt{5}+3\\)."
+        },
+        {
+            q: "Jika \\(a = 2+\\sqrt{3}\\) dan \\(b = 2-\\sqrt{3}\\), nilai dari \\(a^2+b^2\\) adalah...",
+            opts: ["14", "1", "8"],
+            ans: 0,
+            exp: "\\((7+4\\sqrt{3}) + (7-4\\sqrt{3}) = 14\\)."
+        },
+        {
+            q: "Rasionalkan \\(\\frac{2\\sqrt{2}}{3\\sqrt{2}-\\sqrt{7}}\\)",
+            opts: ["\\(\\frac{12+2\\sqrt{14}}{11}\\)", "\\(\\frac{12-2\\sqrt{14}}{11}\\)", "12"],
+            ans: 0,
+            exp: "Kalikan sekawan \\(3\\sqrt{2}+\\sqrt{7}\\). Penyebut jadi 11, pembilang jadi \\(12+2\\sqrt{14}\\)."
+        },
+        {
+            q: "Sederhanakan \\(\\sqrt{9-4\\sqrt{5}}\\)",
+            opts: ["\\(\\sqrt{5}-2\\)", "\\(2-\\sqrt{5}\\)", "\\(3-2\\sqrt{5}\\)"],
+            ans: 0,
+            exp: "\\(\\sqrt{9-2\\sqrt{20}} = \\sqrt{5}-\\sqrt{4} = \\sqrt{5}-2\\)."
+        },
+        {
+            q: "Penyelesaian dari \\(\\sqrt{x+7} = x-5\\) adalah...",
+            opts: ["x = 9", "x = 9 atau x = 2", "x = 2"],
+            ans: 0,
+            exp: "Kuadratkan: \\(x+7=x^2-10x+25 \\implies (x-9)(x-2)=0\\). Hanya x=9 yang memenuhi saat dicek ke akar."
+        },
+        {
+            q: "Nilai dari \\(\\frac{1}{1+\\sqrt{2}}+\\frac{1}{\\sqrt{2}+\\sqrt{3}}+\\frac{1}{\\sqrt{3}+2}\\) adalah...",
+            opts: ["1", "-1", "2"],
+            ans: 0,
+            exp: "Menjadi \\((\\sqrt{2}-1) + (\\sqrt{3}-\\sqrt{2}) + (2-\\sqrt{3}) = 1\\)."
+        },
+        {
+            q: "Jika \\(x=\\sqrt{5}\\), nilai dari \\((x-\\frac{1}{x})^2\\) adalah...",
+            opts: ["\\(16/5\\)", "4", "\\(24/5\\)"],
+            ans: 0,
+            exp: "\\(x^2 - 2 + 1/x^2 = 5 - 2 + 1/5 = 3 + 1/5 = 16/5\\)."
+        },
+        {
+            q: "Rasionalkan \\(\\frac{1}{1+\\sqrt{2}+\\sqrt{3}}\\)",
+            opts: ["\\(\\frac{2+\\sqrt{2}-\\sqrt{6}}{4}\\)", "\\(\\frac{1+\\sqrt{2}-\\sqrt{3}}{2}\\)", "1"],
+            ans: 0,
+            exp: "Gunakan perkalian sekawan bertahap hingga penyebut menjadi rasional (4)."
+        },
+        {
+            q: "Sederhanakan \\(\\sqrt{3+\\sqrt{8}}\\)",
+            opts: ["\\(\\sqrt{2}+1\\)", "\\(\\sqrt{2}-1\\)", "\\(2+\\sqrt{1}\\)"],
+            ans: 0,
+            exp: "\\(\\sqrt{3+2\\sqrt{2}} = \\sqrt{2}+1\\)."
+        },
+        {
+            q: "Jika \\(\\sqrt{x} - \\sqrt{x-9} = 1\\), nilai \\(x\\) adalah...",
+            opts: ["x=25", "x=16", "x=9"],
+            ans: 0,
+            exp: "Selesaikan dengan memindahkan akar dan kuadratkan: \\(\\sqrt{x}=1+\\sqrt{x-9} \\implies x=25\\)."
+        },
+        {
+            q: "Sederhanakan \\( (\\sqrt{2})^{\\sqrt{2}} \\) adalah bilangan...",
+            opts: ["Irasional (Transendental)", "Rasional", "Bulat"],
+            ans: 0,
+            exp: "Berdasarkan teorema Gelfond-Schneider, ini adalah bilangan irasional transendental."
+        },
+        {
+            q: "Nilai dari \\(x\\) jika \\(x = \\sqrt{2+\\sqrt{2+\\sqrt{2+...}}}\\) adalah...",
+            opts: ["2", "\\(\\sqrt{2}\\)", "4"],
+            ans: 0,
+            exp: "\\(x = \\sqrt{2+x} \\implies x^2-x-2=0 \\implies x=2\\)."
+        },
+        {
+            q: "Jika \\(p=3\\sqrt{2}\\) and \\(q=2\\sqrt{3}\\), manakah yang benar?",
+            opts: ["p > q", "q > p", "p = q"],
+            ans: 0,
+            exp: "\\(p^2=18\\) dan \\(q^2=12\\). Karena 18 > 12, maka p > q."
+        },
+        {
+            q: "Sederhanakan \\( \\sqrt[3]{16} \\)",
+            opts: ["\\(2\\sqrt[3]{2}\\)", "\\(2\\sqrt{4}\\)", "\\(4\\sqrt[3]{2}\\)"],
+            ans: 0,
+            exp: "\\(\\sqrt[3]{8 \\times 2} = 2\\sqrt[3]{2}\\)."
+        },
+        {
+            q: "Rasionalkan \\( \\frac{1}{\\sqrt[3]{2}} \\)",
+            opts: ["\\(\\frac{\\sqrt[3]{4}}{2}\\)", "\\(\\frac{\\sqrt[3]{2}}{2}\\)", "\\(\\sqrt[3]{4}\\)"],
+            ans: 0,
+            exp: "Kalikan dengan \\(\\frac{\\sqrt[3]{4}}{\\sqrt[3]{4}}\\), penyebut jadi \\(\\sqrt[3]{8}=2\\)."
+        },
+        {
+            q: "Luas belah ketupat dengan diagonal \\(2\\sqrt{5}\\) dan \\(4\\sqrt{5}\\) adalah...",
+            opts: ["20", "40", "\\(6\\sqrt{5}\\)"],
+            ans: 0,
+            exp: "Luas = \\(1/2 \times 2\sqrt{5} \times 4\sqrt{5} = 4 \times 5 = 20\\)."
+        }
+    ]
+};
+
+// ═══════════════════════════════════════════════════════════════
+//  ENGINE — JANGAN DIUBAH KECUALI TAHU APA YANG DILAKUKAN
+// ═══════════════════════════════════════════════════════════════
+
+const PASS_THRESHOLD  = 0.8;
+const MAX_ATTEMPTS    = 5;
+const PASSES_NEEDED   = 2;
+
+const LEVEL_ORDER = ['LOTS','MOTS','HOTS'];
+
+const defaultLevelState = () => ({ attempts: 0, passes: 0, failStreak: 0 });
+
+function loadProgress() {
+    try {
+        const raw = localStorage.getItem(SPRINT_CONFIG.storageKey);
+        if (!raw) return null;
+        return JSON.parse(raw);
+    } catch { return null; }
+}
+
+function saveProgress(data) {
+    localStorage.setItem(SPRINT_CONFIG.storageKey, JSON.stringify(data));
+}
+
+function initProgress() {
+    const saved = loadProgress();
+    if (saved) return saved;
+    return {
+        LOTS: defaultLevelState(),
+        MOTS: defaultLevelState(),
+        HOTS: defaultLevelState(),
+    };
+}
+
+// Helpers
+function getLevelStatus(prog, level) {
+    const lp = prog[level];
+    const prevIdx = LEVEL_ORDER.indexOf(level) - 1;
+    if (prevIdx >= 0) {
+        const prevLevel = LEVEL_ORDER[prevIdx];
+        if (prog[prevLevel].passes < PASSES_NEEDED) return 'locked';
+    }
+    if (lp.passes >= PASSES_NEEDED) return 'completed';
+    if (lp.failStreak >= 3 || (lp.attempts >= MAX_ATTEMPTS && lp.passes < PASSES_NEEDED)) return 'failed';
+    return 'unlocked';
+}
+
+function isAllDone(prog) {
+    return LEVEL_ORDER.every(l => prog[l].passes >= PASSES_NEEDED);
+}
+
+function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+// ── APP STATE ──
+let progress = initProgress();
+let quizState = null;
+
+const $ = id => document.getElementById(id);
+
+const APP = {
+
+    // ── VIEWS ──
+    showView(name) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        $('view-' + name).classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+
+    goToMateri() {
+        this.updateStageTrack('materi');
+        this.showView('materi');
+        if (window.MathJax) MathJax.typesetPromise();
+    },
+
+    goToLevels() {
+        this.updateStageTrack('levels');
+        this.renderLevelCards();
+        this.updateGlobalStats(null);
+        this.showView('levels');
+    },
+
+    // ── STAGE TRACK ──
+    updateStageTrack(activeView) {
+        const stageMap = {
+            materi:  'st-materi',
+            levels:  null,
+            quiz:    null,
+            result:  null,
+        };
+        const prog = progress;
+        const stagesOrder = ['st-materi','st-lots','st-mots','st-hots','st-selesai'];
+        stagesOrder.forEach(id => {
+            const el = $(id);
+            el.classList.remove('active','done');
+        });
+
+        if (isAllDone(prog)) {
+            stagesOrder.forEach(id => $(id).classList.add('done'));
+            return;
+        }
+
+        $('st-materi').classList.add('done');
+
+        ['LOTS','MOTS','HOTS'].forEach((lvl,i) => {
+            const stId = ['st-lots','st-mots','st-hots'][i];
+            const st = getLevelStatus(prog, lvl);
+            if (st === 'completed') $(stId).classList.add('done');
+        });
+
+        if (activeView === 'materi') {
+            $('st-materi').classList.remove('done');
+            $('st-materi').classList.add('active');
+        }
+    },
+
+    // ── GLOBAL STATS ──
+    updateGlobalStats(activeLevel) {
+        if (!activeLevel) {
+            $('gs-level').textContent = 'Level';
+            $('gs-attempts').textContent = '—';
+            $('gs-pass').textContent = '—';
+            return;
+        }
+        const lp = progress[activeLevel];
+        $('gs-level').textContent = activeLevel;
+        $('gs-attempts').textContent = MAX_ATTEMPTS - lp.attempts;
+        $('gs-pass').textContent = lp.passes + '/' + PASSES_NEEDED;
+    },
+
+    // ── LEVEL CARDS ──
+    renderLevelCards() {
+        const prog = progress;
+        const levelColors = {
+            LOTS: { dot:'var(--green)',  badgeClass:'badge-green'  },
+            MOTS: { dot:'var(--amber)',  badgeClass:'badge-amber'  },
+            HOTS: { dot:'var(--red)',    badgeClass:'badge-red'    },
+        };
+
+        LEVEL_ORDER.forEach(level => {
+            const lp   = prog[level];
+            const st   = getLevelStatus(prog, level);
+            const card = $('lcard-' + level);
+            const lc   = levelColors[level];
+
+            // Card state
+            card.classList.remove('locked','unlocked','open');
+            card.classList.add(st === 'locked' ? 'locked' : 'unlocked');
+
+            // Badge
+            const badge = $('badge-' + level);
+            badge.className = 'badge ' + lc.badgeClass;
+            badge.style.verticalAlign = 'middle';
+            badge.style.marginLeft = '6px';
+            if (st === 'completed') { badge.textContent = '✓ Lulus'; }
+            else if (st === 'locked') { badge.textContent = '🔒 Terkunci'; badge.className = 'badge'; badge.style.background='rgba(58,79,104,.15)'; badge.style.color='var(--text3)'; badge.style.border='1px solid var(--border)'; }
+            else if (st === 'failed') { badge.textContent = '✕ Gugur'; badge.className = 'badge badge-red'; }
+            else { badge.textContent = (MAX_ATTEMPTS - lp.attempts) + ' percobaan'; }
+
+            // Attempt dots
+            const dotsEl = $('dots-' + level);
+            dotsEl.innerHTML = '';
+            for (let i = 0; i < MAX_ATTEMPTS; i++) {
+                const d = document.createElement('div');
+                d.className = 'adot';
+                if (i < lp.attempts) d.classList.add(i < lp.passes ? 'pass' : 'fail');
+                dotsEl.appendChild(d);
+            }
+
+            // Info text & button
+            const infoEl = $('linfo-' + level);
+            const btnEl  = $('lbtn-' + level);
+
+            if (st === 'failed') {
+                infoEl.textContent = 'Gugur — percobaan habis atau gagal 3x berturut-turut';
+                btnEl.style.display = 'none';
+            } else if (st === 'locked') {
+                infoEl.textContent = 'Selesaikan level sebelumnya terlebih dahulu';
+                btnEl.style.display = 'none';
+            } else if (st === 'completed') {
+                infoEl.textContent = 'Sudah lulus! Bisa review soal jika mau.';
+                btnEl.textContent = 'Review';
+                btnEl.style.display = '';
+            } else {
+                const att = MAX_ATTEMPTS - lp.attempts;
+                infoEl.textContent = '5 soal acak · Skor lulus ≥ 80% · ' + att + ' percobaan tersisa';
+                btnEl.textContent = lp.attempts === 0 ? 'Mulai →' : 'Coba Lagi →';
+                btnEl.style.display = '';
+            }
+        });
+    },
+
+    // ── LEVEL TOGGLE ──
+    toggleLevel(level) {
+        const st = getLevelStatus(progress, level);
+        if (st === 'locked') { this.toast('Level ini masih terkunci!', 'warn'); return; }
+        const card = $('lcard-' + level);
+        const isOpen = card.classList.contains('open');
+        // Tutup semua dulu
+        LEVEL_ORDER.forEach(l => $('lcard-' + l).classList.remove('open'));
+        if (!isOpen) card.classList.add('open');
+    },
+
+    // ── START QUIZ ──
+    startQuiz(level) {
+        const st = getLevelStatus(progress, level);
+        if (st === 'locked') { this.toast('Level masih terkunci!', 'warn'); return; }
+        if (st === 'failed')  { this.toast('Kamu sudah gugur di level ini. Reset untuk mencoba lagi.', 'warn'); return; }
+
+        const pool = shuffle(QUESTIONS[level]).slice(0, 5);
+        quizState = {
+            level,
+            questions: pool,
+            answers:   Array(pool.length).fill(null),
+            submitted: Array(pool.length).fill(false),
+            current:   0,
+            reviewMode: st === 'completed',
+        };
+
+        this.updateGlobalStats(level);
+        this.updateStageTrack('quiz');
+
+        const levelColors = { LOTS:'var(--green)', MOTS:'var(--amber)', HOTS:'var(--red)' };
+        const lp = progress[level];
+        $('quiz-title').innerHTML = `<span style="color:${levelColors[level]}">${level}</span> — ${SPRINT_CONFIG.title.replace('Sprint — ','')}`;
+        $('quiz-meta').textContent = pool.length + ' soal · Percobaan ke-' + (lp.attempts + 1) + ' dari ' + MAX_ATTEMPTS;
+
+        this.renderQuizQuestion();
+        this.showView('quiz');
+    },
+
+    // ── QUIZ QUESTION ──
+    renderQuizQuestion() {
+        const qs = quizState;
+        const idx = qs.current;
+        const q   = qs.questions[idx];
+
+        // Nav dots
+        $('q-nav').innerHTML = qs.questions.map((_, i) => {
+            let cls = 'q-dot';
+            if (i === idx) cls += ' current';
+            else if (qs.submitted[i]) {
+                cls += qs.answers[i] === qs.questions[i].ans ? ' ans-correct' : ' ans-wrong';
+            }
+            return `<div class="${cls}" onclick="APP.jumpQ(${i})">${i+1}</div>`;
+        }).join('');
+
+        // Question area
+        const letters = ['A','B','C','D','E'];
+        const isSubmitted = qs.submitted[idx];
+        const optsHTML = q.opts.map((opt, oi) => {
+            let cls = 'opt-btn';
+            if (isSubmitted) {
+                if (oi === q.ans) cls += ' correct';
+                else if (oi === qs.answers[idx]) cls += ' wrong';
+            } else if (oi === qs.answers[idx]) cls += ' selected';
+            return `<button class="${cls}" ${isSubmitted ? 'disabled' : ''} onclick="APP.selectOpt(${oi})">
+                <span class="opt-letter">${letters[oi]}</span>
+                <span>${opt}</span>
+            </button>`;
+        }).join('');
+
+        const expHTML = isSubmitted
+            ? `<div class="explanation"><strong>💡 PEMBAHASAN</strong><br>${q.exp}</div>`
+            : '';
+
+        const allAnswered = qs.answers.every(a => a !== null);
+        const allSubmitted = qs.submitted.every(s => s);
+
+        $('question-area').innerHTML = `
+            <div class="q-num">Soal ${idx+1} dari ${qs.questions.length}</div>
+            <div class="q-text">${q.q}</div>
+            <div>${optsHTML}</div>
+            ${!isSubmitted && qs.answers[idx] !== null
+                ? `<div style="margin-top:10px"><button class="btn btn-primary btn-sm" onclick="APP.submitOne(${idx})">Konfirmasi Jawaban ✓</button></div>`
+                : ''}
+            ${expHTML}
+            ${allSubmitted
+                ? `<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">
+                       <button class="btn btn-primary" onclick="APP.finishQuiz()">Lihat Hasil →</button>
+                   </div>`
+                : ''}
+        `;
+
+        $('q-prev').disabled = idx === 0;
+        const nextBtn = $('q-next');
+        if (idx === qs.questions.length - 1) {
+            nextBtn.textContent = 'Selesai ✓';
+            nextBtn.onclick = () => APP.finishQuiz();
+        } else {
+            nextBtn.textContent = 'Next →';
+            nextBtn.onclick = () => APP.nextOrFinish();
+        }
+
+        if (window.MathJax) MathJax.typesetPromise([$('question-area')]);
+    },
+
+    selectOpt(oi) {
+        if (quizState.submitted[quizState.current]) return;
+        quizState.answers[quizState.current] = oi;
+        this.renderQuizQuestion();
+    },
+
+    submitOne(idx) {
+        if (quizState.answers[idx] === null) { this.toast('Pilih jawaban dulu!','warn'); return; }
+        quizState.submitted[idx] = true;
+        this.renderQuizQuestion();
+    },
+
+    prevQ() {
+        if (quizState.current > 0) { quizState.current--; this.renderQuizQuestion(); }
+    },
+
+    nextOrFinish() {
+        const qs = quizState;
+        if (qs.current < qs.questions.length - 1) { qs.current++; this.renderQuizQuestion(); }
+        else this.finishQuiz();
+    },
+
+    jumpQ(i) { quizState.current = i; this.renderQuizQuestion(); },
+
+    exitQuiz() {
+        if (!quizState.submitted.every(s => s)) {
+            if (!confirm('Keluar sebelum selesai? Percobaan ini tidak akan dihitung.')) return;
+        }
+        this.goToLevels();
+    },
+
+    // ── FINISH QUIZ ──
+    finishQuiz() {
+        const qs = quizState;
+        // Auto-submit yang belum di-submit tapi sudah dijawab
+        qs.questions.forEach((_,i) => { if (!qs.submitted[i] && qs.answers[i] !== null) qs.submitted[i] = true; });
+
+        let correct = 0;
+        qs.questions.forEach((q,i) => { if (qs.answers[i] === q.ans) correct++; });
+        const pct    = Math.round(correct / qs.questions.length * 100);
+        const passed = pct >= PASS_THRESHOLD * 100;
+
+        if (!qs.reviewMode) {
+            const lp = progress[qs.level];
+            lp.attempts++;
+            if (passed) { lp.passes++; lp.failStreak = 0; }
+            else lp.failStreak++;
+            saveProgress(progress);
+        }
+
+        this.renderResult(correct, qs.questions.length, pct, passed);
+        this.updateGlobalStats(qs.level);
+        this.updateStageTrack('result');
+        this.showView('result');
+    },
+
+    // ── RESULT ──
+    renderResult(correct, total, pct, passed) {
+        const qs    = quizState;
+        const level = qs.level;
+        const lp    = progress[level];
+        const st    = getLevelStatus(progress, level);
+
+        const color = passed ? 'var(--green)' : pct >= 60 ? 'var(--amber)' : 'var(--red)';
+
+        const circ  = Math.round(2 * Math.PI * 44);
+        const dash  = Math.round(pct / 100 * circ);
+
+        // notice box
+        let noticeHTML = '';
+        if (st === 'completed') {
+            const nextLvl = LEVEL_ORDER[LEVEL_ORDER.indexOf(level) + 1];
+            if (nextLvl) {
+                noticeHTML = `<div class="notice-box green">
+                    <div class="n-title">🔓 Level ${nextLvl} Terbuka!</div>
+                    <div class="n-sub">Kamu sudah lulus ${PASSES_NEEDED}x di level ini.</div>
+                </div>`;
+            } else if (isAllDone(progress)) {
+                noticeHTML = `<div class="cert">
+                    <div class="cert-icon">🏆</div>
+                    <div class="cert-title">Sprint Selesai!</div>
+                    <div class="cert-text">Kamu berhasil menyelesaikan semua level:<br>LOTS ✓ &nbsp; MOTS ✓ &nbsp; HOTS ✓</div>
+                </div>`;
+            }
+        } else if (st === 'failed') {
+            noticeHTML = `<div class="notice-box red">
+                <div class="n-title">Gugur di Level Ini</div>
+                <div class="n-sub">${lp.failStreak >= 3 ? 'Gagal 3x berturut-turut.' : 'Percobaan habis.'} Reset untuk mencoba ulang.</div>
+            </div>`;
+        } else if (passed) {
+            const need = PASSES_NEEDED - lp.passes;
+            if (need > 0) {
+                noticeHTML = `<div class="notice-box cyan">
+                    <div class="n-title">Lulus! ${lp.passes}/${PASSES_NEEDED}</div>
+                    <div class="n-sub">Butuh ${need} kali lulus lagi untuk naik level.</div>
+                </div>`;
+            }
+        }
+
+        // action buttons
+        const attLeft = MAX_ATTEMPTS - lp.attempts;
+        let actHTML = `<div class="btn-group">
+            <button class="btn btn-ghost" onclick="APP.goToLevels()">← Kembali ke Level</button>`;
+        if (!qs.reviewMode && attLeft > 0 && st !== 'failed' && st !== 'completed') {
+            actHTML += `<button class="btn btn-primary" onclick="APP.startQuiz('${level}')">Coba Lagi (${attLeft}x) →</button>`;
+        }
+        if (st === 'completed' && !isAllDone(progress)) {
+            const nextLvl = LEVEL_ORDER[LEVEL_ORDER.indexOf(level) + 1];
+            if (nextLvl) actHTML += `<button class="btn btn-primary" onclick="APP.startQuiz('${nextLvl}')">Mulai ${nextLvl} →</button>`;
+        }
+        actHTML += `</div>`;
+
+        $('result-panel').innerHTML = `
+            <div class="result-hero">
+                <div class="score-ring-wrap">
+                    <svg width="110" height="110" viewBox="0 0 110 110" style="transform:rotate(-90deg)">
+                        <circle cx="55" cy="55" r="44" fill="none" stroke="var(--border)" stroke-width="7"/>
+                        <circle cx="55" cy="55" r="44" fill="none"
+                            stroke="${color}" stroke-width="7"
+                            stroke-dasharray="${circ}" stroke-dashoffset="${circ - dash}"
+                            stroke-linecap="round"/>
+                    </svg>
+                    <div class="score-ring-text">
+                        <div class="score-big" style="color:${color}">${pct}</div>
+                        <div class="score-pct">%</div>
+                    </div>
+                </div>
+                <div class="result-verdict" style="color:${passed?'var(--green)':'var(--red)'}">${passed ? '✓ LULUS' : '✗ BELUM LULUS'}</div>
+                <div class="result-sub">${correct} dari ${total} soal benar · Skor lulus ≥ 80%</div>
+            </div>
+
+            <div class="result-stats">
+                <div class="rs-card">
+                    <div class="rs-val" style="color:var(--green)">${lp.passes}/${PASSES_NEEDED}</div>
+                    <div class="rs-lbl">Kali Lulus</div>
+                </div>
+                <div class="rs-card">
+                    <div class="rs-val mono">${lp.attempts}/${MAX_ATTEMPTS}</div>
+                    <div class="rs-lbl">Percobaan</div>
+                </div>
+                <div class="rs-card">
+                    <div class="rs-val" style="color:var(--amber)">${lp.failStreak}/3</div>
+                    <div class="rs-lbl">Gagal Berturut</div>
+                </div>
+            </div>
+
+            ${noticeHTML}
+            ${actHTML}
+        `;
+
+        if (window.MathJax) MathJax.typesetPromise([$('result-panel')]);
+    },
+
+    // ── RESET ──
+    resetConfirm() {
+        if (!confirm('Reset semua progress di sprint ini? Aksi tidak bisa dibatalkan.')) return;
+        progress = {
+            LOTS: defaultLevelState(),
+            MOTS: defaultLevelState(),
+            HOTS: defaultLevelState(),
+        };
+        saveProgress(progress);
+        this.toast('Progress direset!', 'info');
+        this.goToLevels();
+    },
+
+    // ── TOAST ──
+    toast(msg, type = 'info') {
+        const colors = { info:'var(--cyan)', success:'var(--green)', warn:'var(--amber)', error:'var(--red)' };
+        const t = $('toast');
+        t.style.borderColor = colors[type] || colors.info;
+        t.innerHTML = `<span style="color:${colors[type]};font-size:16px">${type==='success'?'✓':type==='error'?'✗':'i'}</span> ${msg}`;
+        t.style.display = 'flex';
+        clearTimeout(APP._toastTimer);
+        APP._toastTimer = setTimeout(() => { t.style.display = 'none'; }, 3500);
+    },
+    _toastTimer: null,
+};
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', () => {
+    $('page-title').textContent = SPRINT_CONFIG.title;
+    $('page-sub').textContent   = SPRINT_CONFIG.sub;
+    APP.goToMateri();
+});
+</script>
+</body>
+</html>
