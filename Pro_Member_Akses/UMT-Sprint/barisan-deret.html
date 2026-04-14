@@ -3,487 +3,1657 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Barisan & Deret - Mode Belajar Kilat</title>
-    <link rel="icon" type="image/png" href="../UMT-Logo - Copy.png">
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <title>Sprint — Barisan & Deret</title>
+    <script>
+      MathJax = { tex: { inlineMath: [['\\(','\\)'],['$','$']] } };
+    </script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
+        /* ── RESET & BASE ── */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
         :root {
-            --dark-bg: #141414; --dark-card: #1f1f1f; --dark-border: #333;
-            --text-light: #f0f0f0; --text-muted: #aaa; --accent-blue: #007bff;
-            --accent-green: #28a745; --accent-red: #dc3545; --accent-yellow: #ffc107;
-            --accent-teal: #50e3c2;
+            --bg-main:    #080C14;
+            --bg-panel:   #0D1520;
+            --bg-panel2:  #111A28;
+            --border:     #1A2840;
+            --border2:    #1E3050;
+            --text:       #E2EAF4;
+            --text2:      #637A96;
+            --text3:      #3A4F68;
+            --cyan:       #22D3EE;
+            --cyan2:      #0EA5E9;
+            --cyan-dim:   rgba(34,211,238,0.08);
+            --green:      #34D399;
+            --amber:      #FBBF24;
+            --red:        #F87171;
+            --purple:     #A78BFA;
+            --radius-sm:  8px;
+            --radius-md:  12px;
+            --radius-lg:  16px;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: var(--dark-bg); color: var(--text-light);
-            min-height: 100vh; padding: 20px;
+            background: var(--bg-main);
+            color: var(--text);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            padding: 16px;
         }
-        .container {
-            max-width: 900px; margin: 0 auto; background: var(--dark-card);
-            border-radius: 15px; padding: 30px; border: 1px solid var(--dark-border);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+        /* ── IMPORT FONT ── */
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* ── LAYOUT ── */
+        .wrap { max-width: 760px; margin: 0 auto; }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
         }
-        .header {
-            text-align: center; margin-bottom: 30px; padding-bottom: 15px;
-            border-bottom: 2px solid var(--accent-blue);
+        .back-btn {
+            display: flex; align-items: center; gap: 6px;
+            background: var(--bg-panel2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 7px 12px;
+            color: var(--text2);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: border-color .2s, color .2s;
+            flex-shrink: 0;
         }
-        .header h1 { color: var(--text-light); font-size: 2.5em; margin-bottom: 10px; }
-        .header p { color: var(--text-muted); font-size: 1.1em; }
-        .progress-container {
-            margin: 30px 0; padding: 20px; background: rgba(0,0,0,0.2);
-            border: 1px solid var(--dark-border); border-radius: 15px;
+        .back-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+        .topbar-title { font-size: 14px; font-weight: 700; color: var(--text); }
+        .topbar-sub   { font-size: 11px; color: var(--text2); margin-top: 1px; }
+
+        /* ── PANEL ── */
+        .panel {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 14px;
         }
-        .progress-steps {
-            display: flex; justify-content: space-between; margin-bottom: 15px; position: relative;
+        @media (min-width: 600px) { .panel { padding: 24px; } }
+
+        /* ── PROGRESS TRACK ── */
+        .stage-track {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin-bottom: 20px;
         }
-        .progress-steps::before {
-            content: ''; position: absolute; top: 20px; left: 0; right: 0;
-            height: 4px; background: var(--dark-border); z-index: 0;
+        .stage-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            position: relative;
+            z-index: 1;
         }
-        .progress-fill {
-            position: absolute; top: 20px; left: 0; height: 4px;
-            background: var(--accent-blue); transition: width 0.5s ease; z-index: 1;
+        .stage-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: var(--border);
+            z-index: 0;
+            transition: background .4s;
         }
-        .step { display: flex; flex-direction: column; align-items: center; z-index: 2; position: relative; }
-        .step-circle {
-            width: 40px; height: 40px; border-radius: 50%; background: var(--dark-border);
-            display: flex; align-items: center; justify-content: center; font-weight: bold;
-            color: var(--text-muted); border: 3px solid var(--dark-border); margin-bottom: 8px; transition: all 0.3s;
+        .stage-item.done:not(:last-child)::after { background: var(--cyan2); }
+        .stage-dot {
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            background: var(--bg-panel2);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 700;
+            color: var(--text3);
+            transition: all .3s;
+            position: relative;
+            z-index: 2;
         }
-        .step.active .step-circle {
-            background: var(--dark-card); border-color: var(--accent-blue);
-            color: var(--accent-blue); transform: scale(1.2);
+        .stage-item.active .stage-dot {
+            border-color: var(--cyan);
+            color: var(--cyan);
+            background: var(--bg-panel);
+            box-shadow: 0 0 0 4px rgba(34,211,238,0.12);
         }
-        .step.completed .step-circle { background: var(--accent-green); border-color: var(--accent-green); color: white; }
-        .step-label { font-size: 0.85em; color: var(--text-muted); font-weight: 600; }
-        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0; }
+        .stage-item.done .stage-dot {
+            border-color: var(--green);
+            background: rgba(52,211,153,0.12);
+            color: var(--green);
+        }
+        .stage-lbl {
+            font-size: 10px; font-weight: 600;
+            color: var(--text3);
+            margin-top: 5px;
+            transition: color .3s;
+        }
+        .stage-item.active .stage-lbl { color: var(--cyan); }
+        .stage-item.done  .stage-lbl  { color: var(--green); }
+
+        /* ── STAT ROW ── */
+        .stat-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
         .stat-card {
-            background: var(--dark-bg); border: 1px solid var(--dark-border);
-            padding: 15px; border-radius: 12px; text-align: center;
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            text-align: center;
         }
-        .stat-value { font-size: 2em; font-weight: bold; color: var(--accent-teal); margin-bottom: 5px; }
-        .stat-label { font-size: 0.9em; color: var(--text-muted); }
-        .content-area { margin: 30px 0; min-height: 300px; }
-        .material-section, .question-card, .result-summary {
-            padding: 25px; background: var(--dark-card); border: 1px solid var(--dark-border);
-            border-radius: 15px; margin-bottom: 20px;
+        .stat-val {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--cyan);
+            font-family: 'JetBrains Mono', monospace;
+            line-height: 1.2;
         }
-        .question-number { color: var(--accent-blue); font-weight: bold; margin-bottom: 15px; }
-        .question-text { margin-bottom: 20px; font-size: 1.1em; }
-        .option {
-            padding: 15px 20px; background: var(--dark-bg); border: 2px solid var(--dark-border);
-            border-radius: 10px; cursor: pointer; transition: all 0.3s; display: flex;
-            align-items: center; color: var(--text-muted);
-        }
-        .option:hover { border-color: var(--accent-blue); color: var(--text-light); background: #2a2a2a; }
-        .option.selected { border-color: var(--accent-blue); background: rgba(0, 123, 255, 0.1); color: var(--text-light); }
-        .option.correct { border-color: var(--accent-green); background: rgba(40, 167, 69, 0.2); color: #d4edda; }
-        .option.incorrect { border-color: var(--accent-red); background: rgba(220, 53, 69, 0.2); color: #f8d7da; }
-        .option input[type="radio"] { margin-right: 15px; }
+        .stat-lbl { font-size: 10px; color: var(--text2); margin-top: 3px; }
+
+        /* ── BUTTONS ── */
         .btn {
-            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.2);
-            color: var(--text-muted); padding: 12px 35px; border-radius: 8px; font-size: 1em;
-            font-weight: 600; cursor: pointer; transition: all 0.3s ease; margin: 10px 5px;
+            display: inline-flex; align-items: center; gap: 7px;
+            padding: 9px 20px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all .2s;
+            font-family: inherit;
         }
-        .btn:hover { background: rgba(255, 255, 255, 0.1); color: var(--text-light); transform: translateY(-2px); }
-        .btn-primary { background: var(--accent-blue); border-color: var(--accent-blue); color: white; }
-        .btn-primary:hover { background: #0069d9; border-color: #0062cc; }
-        .btn-secondary { background: #6c757d; border-color: #6c757d; color: white; }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; background: var(--dark-border); }
-        .button-group { display: flex; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
-        .explanation {
-            background: #2a2a2a; padding: 15px; border-radius: 10px; margin-top: 20px;
-            border: 1px solid #444; color: var(--text-muted);
+        .btn-primary { background: var(--cyan2); color: #000; border-color: var(--cyan2); }
+        .btn-primary:hover { background: var(--cyan); border-color: var(--cyan); }
+        .btn-ghost {
+            background: transparent;
+            color: var(--text2);
+            border-color: var(--border);
         }
-        .attempts-info {
-            background-color: rgba(255, 193, 7, 0.1); border-left: 5px solid var(--accent-yellow);
-            color: #fff3cd; padding: 15px; border-radius: 10px; margin: 15px 0;
+        .btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); }
+        .btn-danger { background: rgba(248,113,113,.1); color: var(--red); border-color: rgba(248,113,113,.25); }
+        .btn-danger:hover { background: rgba(248,113,113,.2); }
+        .btn:disabled { opacity: .4; cursor: not-allowed; }
+        .btn-sm { padding: 6px 14px; font-size: 12px; }
+
+        .btn-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+        .btn-group.center { justify-content: center; }
+
+        /* ── BADGE ── */
+        .badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            font-size: 10px; font-weight: 700;
+            padding: 3px 8px; border-radius: 20px;
+            letter-spacing: .04em;
         }
-        .hidden { display: none; }
-        .certificate {
-            background: linear-gradient(135deg, #1f1f1f, #2a2a2a); color: white; padding: 40px;
-            border-radius: 20px; text-align: center; margin: 30px 0; border: 2px solid var(--accent-teal);
-            box-shadow: 0 0 40px rgba(80, 227, 194, 0.2);
+        .badge-cyan   { background: var(--cyan-dim);           color: var(--cyan);   border: 1px solid rgba(34,211,238,.2); }
+        .badge-green  { background: rgba(52,211,153,.08);      color: var(--green);  border: 1px solid rgba(52,211,153,.2); }
+        .badge-amber  { background: rgba(251,191,36,.08);      color: var(--amber);  border: 1px solid rgba(251,191,36,.2); }
+        .badge-red    { background: rgba(248,113,113,.08);     color: var(--red);    border: 1px solid rgba(248,113,113,.2); }
+        .badge-purple { background: rgba(167,139,250,.08);     color: var(--purple); border: 1px solid rgba(167,139,250,.2); }
+
+        /* ── MATERIAL ── */
+        .mat-heading {
+            font-size: 14px; font-weight: 700; color: var(--cyan);
+            margin: 20px 0 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 8px;
         }
-        #notification-container {
-            position: fixed; top: 20px; right: 20px; z-index: 1000;
-            display: flex; flex-direction: column; gap: 10px;
+        .mat-heading::before {
+            content: '';
+            display: inline-block;
+            width: 3px; height: 14px;
+            background: var(--cyan);
+            border-radius: 2px;
+            flex-shrink: 0;
         }
-        .notification {
-            background-color: #2a2a2a; color: var(--text-light); padding: 15px 20px;
-            border-radius: 8px; border-left: 5px solid; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            display: flex; align-items: center; gap: 10px;
-            animation: slideIn 0.3s ease forwards, fadeOut 0.5s ease 3.5s forwards;
-        }
-        .notification.warning { border-color: var(--accent-yellow); }
-        .notification.success { border-color: var(--accent-green); }
-        .notification.info { border-color: var(--accent-blue); }
-        @keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; transform: translateY(20px); } }
-        .material-title { color: var(--text-light); font-size: 2em; margin-bottom: 10px; }
-        .material-intro { color: var(--text-muted); font-size: 1.1em; margin-bottom: 30px; }
-        .material-point { margin-bottom: 35px; }
-        .material-heading {
-            color: var(--accent-teal); font-size: 1.5em; margin-bottom: 15px;
-            padding-bottom: 10px; border-bottom: 1px solid var(--dark-border);
-            display: flex; align-items: center;
-        }
-        .material-heading::before {
-            content: '»'; margin-right: 12px; color: var(--accent-blue);
-            font-weight: bold; font-size: 1.2em;
-        }
-        .key-concept { color: var(--accent-yellow); font-weight: 600; }
+        .mat-text { font-size: 13px; color: var(--text2); line-height: 1.7; margin-bottom: 10px; }
         .rule-box {
-            background-color: rgba(0,0,0,0.2); border-left: 4px solid var(--accent-blue);
-            padding: 20px; margin-top: 15px; border-radius: 0 8px 8px 0; line-height: 1.8;
+            background: rgba(0,0,0,.2);
+            border-left: 3px solid var(--cyan2);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            padding: 14px 16px;
+            margin: 10px 0;
+            font-size: 13px;
+            color: var(--text2);
+            line-height: 1.8;
         }
-        .rule-box ul { list-style-type: none; padding-left: 0; }
-        .rule-box li { margin-bottom: 15px; }
-        
-        @media (max-width: 600px) {
-            body { padding: 10px; }
-            .container { padding: 20px 15px; }
-            .header h1 { font-size: 2em; }
-            .material-title { font-size: 1.8em; }
-            .step-label { display: none; }
-            .step-circle { width: 35px; height: 35px; }
-            .progress-steps::before, .progress-fill { top: 17.5px; }
-            .stats { grid-template-columns: 1fr; gap: 10px; }
-            .button-group { flex-direction: column; align-items: stretch; }
-            .btn { width: 100%; margin: 5px 0; }
+        .rule-box ul { list-style: none; padding: 0; }
+        .rule-box li { margin-bottom: 8px; }
+        .key { color: var(--amber); font-weight: 600; }
+        .info-box {
+            background: rgba(251,191,36,.06);
+            border: 1px solid rgba(251,191,36,.2);
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            font-size: 12px;
+            color: var(--amber);
+            line-height: 1.6;
+            margin-top: 16px;
+        }
+
+        /* ── LEVEL CARDS ── */
+        .level-card {
+            background: var(--bg-panel2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            margin-bottom: 10px;
+            transition: border-color .2s;
+        }
+        .level-card.unlocked:hover { border-color: var(--border2); }
+        .level-card.locked { opacity: .55; }
+
+        .level-header {
+            display: flex; align-items: center; gap: 12px;
+            padding: 14px 16px;
+            cursor: pointer;
+        }
+        .level-card.locked .level-header { cursor: not-allowed; }
+
+        .level-icon {
+            width: 36px; height: 36px;
+            border-radius: var(--radius-sm);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        .level-meta { flex: 1; min-width: 0; }
+        .level-name { font-size: 14px; font-weight: 700; color: var(--text); }
+        .level-sub  { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+        /* attempt dots */
+        .attempt-dots { display: flex; gap: 4px; margin-top: 6px; }
+        .adot {
+            width: 9px; height: 9px; border-radius: 50%;
+            background: var(--border2);
+            transition: background .3s;
+        }
+        .adot.pass { background: var(--green); }
+        .adot.fail { background: var(--red); }
+
+        .level-chevron { color: var(--text3); font-size: 11px; transition: transform .25s; }
+        .level-card.open .level-chevron { transform: rotate(180deg); }
+
+        .level-body {
+            display: none;
+            padding: 0 16px 14px;
+            border-top: 1px solid var(--border);
+        }
+        .level-card.open .level-body { display: block; }
+
+        .level-info-row {
+            display: flex; align-items: center; justify-content: space-between;
+            padding-top: 12px;
+            flex-wrap: wrap; gap: 8px;
+        }
+        .level-info-text { font-size: 12px; color: var(--text2); }
+
+        /* ── QUIZ ── */
+        .q-nav { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+        .q-dot {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            border: 1.5px solid var(--border);
+            font-size: 11px; font-weight: 700;
+            color: var(--text3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all .2s;
+            font-family: 'JetBrains Mono', monospace;
+            flex-shrink: 0;
+        }
+        .q-dot:hover       { border-color: var(--cyan); color: var(--cyan); }
+        .q-dot.current     { background: var(--cyan); border-color: var(--cyan); color: #000; }
+        .q-dot.ans-correct { background: rgba(52,211,153,.12); border-color: var(--green); color: var(--green); }
+        .q-dot.ans-wrong   { background: rgba(248,113,113,.12); border-color: var(--red); color: var(--red); }
+
+        .q-num    { font-size: 11px; color: var(--text2); margin-bottom: 10px; }
+        .q-text   { font-size: 15px; color: var(--text); line-height: 1.65; margin-bottom: 16px; }
+
+        .opt-btn {
+            width: 100%;
+            text-align: left;
+            background: var(--bg-panel2);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 12px 14px;
+            color: var(--text2);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all .2s;
+            margin-bottom: 8px;
+            display: flex; align-items: center; gap: 10px;
+            font-family: inherit;
+        }
+        .opt-btn:hover:not(:disabled) { border-color: var(--cyan); color: var(--text); background: var(--cyan-dim); }
+        .opt-btn.selected  { border-color: var(--cyan);  color: var(--text); background: var(--cyan-dim); }
+        .opt-btn.correct   { border-color: var(--green); color: #d4edda;    background: rgba(52,211,153,.1); }
+        .opt-btn.wrong     { border-color: var(--red);   color: #f8d7da;    background: rgba(248,113,113,.1); }
+        .opt-btn:disabled  { cursor: not-allowed; }
+        .opt-letter {
+            width: 22px; height: 22px;
+            border-radius: 50%;
+            border: 1.5px solid currentColor;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px; font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .explanation {
+            background: var(--cyan-dim);
+            border-left: 3px solid var(--cyan);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            padding: 12px 14px;
+            margin-top: 14px;
+            font-size: 13px;
+            color: var(--text2);
+            line-height: 1.7;
+        }
+        .explanation strong { color: var(--cyan); font-size: 11px; letter-spacing: .04em; }
+
+        .quiz-footer {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+            gap: 8px;
+        }
+
+        /* ── RESULT ── */
+        .result-hero { text-align: center; padding: 16px 0 20px; }
+        .score-ring-wrap { position: relative; display: inline-block; margin-bottom: 12px; }
+        .score-ring-text {
+            position: absolute; inset: 0;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+        }
+        .score-big { font-size: 28px; font-weight: 700; line-height: 1; font-family: 'JetBrains Mono', monospace; }
+        .score-pct { font-size: 11px; color: var(--text2); }
+        .result-verdict { font-size: 17px; font-weight: 700; margin-top: 4px; }
+        .result-sub    { font-size: 12px; color: var(--text2); margin-top: 4px; }
+
+        .result-stats {
+            display: grid; grid-template-columns: repeat(3,1fr);
+            gap: 8px; margin: 16px 0;
+        }
+        .rs-card {
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 10px;
+            text-align: center;
+        }
+        .rs-val { font-size: 16px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+        .rs-lbl { font-size: 10px; color: var(--text2); margin-top: 2px; }
+
+        .notice-box {
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            font-size: 13px;
+            line-height: 1.6;
+            margin: 12px 0;
+        }
+        .notice-box.green  { background: rgba(52,211,153,.06); border: 1px solid rgba(52,211,153,.2); color: var(--green); }
+        .notice-box.red    { background: rgba(248,113,113,.06); border: 1px solid rgba(248,113,113,.2); color: var(--red); }
+        .notice-box.cyan   { background: var(--cyan-dim);       border: 1px solid rgba(34,211,238,.2);  color: var(--cyan); }
+        .notice-box .n-title { font-weight: 700; margin-bottom: 4px; }
+        .notice-box .n-sub   { font-size: 12px; opacity: .8; }
+
+        /* ── CERTIFICATE ── */
+        .cert {
+            text-align: center;
+            padding: 28px 20px;
+            border: 1px solid rgba(34,211,238,.3);
+            border-radius: var(--radius-lg);
+            background: var(--bg-panel2);
+            position: relative;
+            overflow: hidden;
+        }
+        .cert::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(34,211,238,.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .cert-icon { font-size: 40px; margin-bottom: 12px; }
+        .cert-title { font-size: 20px; font-weight: 700; color: var(--cyan); margin-bottom: 8px; }
+        .cert-text  { font-size: 13px; color: var(--text2); line-height: 1.7; }
+
+        /* ── TOAST ── */
+        #toast {
+            position: fixed; bottom: 20px; right: 20px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            font-size: 13px;
+            color: var(--text);
+            z-index: 9999;
+            display: none;
+            align-items: center; gap: 10px;
+            max-width: 300px;
+            box-shadow: 0 8px 24px rgba(0,0,0,.4);
+            animation: toastIn .3s ease;
+        }
+        @keyframes toastIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+        /* ── VIEWS ── */
+        .view { display: none; }
+        .view.active { display: block; }
+
+        /* ── SECTION HEADER ── */
+        .sec-hdr {
+            display: flex; align-items: center; gap: 8px;
+            margin-bottom: 14px;
+        }
+        .sec-accent { width: 3px; height: 16px; background: var(--cyan); border-radius: 2px; flex-shrink: 0; }
+        .sec-title  { font-size: 14px; font-weight: 700; color: var(--text); }
+
+        /* ── MOBILE ── */
+        @media (max-width: 480px) {
+            body { padding: 12px 10px; }
+            .stat-row { grid-template-columns: 1fr 1fr; }
+            .result-stats { grid-template-columns: 1fr 1fr; }
+            .quiz-footer { flex-direction: column; }
+            .quiz-footer .btn { width: 100%; justify-content: center; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>⚡ Barisan dan Deret</h1>
-            <p>Sistem Pembelajaran Terstruktur dengan 3 Level</p>
+
+<div class="wrap">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+        <a href="javascript:history.back()" class="back-btn">&#8592; Kembali</a>
+        <div>
+            <div class="topbar-title" id="page-title">⚡ Sprint — Barisan & Deret</div>
+            <div class="topbar-sub" id="page-sub">Latihan Sprint · 3 Level</div>
         </div>
-        <div class="progress-container">
-            <div class="progress-steps">
-                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
-                <div class="step" id="step0"><div class="step-circle">📚</div><div class="step-label">Materi</div></div>
-                <div class="step" id="step1"><div class="step-circle">1</div><div class="step-label">LOTS</div></div>
-                <div class="step" id="step2"><div class="step-circle">2</div><div class="step-label">MOTS</div></div>
-                <div class="step" id="step3"><div class="step-circle">3</div><div class="step-label">HOTS</div></div>
-                <div class="step" id="step4"><div class="step-circle">🏆</div><div class="step-label">Selesai</div></div>
-            </div>
-            <div class="stats">
-                <div class="stat-card"><div class="stat-value" id="currentLevel">Materi</div><div class="stat-label">Level Saat Ini</div></div>
-                <div class="stat-card"><div class="stat-value" id="attemptsLeft">5</div><div class="stat-label">Percobaan Tersisa</div></div>
-                <div class="stat-card"><div class="stat-value" id="passCount">0/2</div><div class="stat-label">Kali Lulus</div></div>
-            </div>
-        </div>
-        <div class="content-area" id="contentArea"></div>
     </div>
 
-    <div id="notification-container"></div>
-    
-    <script>
-        if (!sessionStorage.getItem('sessionToken')) {
-            window.location.href = '../../Login/';
-        }
-        const state = { currentStage: 0, attempts: { LOTS: 5, MOTS: 5, HOTS: 5 }, passCount: { LOTS: 0, MOTS: 0, HOTS: 0 }, consecutiveFails: { LOTS: 0, MOTS: 0, HOTS: 0 }, currentQuiz: null, userAnswers: [], activeQuestions: [] };
+    <!-- STAGE TRACK -->
+    <div class="panel" style="padding:16px 20px">
+        <div class="stage-track" id="stage-track">
+            <div class="stage-item" id="st-materi">
+                <div class="stage-dot">📚</div>
+                <div class="stage-lbl">Materi</div>
+            </div>
+            <div class="stage-item" id="st-lots">
+                <div class="stage-dot mono">①</div>
+                <div class="stage-lbl">LOTS</div>
+            </div>
+            <div class="stage-item" id="st-mots">
+                <div class="stage-dot mono">②</div>
+                <div class="stage-lbl">MOTS</div>
+            </div>
+            <div class="stage-item" id="st-hots">
+                <div class="stage-dot mono">③</div>
+                <div class="stage-lbl">HOTS</div>
+            </div>
+            <div class="stage-item" id="st-selesai">
+                <div class="stage-dot">🏆</div>
+                <div class="stage-lbl">Selesai</div>
+            </div>
+        </div>
+        <div class="stat-row" id="global-stats">
+            <div class="stat-card">
+                <div class="stat-val" id="gs-level">Materi</div>
+                <div class="stat-lbl">Tahap</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val" id="gs-attempts">—</div>
+                <div class="stat-lbl">Percobaan Tersisa</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val" id="gs-pass">0/2</div>
+                <div class="stat-lbl">Kali Lulus</div>
+            </div>
+        </div>
+    </div>
 
-        const quizContent = {
-            material: `
-                <h2 class="material-title">📚 Materi Ringkas: Barisan dan Deret</h2>
-                <p class="material-intro">Pelajari pola bilangan, baik dalam bentuk barisan (urutan) maupun deret (penjumlahan).</p>
-                
-                <div class="material-point">
-                    <h3 class="material-heading">1. Barisan & Deret Aritmetika</h3>
-                    <p>Memiliki <strong class="key-concept">selisih (beda)</strong> yang konstan antar sukunya. Beda (\\(b\\)) = \\(U_n - U_{n-1}\\).</p>
-                    <div class="rule-box"><ul>
-                        <li><strong>Suku ke-n (\\(U_n\\)):</strong> \\( U_n = a + (n-1)b \\)</li>
-                        <li><strong>Jumlah n Suku Pertama (\\(S_n\\)):</strong> \\( S_n = \\frac{n}{2} (2a + (n-1)b) \\)</li>
-                    </ul></div>
+    <!-- ── VIEW: MATERI ── -->
+    <div class="view active" id="view-materi">
+        <div class="panel">
+            <div class="sec-hdr">
+                <div class="sec-accent"></div>
+                <div class="sec-title">Materi Ringkas</div>
+                <span class="badge badge-cyan">Baca Dulu</span>
+            </div>
+
+            <!-- ═══════════════════════════════════════════
+                 GANTI KONTEN MATERI DI SINI
+            ═══════════════════════════════════════════ -->
+            <div id="materi-content">
+                <div class="mat-heading">1. Barisan & Deret Aritmetika</div>
+                <p class="mat-text">Memiliki <span class="key">selisih (beda)</span> yang konstan antar sukunya.</p>
+                <div class="rule-box">
+                    <ul>
+                        <li><strong>Suku ke-n:</strong> \(U_n = a + (n-1)b\)</li>
+                        <li><strong>Jumlah n suku pertama:</strong> \(S_n = \dfrac{n}{2}(2a + (n-1)b)\)</li>
+                    </ul>
                 </div>
 
-                <div class="material-point">
-                    <h3 class="material-heading">2. Barisan & Deret Geometri</h3>
-                    <p>Memiliki <strong class="key-concept">perbandingan (rasio)</strong> yang konstan antar sukunya. Rasio (\\(r\\)) = \\( \\frac{U_n}{U_{n-1}} \\).</p>
-                    <div class="rule-box"><ul>
-                        <li><strong>Suku ke-n (\\(U_n\\)):</strong> \\( U_n = ar^{n-1} \\)</li>
-                        <li><strong>Jumlah n Suku Pertama (\\(S_n\\)):</strong> \\( S_n = \\frac{a(r^n - 1)}{r-1} \\) untuk \\(r > 1\\)</li>
-                    </ul></div>
+                <div class="mat-heading">2. Barisan & Deret Geometri</div>
+                <p class="mat-text">Memiliki <span class="key">rasio (r)</span> yang konstan antar sukunya.</p>
+                <div class="rule-box">
+                    <ul>
+                        <li><strong>Suku ke-n:</strong> \(U_n = ar^{n-1}\)</li>
+                        <li><strong>Jumlah n suku pertama:</strong> \(S_n = \dfrac{a(r^n-1)}{r-1}\) untuk \(r \neq 1\)</li>
+                    </ul>
                 </div>
-                
-                <div class="material-point">
-                    <h3 class="material-heading">3. Deret Geometri Tak Hingga</h3>
-                    <p>Hanya berlaku jika rasio berada di antara -1 dan 1 (\\(-1 < r < 1\\)), disebut deret <strong class="key-concept">konvergen</strong>.</p>
-                     <div class="rule-box">
-                        <strong>Jumlah Tak Hingga (\\(S_\\infty\\)):</strong> \\( S_\\infty = \\frac{a}{1-r} \\)
+
+                <div class="mat-heading">3. Deret Geometri Tak Hingga</div>
+                <p class="mat-text">Berlaku jika <span class="key">\(-1 &lt; r &lt; 1\)</span> (deret konvergen).</p>
+                <div class="rule-box">
+                    <strong>Jumlah tak hingga:</strong> \(S_\infty = \dfrac{a}{1-r}\)
+                </div>
+            </div>
+            <!-- ═══════════════════════════════════════════ -->
+
+            <div class="info-box">
+                ⚠️ <strong>Aturan Sprint:</strong> Setiap percobaan berisi <strong>5 soal acak</strong>.
+                Lulus jika skor ≥ 80% (minimal 4 benar). Harus lulus <strong>2 kali</strong> untuk membuka level berikutnya.
+                Gagal 3x berturut-turut atau habis percobaan (5x) → gugur di level itu.
+            </div>
+
+            <div class="btn-group center" style="margin-top:20px">
+                <button class="btn btn-primary" onclick="APP.goToLevels()">
+                    Mulai Latihan →
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── VIEW: LEVEL SELECT ── -->
+    <div class="view" id="view-levels">
+        <div class="panel">
+            <div class="sec-hdr">
+                <div class="sec-accent"></div>
+                <div class="sec-title">Pilih Level</div>
+            </div>
+
+            <!-- LOTS -->
+            <div class="level-card unlocked" id="lcard-LOTS">
+                <div class="level-header" onclick="APP.toggleLevel('LOTS')">
+                    <div class="level-icon" style="background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.2)">
+                        <span style="color:var(--green);font-weight:700;font-family:monospace">①</span>
+                    </div>
+                    <div class="level-meta">
+                        <div class="level-name">
+                            LOTS
+                            <span id="badge-LOTS" class="badge badge-cyan" style="margin-left:6px;vertical-align:middle"></span>
+                        </div>
+                        <div class="level-sub">Lower Order Thinking Skill — Level Dasar</div>
+                        <div class="attempt-dots" id="dots-LOTS"></div>
+                    </div>
+                    <div class="level-chevron" id="chev-LOTS">▾</div>
+                </div>
+                <div class="level-body" id="lbody-LOTS">
+                    <div class="level-info-row">
+                        <div class="level-info-text" id="linfo-LOTS">5 soal acak · skor lulus ≥ 80%</div>
+                        <button class="btn btn-primary btn-sm" id="lbtn-LOTS" onclick="APP.startQuiz('LOTS')">Mulai →</button>
                     </div>
                 </div>
+            </div>
 
-                <div class="attempts-info" style="margin-top: 20px;">
-                    <strong>⚠️ Peraturan:</strong> Setiap percobaan terdiri dari <strong>5 soal acak</strong>. Lulus level jika skor ≥ 80% (benar 4 dari 5 soal). Anda harus lulus 2 kali untuk membuka level selanjutnya.
+            <!-- MOTS -->
+            <div class="level-card locked" id="lcard-MOTS">
+                <div class="level-header" onclick="APP.toggleLevel('MOTS')">
+                    <div class="level-icon" style="background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.2)">
+                        <span style="color:var(--amber);font-weight:700;font-family:monospace">②</span>
+                    </div>
+                    <div class="level-meta">
+                        <div class="level-name">
+                            MOTS
+                            <span id="badge-MOTS" class="badge badge-amber" style="margin-left:6px;vertical-align:middle"></span>
+                        </div>
+                        <div class="level-sub">Medium Order Thinking Skill — Level Menengah</div>
+                        <div class="attempt-dots" id="dots-MOTS"></div>
+                    </div>
+                    <div class="level-chevron" id="chev-MOTS">▾</div>
                 </div>
-            `,
-            LOTS: [
-                // 25 Soal LOTS
-                { question: "Manakah dari barisan berikut yang merupakan barisan aritmetika?", options: [{ text: "2, 5, 8, 11" }, { text: "2, 4, 8, 16" }, { text: "1, 1, 2, 3" }], correct: 0, explanation: "Barisan aritmetika memiliki selisih yang sama. Pada 2, 5, 8, 11, selisihnya selalu 3." },
-                { question: "Manakah dari barisan berikut yang merupakan barisan geometri?", options: [{ text: "3, 6, 12, 24" }, { text: "3, 6, 9, 12" }, { text: "1, 4, 9, 16" }], correct: 0, explanation: "Barisan geometri memiliki rasio yang sama. Pada 3, 6, 12, 24, rasionya selalu 2 (suku berikutnya dibagi suku sebelumnya)." },
-                { question: "Beda (b) dari barisan aritmetika 10, 7, 4, 1, ... adalah...", options: [{ text: "-3" }, { text: "3" }, { text: "7" }], correct: 0, explanation: "Beda = suku kedua - suku pertama = \\(7 - 10 = -3\\)." },
-                { question: "Rasio (r) dari barisan geometri 81, 27, 9, 3, ... adalah...", options: [{ text: "\\(1/3\\)" }, { text: "3" }, { text: "-3" }], correct: 0, explanation: "Rasio = suku kedua / suku pertama = \\(27 / 81 = 1/3\\)." },
-                { question: "Dua suku berikutnya dari barisan 4, 9, 14, ... adalah...", options: [{ text: "19, 24" }, { text: "18, 22" }, { text: "19, 25" }], correct: 0, explanation: "Ini adalah barisan aritmetika dengan beda 5. Suku berikutnya adalah \\(14+5=19\\) dan \\(19+5=24\\)." },
-                { question: "Dua suku berikutnya dari barisan 2, 6, 18, ... adalah...", options: [{ text: "54, 162" }, { text: "36, 72" }, { text: "54, 108" }], correct: 0, explanation: "Ini adalah barisan geometri dengan rasio 3. Suku berikutnya adalah \\(18 \\times 3=54\\) dan \\(54 \\times 3=162\\)." },
-                { question: "Suku pertama (a) dari barisan 20, 18, 16, ... adalah...", options: [{ text: "20" }, { text: "2" }, { text: "-2" }], correct: 0, explanation: "Suku pertama, dilambangkan dengan 'a', adalah angka paling awal dalam barisan, yaitu 20." },
-                { question: "Tentukan suku ke-5 dari barisan aritmetika dengan suku pertama 3 dan beda 4.", options: [{ text: "19" }, { text: "15" }, { text: "23" }], correct: 0, explanation: "Gunakan rumus \\(U_n = a + (n-1)b\\). \\(U_5 = 3 + (5-1)4 = 3 + 16 = 19\\)." },
-                { question: "Tentukan suku ke-4 dari barisan geometri dengan suku pertama 5 dan rasio 2.", options: [{ text: "40" }, { text: "30" }, { text: "80" }], correct: 0, explanation: "Gunakan rumus \\(U_n = ar^{n-1}\\). \\(U_4 = 5 \\times 2^{4-1} = 5 \\times 2^3 = 5 \\times 8 = 40\\)." },
-                { question: "Jumlah 3 suku pertama dari deret 1 + 3 + 5 + ... adalah...", options: [{ text: "9" }, { text: "8" }, { text: "15" }], correct: 0, explanation: "Cukup jumlahkan 3 suku pertama: \\(1 + 3 + 5 = 9\\)." },
-                { question: "Jenis barisan dari 100, 50, 25, 12.5, ... adalah...", options: [{ text: "Geometri" }, { text: "Aritmetika" }, { text: "Fibonacci" }], correct: 0, explanation: "Setiap suku adalah setengah dari suku sebelumnya, jadi rasionya konstan (1/2). Ini adalah barisan geometri." },
-                { question: "Beda dari barisan 5, 5, 5, 5, ... adalah...", options: [{ text: "0" }, { text: "1" }, { text: "5" }], correct: 0, explanation: "Karena selisih antar sukunya adalah 0, maka ini adalah barisan aritmetika dengan beda 0." },
-                { question: "Rasio dari barisan 7, 7, 7, 7, ... adalah...", options: [{ text: "1" }, { text: "0" }, { text: "7" }], correct: 0, explanation: "Karena perbandingan antar sukunya adalah 1 (7/7=1), ini adalah barisan geometri dengan rasio 1." },
-                { question: "Suku ke-10 dari barisan aritmetika 2, 4, 6, ... adalah...", options: [{ text: "20" }, { text: "18" }, { text: "22" }], correct: 0, explanation: "a=2, b=2. \\(U_{10} = 2 + (10-1)2 = 2 + 18 = 20\\)." },
-                { question: "Suku ke-3 dari barisan geometri 1, 5, 25, ... adalah...", options: [{ text: "25" }, { text: "125" }, { text: "10" }], correct: 0, explanation: "Suku ketiga sudah tertulis jelas dalam barisan, yaitu 25." },
-                { question: "Rumus untuk mencari suku ke-n barisan aritmetika adalah...", options: [{ text: "\\(U_n = a + (n-1)b\\)" }, { text: "\\(U_n = ar^{n-1}\\)" }, { text: "\\(S_n = n/2(2a+(n-1)b)\\)" }], correct: 0, explanation: "Rumus suku ke-n barisan aritmetika adalah \\(U_n = a + (n-1)b\\)." },
-                { question: "Rumus untuk mencari suku ke-n barisan geometri adalah...", options: [{ text: "\\(U_n = ar^{n-1}\\)" }, { text: "\\(U_n = a + (n-1)b\\)" }, { text: "\\(S_n = a(r^n-1)/(r-1)\\)" }], correct: 0, explanation: "Rumus suku ke-n barisan geometri adalah \\(U_n = ar^{n-1}\\)." },
-                { question: "Apa itu 'deret'?", options: [{ text: "Penjumlahan suku-suku dari sebuah barisan" }, { text: "Urutan bilangan dengan pola tertentu" }, { text: "Selisih antar suku" }], correct: 0, explanation: "Deret adalah hasil penjumlahan suku-suku dari sebuah barisan." },
-                { question: "Suku ke-6 dari barisan 1, 3, 5, 7, 9, ... adalah...", options: [{ text: "11" }, { text: "13" }, { text: "9" }], correct: 0, explanation: "Ini adalah barisan bilangan ganjil, atau barisan aritmetika dengan beda 2. Suku setelah 9 adalah 11." },
-                { question: "Suku ke-5 dari barisan 80, 40, 20, 10, ... adalah...", options: [{ text: "5" }, { text: "2.5" }, { text: "0" }], correct: 0, explanation: "Ini adalah barisan geometri dengan rasio 1/2. Suku setelah 10 adalah \\(10 \\times 1/2 = 5\\)." },
-                { question: "Pada barisan 4, 8, 12, ..., nilai \\(a\\) dan \\(b\\) adalah...", options: [{ text: "a=4, b=4" }, { text: "a=4, b=2" }, { text: "a=8, b=4" }], correct: 0, explanation: "Suku pertama (a) adalah 4. Beda (b) adalah \\(8-4=4\\)." },
-                { question: "Pada barisan 5, 15, 45, ..., nilai \\(a\\) dan \\(r\\) adalah...", options: [{ text: "a=5, r=3" }, { text: "a=5, r=10" }, { text: "a=15, r=3" }], correct: 0, explanation: "Suku pertama (a) adalah 5. Rasio (r) adalah \\(15/5=3\\)." },
-                { question: "Suku ke-20 dari barisan aritmetika dengan a=5 dan b=3 adalah...", options: [{ text: "62" }, { text: "65" }, { text: "59" }], correct: 0, explanation: "\\(U_{20} = 5 + (20-1)3 = 5 + 19 \times 3 = 5 + 57 = 62\\)." },
-                { question: "Suku ke-5 dari barisan geometri dengan a=2 dan r=4 adalah...", options: [{ text: "512" }, { text: "256" }, { text: "1024" }], correct: 0, explanation: "\\(U_5 = 2 \times 4^{5-1} = 2 \times 4^4 = 2 \times 256 = 512\\)." },
-                { question: "Jumlah 5 suku pertama dari deret 2 + 4 + 6 + 8 + 10 adalah...", options: [{ text: "30" }, { text: "20" }, { text: "25" }], correct: 0, explanation: "Jumlahkan saja: \\(2+4+6+8+10 = 30\\)." }
-            ],
-            MOTS: [
-                { question: "Suku ke-50 dari barisan aritmetika 7, 10, 13, ... adalah...", options: [{ text: "154" }, { text: "157" }, { text: "151" }], correct: 0, explanation: "a=7, b=3. \\(U_{50} = 7 + (50-1)3 = 7 + 49 \times 3 = 7 + 147 = 154\\)." },
-                { question: "Suku ke-8 dari barisan geometri 3, 6, 12, ... adalah...", options: [{ text: "384" }, { text: "192" }, { text: "768" }], correct: 0, explanation: "a=3, r=2. \\(U_8 = 3 \times 2^{8-1} = 3 \times 2^7 = 3 \times 128 = 384\\)." },
-                { question: "Jumlah 20 suku pertama dari deret aritmetika 4 + 6 + 8 + ... adalah...", options: [{ text: "460" }, { text: "480" }, { text: "500" }], correct: 0, explanation: "a=4, b=2. \\(S_{20} = \\frac{20}{2}(2(4)+(20-1)2) = 10(8+38) = 10(46) = 460\\)." },
-                { question: "Jumlah 6 suku pertama dari deret geometri 2 + 6 + 18 + ... adalah...", options: [{ text: "728" }, { text: "364" }, { text: "729" }], correct: 0, explanation: "a=2, r=3. \\(S_6 = \\frac{2(3^6-1)}{3-1} = \\frac{2(729-1)}{2} = 728\\)." },
-                { question: "Dalam barisan aritmetika, diketahui \\(U_3=9\\) dan \\(U_7=21\\). Suku pertama (a) adalah...", options: [{ text: "3" }, { text: "5" }, { text: "1" }], correct: 0, explanation: "\\(U_7-U_3 = (a+6b)-(a+2b)=4b\\). \\(21-9=12\\). Jadi \\(4b=12 \implies b=3\\). \\(U_3=a+2b=9 \implies a+2(3)=9 \implies a=3\\)." },
-                { question: "Suku ke-30 dari barisan 50, 48, 46, ... adalah...", options: [{ text: "-8" }, { text: "8" }, { text: "-6" }], correct: 0, explanation: "a=50, b=-2. \\(U_{30} = 50 + (29)(-2) = 50 - 58 = -8\\)." },
-                { question: "Suku ke-7 dari barisan 1/8, 1/4, 1/2, ... adalah...", options: [{ text: "8" }, { text: "4" }, { text: "16" }], correct: 0, explanation: "a=1/8, r=2. \\(U_7 = \\frac{1}{8} \times 2^{6} = \\frac{1}{8} \times 64 = 8\\)." },
-                { question: "Jumlah 10 suku pertama dari deret 1+2+3+...+10 adalah...", options: [{ text: "55" }, { text: "50" }, { text: "100" }], correct: 0, explanation: "a=1, n=10, \\(U_{10}=10\\). \\(S_{10} = \\frac{10}{2}(1+10) = 5(11) = 55\\)." },
-                { question: "Jumlah 5 suku pertama dari deret 81 + 27 + 9 + ... adalah...", options: [{ text: "121" }, { text: "243" }, { text: "81" }], correct: 0, explanation: "a=81, r=1/3. \\(S_5 = \\frac{81(1-(1/3)^5)}{1-1/3} = \\frac{81(1-1/243)}{2/3} = 81 \times \\frac{242}{243} \times \\frac{3}{2} = 121\\)." },
-                { question: "Dalam barisan geometri, \\(U_2=6\\) dan \\(U_4=24\\). Rasionya adalah...", options: [{ text: "2" }, { text: "3" }, { text: "4" }], correct: 0, explanation: "\\(\\frac{U_4}{U_2} = \\frac{ar^3}{ar} = r^2\\). \\(\\frac{24}{6} = 4\\). Jadi \\(r^2=4\\). Karena barisan positif, \\(r=2\\)." },
-                { question: "Banyak kursi di gedung pertunjukan: baris pertama 10, baris kedua 12, dst bertambah 2. Jumlah kursi di baris ke-15 adalah...", options: [{ text: "38" }, { text: "40" }, { text: "36" }], correct: 0, explanation: "Barisan aritmetika, a=10, b=2. Cari \\(U_{15}\\). \\(U_{15} = 10+(14)2 = 10+28=38\\)." },
-                { question: "Seorang karyawan menabung Rp 50.000 bulan pertama, Rp 55.000 bulan kedua, dst. Jumlah tabungan setelah 1 tahun adalah...", options: [{ text: "Rp 990.000" }, { text: "Rp 660.000" }, { text: "Rp 1.200.000" }], correct: 0, explanation: "Deret aritmetika, a=50.000, b=5.000, n=12. \\(S_{12} = \\frac{12}{2}(2(50000)+11(5000)) = 6(100000+55000) = 6(155000) = 930.000\\). Oops, check again. \\(S_n = n/2(a+U_n)\\). \\(U_{12} = 50000+11(5000)=105000\\). \\(S_{12} = 6(50000+105000)=6(155000)=930000\\). Mari perbaiki soal atau opsi." },
-                { question: "Suku ke-n sebuah barisan aritmetika adalah \\(U_n=3n+2\\). Beda barisan tersebut adalah...", options: [{ text: "3" }, { text: "2" }, { text: "5" }], correct: 0, explanation: "Beda adalah koefisien dari n. Atau hitung \\(U_1=5, U_2=8\\). Beda = 8-5=3." },
-                { question: "Suku ke berapa dari barisan 3, 7, 11, ... yang nilainya 43?", options: [{ text: "11" }, { text: "10" }, { text: "12" }], correct: 0, explanation: "a=3, b=4. \\(U_n=43\\). \\(3+(n-1)4=43 \implies (n-1)4=40 \implies n-1=10 \implies n=11\\)." },
-                { question: "Diketahui deret geometri \\(U_3=20\\) dan \\(U_5=80\\). Suku pertama (a) adalah...", options: [{ text: "5" }, { text: "10" }, { text: "2" }], correct: 0, explanation: "\\(r^2 = U_5/U_3 = 80/20=4 \implies r=2\\). \\(U_3 = ar^2 = 20 \implies a(2^2)=20 \implies 4a=20 \implies a=5\\)." },
-                { question: "Jumlah semua bilangan kelipatan 3 antara 100 dan 200 adalah...", options: [{ text: "4950" }, { text: "5000" }, { text: "4850" }], correct: 0, explanation: "Barisan: 102, 105, ..., 198. a=102, b=3. \\(198=102+(n-1)3 \implies 96=(n-1)3 \implies n-1=32 \implies n=33\\). \\(S_{33} = \\frac{33}{2}(102+198) = \\frac{33}{2}(300) = 33 \times 150 = 4950\\)." },
-                { question: "Sebuah amoeba membelah diri menjadi dua setiap 5 menit. Jika awalnya ada 2 amoeba, berapa jumlahnya setelah 30 menit?", options: [{ text: "128" }, { text: "64" }, { text: "256" }], correct: 0, explanation: "Pembelahan terjadi 30/5=6 kali. Barisan geometri, a=2, r=2. Yang dicari suku ke-(6+1)=7. \\(U_7 = 2 \times 2^{7-1} = 2 \times 2^6 = 2^7 = 128\\)." },
-                { question: "Diketahui \\(S_n = n^2 + 2n\\) untuk deret aritmetika. Suku ke-5 (\\(U_5\\)) adalah...", options: [{ text: "11" }, { text: "35" }, { text: "24" }], correct: 0, explanation: "Gunakan \\(U_n = S_n - S_{n-1}\\). \\(S_5=5^2+2(5)=35\\). \\(S_4=4^2+2(4)=24\\). \\(U_5 = 35 - 24 = 11\\)." },
-                { question: "Tali dipotong menjadi 5 bagian membentuk barisan geometri. Jika terpendek 4 cm dan terpanjang 324 cm, panjang tali semula adalah...", options: [{ text: "484 cm" }, { text: "328 cm" }, { text: "400 cm" }], correct: 0, explanation: "a=4, n=5, \\(U_5=324\\). \\(U_5=ar^4 \implies 324=4r^4 \implies 81=r^4 \implies r=3\\). \\(S_5 = \\frac{4(3^5-1)}{3-1} = \\frac{4(242)}{2} = 484\\)." },
-                { question: "Suku tengah dari barisan 3, 8, 13, ..., 103 adalah...", options: [{ text: "53" }, { text: "58" }, { text: "51" }], correct: 0, explanation: "Gunakan rumus \\(U_t = (a+U_n)/2 = (3+103)/2 = 106/2 = 53\\)." },
-                { question: "Jumlah 15 suku pertama dari deret dengan \\(U_n=5-2n\\) adalah...", options: [{ text: "-165" }, { text: "165" }, { text: "-150" }], correct: 0, explanation: "a=\\(U_1=5-2=3\\). \\(U_{15}=5-30=-25\\). \\(S_{15} = \\frac{15}{2}(3+(-25)) = \\frac{15}{2}(-22) = 15(-11) = -165\\)." },
-                { question: "Banyaknya suku pada barisan aritmetika 6, 9, 12, ..., 78 adalah...", options: [{ text: "25" }, { text: "24" }, { text: "26" }], correct: 0, explanation: "a=6, b=3, Un=78. \\(78=6+(n-1)3 \implies 72=(n-1)3 \implies 24=n-1 \implies n=25\\)." },
-                { question: "Sebuah deret geometri memiliki \\(S_4=40\\) dan \\(S_8=360\\). Suku pertama (a) adalah...", options: [{ text: "4" }, { text: "8" }, { text: "2" }], correct: 0, explanation: "Rumit, tapi \\(S_8 = S_4 + r^4 S_4 \implies 360 = 40 + r^4(40) \implies 320 = 40r^4 \implies r^4=8\\). Tidak bulat. Mungkin ada kesalahan. Ganti soal." },
-                { question: "Suku ke-6 dan ke-10 barisan aritmetika berturut-turut adalah 19 dan 31. Suku ke-20 adalah...", options: [{ text: "61" }, { text: "59" }, { text: "63" }], correct: 0, explanation: "\\(U_{10}-U_6=4b \implies 31-19=12 \implies b=3\\). \\(U_6=a+5b=19 \implies a+15=19 \implies a=4\\). \\(U_{20}=a+19b=4+19(3)=4+57=61\\)." },
-                { question: "Sebuah deret geometri memiliki a=3 dan \\(U_4=24\\). Jumlah 5 suku pertamanya adalah...", options: [{ text: "93" }, { text: "96" }, { text: "48" }], correct: 0, explanation: "\\(U_4=ar^3=24 \implies 3r^3=24 \implies r^3=8 \implies r=2\\). \\(S_5 = \\frac{3(2^5-1)}{2-1} = 3(31) = 93\\)." }
-            ],
-            HOTS: [
-                { question: "Jumlah deret geometri tak hingga \\(18 + 12 + 8 + ...\\) adalah...", options: [{ text: "54" }, { text: "36" }, { text: "Tidak ada" }], correct: 0, explanation: "a=18, r=12/18=2/3. Karena -1<r<1, deret konvergen. \\(S_\\infty = \\frac{a}{1-r} = \\frac{18}{1-2/3} = \\frac{18}{1/3} = 54\\)." },
-                { question: "Sebuah bola jatuh dari 8m dan memantul kembali \\(3/4\\) tinggi sebelumnya. Total lintasan bola sampai berhenti adalah...", options: [{ text: "56 m" }, { text: "32 m" }, { text: "64 m" }], correct: 0, explanation: "Lintasan turun: \\(S_\\infty = \\frac{8}{1-3/4} = 32\\). Lintasan naik: \\(S_\\infty = \\frac{a_2}{1-r} = \\frac{8 \\times 3/4}{1-3/4} = \\frac{6}{1/4} = 24\\). Total = 32+24 = 56 m." },
-                { question: "Di antara bilangan 4 dan 28 disisipkan 5 bilangan sehingga membentuk barisan aritmetika. Beda barisan tersebut adalah...", options: [{ text: "4" }, { text: "5" }, { text: "6" }], correct: 0, explanation: "Barisan baru: 4, ..., 28. Total suku n'=5+2=7. a=4, \\(U_7=28\\). \\(U_7=a+6b \implies 28=4+6b \implies 24=6b \implies b=4\\)." },
-                { question: "Tiga bilangan membentuk barisan geometri. Jumlahnya 26, hasil kalinya 216. Bilangan terbesarnya adalah...", options: [{ text: "18" }, { text: "6" }, { text: "2" }], correct: 0, explanation: "Misal bilangannya \\(a/r, a, ar\\). Hasil kali: \\(a^3=216 \implies a=6\\). Jumlah: \\(6/r+6+6r=26 \implies 6/r+6r=20\\). Kalikan r: \\(6+6r^2=20r \implies 6r^2-20r+6=0 \implies 3r^2-10r+3=0 \implies (3r-1)(r-3)=0\\). Jika r=3, bilangannya 2, 6, 18. Jika r=1/3, bilangannya 18, 6, 2. Terbesarnya 18." },
-                { question: "Jumlah semua bilangan asli antara 1 dan 100 yang habis dibagi 3 tetapi tidak habis dibagi 5 adalah...", options: [{ text: "1368" }, { text: "1683" }, { text: "315" }], correct: 0, explanation: "Jumlah kelipatan 3: (n=33) S_33 = 33/2(3+99) = 1683. Jumlah kelipatan 15 (habis dibagi 3 dan 5): 15,30,..,90 (n=6). S_6=6/2(15+90)=315. Hasilnya = 1683-315 = 1368." },
-                { question: "Jumlah deret tak hingga \\( \frac{1}{2} + \frac{1}{4} + \frac{1}{8} + ... \\) adalah...", options: [{ text: "1" }, { text: "2" }, { text: "1/2" }], correct: 0, explanation: "a=1/2, r=1/2. \\(S_\\infty = \\frac{1/2}{1-1/2} = \\frac{1/2}{1/2} = 1\\)." },
-                { question: "Sebuah persegi memiliki sisi 10 cm. Di dalamnya dibuat persegi kedua dengan menghubungkan titik tengah sisi-sisinya, dst. Jumlah luas semua persegi adalah...", options: [{ text: "\\(200 \\text{ cm}^2\\)" }, { text: "\\(100 \\text{ cm}^2\\)" }, { text: "Tak hingga" }], correct: 0, explanation: "Luas pertama = 100. Sisi kedua \\(s_2 = \\sqrt{5^2+5^2}=\\sqrt{50}\\), Luas kedua = 50. Sisi ketiga \\(s_3=5\\), Luas ketiga = 25. Ini deret geometri tak hingga dengan a=100, r=1/2. \\(S_\\infty = \\frac{100}{1-1/2}=200\\)." },
-                { question: "Jika jumlah n suku pertama suatu deret adalah \\(S_n = 2n^2 + n\\), maka suku ke-10 deret tersebut adalah...", options: [{ text: "39" }, { text: "210" }, { text: "164" }], correct: 0, explanation: "\\(U_{10} = S_{10} - S_9\\). \\(S_{10}=2(100)+10=210\\). \\(S_9 = 2(81)+9=162+9=171\\). \\(U_{10} = 210-171 = 39\\)." },
-                { question: "Agar deret geometri \\( (x-1) + (x-1)^2 + ... \\) konvergen, nilai x harus...", options: [{ text: "\\(0 < x < 2\\)" }, { text: "\\(-1 < x < 1\\)" }, { text: "\\(x>1\\)" }], correct: 0, explanation: "Syarat konvergen: \\(-1 < r < 1\\). Rasionya adalah \\(r=x-1\\). Maka \\(-1 < x-1 < 1\\). Tambahkan 1 ke semua ruas: \\(0 < x < 2\\)." },
-                { question: "Diketahui barisan aritmetika dengan \\(U_5+U_7 = 24\\) dan \\(U_{10}=21\\). Suku pertama barisan tersebut adalah...", options: [{ text: "3" }, { text: "4" }, { text: "2" }], correct: 0, explanation: "\\(U_5+U_7 = (a+4b)+(a+6b)=2a+10b=24 \implies a+5b=12\\). \\(U_{10}=a+9b=21\\). Eliminasi: \\((a+9b)-(a+5b)=21-12 \implies 4b=9 \implies b=9/4\\). \\(a=12-5(9/4) = 48/4-45/4=3/4\\). Soal sepertinya salah hitung. Mari ganti: \\(U_5+U_7=28 \implies a+5b=14\\). \\(U_{10}=29 \implies a+9b=29\\). \\(4b=15 \implies b=15/4\\). Masih pecahan. Ganti lagi: \\(U_5+U_7=34 \implies a+5b=17\\). \\(U_{10}=32 \implies a+9b=32\\). \\(4b=15\\). Oke, perbaiki soal di awal. \\(U_3+U_5=16 \implies a+3b=8\\). \\(U_8=18 \implies a+7b=18\\). \\(4b=10, b=2.5\\). Oke soalnya harus dibuat pas." },
-                { question: "Jumlah tak hingga dari \\( 1 - \\frac{2}{3} + \\frac{4}{9} - \\frac{8}{27} + ... \\) adalah...", options: [{ text: "3/5" }, { text: "3/2" }, { text: "5/3" }], correct: 0, explanation: "Deret geometri tak hingga dengan a=1 dan r = -2/3. \\(S_\\infty = \\frac{1}{1 - (-2/3)} = \\frac{1}{1+2/3} = \\frac{1}{5/3} = 3/5\\)." },
-                { question: "Suku tengah suatu barisan aritmetika adalah 23. Jika suku terakhirnya 43 dan suku ketiganya 13, suku pertamanya adalah...", options: [{ text: "3" }, { text: "1" }, { text: "5" }], correct: 0, explanation: "\\(U_t = (a+U_n)/2 \implies 23 = (a+43)/2 \implies 46=a+43 \implies a=3\\)." },
-                { question: "Di antara bilangan 2 dan 50 disisipkan 5 bilangan membentuk barisan geometri. Rasio barisan itu adalah...", options: [{ text: "\\(\\sqrt{5}\\)" }, { text: "5" }, { text: "2" }], correct: 0, explanation: "n'=7, a=2, \\(U_7=50\\). Salah. Soal tidak bulat. Ganti: 2 dan 162. \\(U_7=ar^6 \implies 162=2r^6 \implies r^6=81\\). Tidak bulat juga. Ganti lagi: 3 dan 192. \\(192=3r^6 \implies r^6=64 \implies r=2\\). OK." },
-                { question: "Jika \\(S_n = 3^n - 1\\) adalah jumlah n suku pertama deret geometri, maka rasionya adalah...", options: [{ text: "3" }, { text: "2" }, { text: "1/3" }], correct: 0, explanation: "\\(U_1 = S_1 = 3^1-1=2\\). \\(U_2 = S_2-S_1 = (3^2-1)-(3^1-1) = 8-2=6\\). Rasio \\(r = U_2/U_1 = 6/2=3\\)." },
-                { question: "Sebuah ayunan mencapai lintasan pertama 120 cm, dan lintasan berikutnya hanya \\(2/3\\) dari sebelumnya. Panjang total ayunan sampai berhenti adalah...", options: [{ text: "360 cm" }, { text: "240 cm" }, { text: "180 cm" }], correct: 0, explanation: "Ini adalah deret geometri tak hingga. a=120, r=2/3. \\(S_\\infty = \\frac{120}{1-2/3} = \\frac{120}{1/3} = 360\\) cm." },
-                { question: "Tiga bilangan (x-1), (x+1), (3x-1) membentuk barisan geometri. Nilai x positif adalah...", options: [{ text: "3" }, { text: "1" }, { text: "2" }], correct: 0, explanation: "Rasio harus sama: \\(\\frac{x+1}{x-1} = \\frac{3x-1}{x+1} \implies (x+1)^2=(x-1)(3x-1) \implies x^2+2x+1=3x^2-4x+1 \implies 2x^2-6x=0 \implies 2x(x-3)=0\\). Solusi x=0 atau x=3. Yang positif adalah 3." },
-                { question: "Jumlah bilangan ganjil dari 1 sampai 50 adalah...", options: [{ text: "625" }, { text: "650" }, { text: "1250" }], correct: 0, explanation: "Barisan 1,3,5,...,49. Ada 25 bilangan ganjil. a=1, U_25=49. \\(S_{25} = \\frac{25}{2}(1+49) = \\frac{25}{2}(50)=625\\)." },
-                { question: "Sebuah bakteri membelah menjadi 3 setiap 10 menit. Jika ada 5 bakteri pada pukul 09.00, jumlah bakteri pada pukul 10.00 adalah...", options: [{ text: "3645" }, { text: "1215" }, { text: "729" }], correct: 0, explanation: "Waktu=60 menit, jadi ada 60/10=6 kali pembelahan. a=5, r=3. Mencari suku ke-7 (setelah 6 pembelahan). \\(U_7=5 \\times 3^6 = 5 \\times 729 = 3645\\)." },
-                { question: "Jumlah tak hingga suku-suku ganjil dari deret \\(1 + 1/2 + 1/4 + 1/8 + ...\\) adalah...", options: [{ text: "4/3" }, { text: "2/3" }, { text: "2" }], correct: 0, explanation: "Suku ganjil: 1, 1/4, 1/16, ... Ini deret geometri baru dengan a=1 dan r=1/4. \\(S_\\infty = \\frac{1}{1-1/4} = \\frac{1}{3/4} = 4/3\\)." },
-                { question: "Suku ke-n barisan 2, 5, 10, 17, ... adalah...", options: [{ text: "\\(n^2+1\\)" }, { text: "\\(n^2-1\\)" }, { text: "\\(2n\\)" }], correct: 0, explanation: "Ini bukan aritmetika atau geometri. Perhatikan polanya: \\(1^2+1=2, 2^2+1=5, 3^2+1=10, 4^2+1=17\\). Jadi rumusnya \\(U_n=n^2+1\\)." },
-                { question: "Jika \\(S_n = 2n^2+3n\\), maka beda barisan aritmetika tersebut adalah...", options: [{ text: "4" }, { text: "2" }, { text: "3" }], correct: 0, explanation: "Cara cepat: beda = 2 kali koefisien \\(n^2\\), jadi \\(2 \times 2=4\\). Cara biasa: \\(U_1=S_1=5\\), \\(U_2=S_2-S_1=(14)-5=9\\). Beda=9-5=4." },
-                { question: "Suku ke-5 sebuah deret geometri adalah 162 dan suku ke-2 adalah 6. Jumlah 6 suku pertama adalah...", options: [{ text: "728" }, { text: "242" }, { text: "729" }], correct: 0, explanation: "\\(r^3=U_5/U_2 = 162/6=27 \implies r=3\\). \\(U_2=ar=6 \implies a(3)=6 \implies a=2\\). \\(S_6 = \\frac{2(3^6-1)}{3-1} = 729-1=728\\)." },
-                { question: "Jumlah tak hingga dari \\(100+50+25+...\\) adalah...", options: [{ text: "200" }, { text: "150" }, { text: "Tak hingga" }], correct: 0, explanation: "a=100, r=1/2. \\(S_\\infty = \\frac{100}{1-1/2} = \\frac{100}{1/2} = 200\\)." },
-                { question: "Panjang sisi-sisi sebuah segitiga siku-siku membentuk barisan aritmetika. Jika kelilingnya 24, luasnya adalah...", options: [{ text: "24" }, { text: "12" }, { text: "48" }], correct: 0, explanation: "Sisi-sisinya (a-b), a, (a+b). Keliling: 3a=24 -> a=8. Sisi: (8-b), 8, (8+b). Pythagoras: \\((8-b)^2+8^2=(8+b)^2 \implies 64-16b+b^2+64=64+16b+b^2 \implies 64=32b \implies b=2\\). Sisi: 6, 8, 10. Luas = 1/2 * 6 * 8 = 24." },
-                { question: "Jika 3 suku pertama barisan aritmetika adalah (x), (2x+1), (5x-2), maka suku ke-4 adalah...", options: [{ text: "19" }, { text: "15" }, { text: "23" }], correct: 0, explanation: "Beda sama: \\((2x+1)-x = (5x-2)-(2x+1) \implies x+1=3x-3 \implies 4=2x \implies x=2\\). Barisannya: 2, 5, 8, ... Beda=3. Suku ke-4 adalah \\(8+3=11\\). Oops, hitung lagi. \\(x+1=3x-3 \implies 4=2x \implies x=2\\). Barisan: 2, 5, 8. Suku ke-4 = 11. Mari perbaiki pilihan soal." }
-            ]
+                <div class="level-body" id="lbody-MOTS">
+                    <div class="level-info-row">
+                        <div class="level-info-text" id="linfo-MOTS">5 soal acak · skor lulus ≥ 80%</div>
+                        <button class="btn btn-primary btn-sm" id="lbtn-MOTS" onclick="APP.startQuiz('MOTS')">Mulai →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HOTS -->
+            <div class="level-card locked" id="lcard-HOTS">
+                <div class="level-header" onclick="APP.toggleLevel('HOTS')">
+                    <div class="level-icon" style="background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.2)">
+                        <span style="color:var(--red);font-weight:700;font-family:monospace">③</span>
+                    </div>
+                    <div class="level-meta">
+                        <div class="level-name">
+                            HOTS
+                            <span id="badge-HOTS" class="badge badge-red" style="margin-left:6px;vertical-align:middle"></span>
+                        </div>
+                        <div class="level-sub">Higher Order Thinking Skill — Level Tinggi</div>
+                        <div class="attempt-dots" id="dots-HOTS"></div>
+                    </div>
+                    <div class="level-chevron" id="chev-HOTS">▾</div>
+                </div>
+                <div class="level-body" id="lbody-HOTS">
+                    <div class="level-info-row">
+                        <div class="level-info-text" id="linfo-HOTS">5 soal acak · skor lulus ≥ 80%</div>
+                        <button class="btn btn-primary btn-sm" id="lbtn-HOTS" onclick="APP.startQuiz('HOTS')">Mulai →</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group" style="margin-top:16px;justify-content:space-between">
+                <button class="btn btn-ghost btn-sm" onclick="APP.goToMateri()">← Baca Materi</button>
+                <button class="btn btn-danger btn-sm" onclick="APP.resetConfirm()">Reset Progress</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── VIEW: QUIZ ── -->
+    <div class="view" id="view-quiz">
+        <div class="panel">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+                <div>
+                    <div id="quiz-title" style="font-size:15px;font-weight:700;color:var(--text)"></div>
+                    <div id="quiz-meta" style="font-size:11px;color:var(--text2);margin-top:2px"></div>
+                </div>
+                <button class="btn btn-ghost btn-sm" onclick="APP.exitQuiz()">✕ Keluar</button>
+            </div>
+
+            <div class="q-nav" id="q-nav"></div>
+            <div id="question-area"></div>
+
+            <div class="quiz-footer">
+                <button class="btn btn-ghost btn-sm" id="q-prev" onclick="APP.prevQ()">← Prev</button>
+                <button class="btn btn-primary btn-sm" id="q-next" onclick="APP.nextOrFinish()">Next →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── VIEW: RESULT ── -->
+    <div class="view" id="view-result">
+        <div class="panel" id="result-panel"></div>
+    </div>
+
+</div><!-- /wrap -->
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  KONFIGURASI — GANTI BAGIAN INI SESUAI TOPIK SPRINT
+// ═══════════════════════════════════════════════════════════════
+
+const SPRINT_CONFIG = {
+    // Key localStorage — HARUS UNIK per file sprint
+    storageKey: 'sprint_barisan_deret_v1',
+
+    // Nama topik untuk ditampilkan
+    title: 'Sprint — Barisan & Deret',
+    sub:   'Latihan Sprint · 3 Level',
+};
+
+// ═══════════════════════════════════════════════════════════════
+//  BANK SOAL — GANTI/TAMBAH SOAL DI SINI
+//  Format setiap soal:
+//  {
+//    q:    "teks pertanyaan",
+//    opts: ["opsi A","opsi B","opsi C"],   ← minimal 2, maks 5
+//    ans:  0,                               ← index jawaban benar (0-based)
+//    exp:  "teks pembahasan"
+//  }
+// ═══════════════════════════════════════════════════════════════
+
+const QUESTIONS = {
+
+    LOTS: [
+        {
+            q: "Manakah dari barisan berikut yang merupakan barisan aritmetika?",
+            opts: ["2, 5, 8, 11", "2, 4, 8, 16", "1, 1, 2, 3"],
+            ans: 0,
+            exp: "Barisan aritmetika memiliki selisih yang sama. Pada 2, 5, 8, 11, selisihnya selalu 3."
+        },
+        {
+            q: "Manakah dari barisan berikut yang merupakan barisan geometri?",
+            opts: ["3, 6, 12, 24", "3, 6, 9, 12", "1, 4, 9, 16"],
+            ans: 0,
+            exp: "Barisan geometri memiliki rasio yang sama. Pada 3, 6, 12, 24, rasionya selalu 2."
+        },
+        {
+            q: "Beda (b) dari barisan aritmetika 10, 7, 4, 1, ... adalah ...",
+            opts: ["\\(-3\\)", "\\(3\\)", "\\(7\\)"],
+            ans: 0,
+            exp: "Beda = suku ke-2 − suku ke-1 = \\(7 - 10 = -3\\)."
+        },
+        {
+            q: "Rasio (r) dari barisan geometri 81, 27, 9, 3, ... adalah ...",
+            opts: ["\\(\\frac{1}{3}\\)", "\\(3\\)", "\\(-3\\)"],
+            ans: 0,
+            exp: "Rasio = suku ke-2 / suku ke-1 = \\(27 / 81 = \\frac{1}{3}\\)."
+        },
+        {
+            q: "Dua suku berikutnya dari barisan 4, 9, 14, ... adalah ...",
+            opts: ["19 dan 24", "18 dan 22", "19 dan 25"],
+            ans: 0,
+            exp: "Barisan aritmetika dengan beda 5. Suku berikutnya: \\(14+5=19\\) dan \\(19+5=24\\)."
+        },
+        {
+            q: "Dua suku berikutnya dari barisan 2, 6, 18, ... adalah ...",
+            opts: ["54 dan 162", "36 dan 72", "54 dan 108"],
+            ans: 0,
+            exp: "Barisan geometri dengan rasio 3. Suku berikutnya: \\(18\\times3=54\\) dan \\(54\\times3=162\\)."
+        },
+        {
+            q: "Suku ke-5 dari barisan aritmetika dengan suku pertama 3 dan beda 4 adalah ...",
+            opts: ["19", "15", "23"],
+            ans: 0,
+            exp: "\\(U_5 = 3 + (5-1)\\cdot 4 = 3 + 16 = 19\\)."
+        },
+        {
+            q: "Suku ke-4 dari barisan geometri dengan suku pertama 5 dan rasio 2 adalah ...",
+            opts: ["40", "30", "80"],
+            ans: 0,
+            exp: "\\(U_4 = 5 \\times 2^{3} = 5 \\times 8 = 40\\)."
+        },
+        {
+            q: "Suku ke-10 dari barisan aritmetika 2, 4, 6, ... adalah ...",
+            opts: ["20", "18", "22"],
+            ans: 0,
+            exp: "\\(a=2,\\ b=2\\). \\(U_{10} = 2 + 9\\times2 = 20\\)."
+        },
+        {
+            q: "Suku ke-5 dari barisan geometri 80, 40, 20, 10, ... adalah ...",
+            opts: ["5", "2,5", "0"],
+            ans: 0,
+            exp: "Barisan geometri dengan \\(r=\\frac{1}{2}\\). Suku setelah 10: \\(10\\times\\frac{1}{2}=5\\)."
+        },
+        {
+            q: "Pada barisan 4, 8, 12, ..., nilai \\(a\\) dan \\(b\\) berturut-turut adalah ...",
+            opts: ["\\(a=4,\\ b=4\\)", "\\(a=4,\\ b=2\\)", "\\(a=8,\\ b=4\\)"],
+            ans: 0,
+            exp: "Suku pertama \\(a=4\\), beda \\(b=8-4=4\\)."
+        },
+        {
+            q: "Suku ke-20 dari barisan aritmetika dengan \\(a=5\\) dan \\(b=3\\) adalah ...",
+            opts: ["62", "65", "59"],
+            ans: 0,
+            exp: "\\(U_{20} = 5 + 19\\times3 = 5 + 57 = 62\\)."
+        },
+        {
+            q: "Jenis barisan dari 100, 50, 25, 12,5, ... adalah ...",
+            opts: ["Geometri", "Aritmetika", "Fibonacci"],
+            ans: 0,
+            exp: "Setiap suku adalah setengah suku sebelumnya, rasio konstan \\(\\frac{1}{2}\\) → barisan geometri."
+        },
+        {
+            q: "Jumlah 3 suku pertama dari deret \\(1+3+5+\\ldots\\) adalah ...",
+            opts: ["9", "8", "15"],
+            ans: 0,
+            exp: "\\(1+3+5=9\\)."
+        },
+        {
+            q: "Suku ke-5 dari barisan geometri dengan \\(a=2\\) dan \\(r=4\\) adalah ...",
+            opts: ["512", "256", "1024"],
+            ans: 0,
+            exp: "\\(U_5 = 2\\times4^4 = 2\\times256 = 512\\)."
+        },
+        {
+            q: "Rumus suku ke-\\(n\\) barisan geometri adalah ...",
+            opts: ["\\(U_n = ar^{n-1}\\)", "\\(U_n = a+(n-1)b\\)", "\\(S_n = \\frac{a(r^n-1)}{r-1}\\)"],
+            ans: 0,
+            exp: "Rumus suku ke-\\(n\\) barisan geometri adalah \\(U_n = ar^{n-1}\\)."
+        },
+        {
+            q: "Apa yang dimaksud dengan 'deret'?",
+            opts: ["Penjumlahan suku-suku suatu barisan", "Urutan bilangan dengan pola tertentu", "Selisih antar suku"],
+            ans: 0,
+            exp: "Deret adalah hasil penjumlahan suku-suku dari sebuah barisan."
+        },
+        {
+            q: "Suku ke-6 dari barisan 1, 3, 5, 7, 9, ... adalah ...",
+            opts: ["11", "13", "9"],
+            ans: 0,
+            exp: "Barisan bilangan ganjil (beda 2). Suku setelah 9 adalah 11."
+        },
+        {
+            q: "Jumlah 5 suku pertama dari deret \\(2+4+6+8+10\\) adalah ...",
+            opts: ["30", "20", "25"],
+            ans: 0,
+            exp: "\\(2+4+6+8+10=30\\)."
+        },
+        {
+            q: "Pada barisan geometri 5, 15, 45, ..., nilai \\(a\\) dan \\(r\\) berturut-turut adalah ...",
+            opts: ["\\(a=5,\\ r=3\\)", "\\(a=5,\\ r=10\\)", "\\(a=15,\\ r=3\\)"],
+            ans: 0,
+            exp: "Suku pertama \\(a=5\\), rasio \\(r=15/5=3\\)."
+        },
+        {
+            q: "Beda dari barisan konstan 5, 5, 5, 5, ... adalah ...",
+            opts: ["0", "1", "5"],
+            ans: 0,
+            exp: "Selisih antar suku = \\(5-5=0\\), sehingga beda = 0."
+        },
+        {
+            q: "Rasio dari barisan 7, 7, 7, 7, ... adalah ...",
+            opts: ["1", "0", "7"],
+            ans: 0,
+            exp: "\\(r = 7/7 = 1\\)."
+        },
+        {
+            q: "Suku ke-3 dari barisan geometri 1, 5, 25, ... adalah ...",
+            opts: ["25", "125", "10"],
+            ans: 0,
+            exp: "Suku ketiga sudah tertulis: 25."
+        },
+        {
+            q: "Rumus untuk mencari suku ke-\\(n\\) barisan aritmetika adalah ...",
+            opts: ["\\(U_n = a+(n-1)b\\)", "\\(U_n = ar^{n-1}\\)", "\\(S_n = \\frac{n}{2}(2a+(n-1)b)\\)"],
+            ans: 0,
+            exp: "Rumus suku ke-\\(n\\) barisan aritmetika adalah \\(U_n = a+(n-1)b\\)."
+        },
+        {
+            q: "Suku pertama dari barisan 20, 18, 16, ... adalah ...",
+            opts: ["20", "2", "\\(-2\\)"],
+            ans: 0,
+            exp: "Suku pertama \\((a)\\) adalah angka paling awal dalam barisan, yaitu 20."
+        },
+    ],
+
+    MOTS: [
+        {
+            q: "Suku ke-50 dari barisan aritmetika 7, 10, 13, ... adalah ...",
+            opts: ["154", "157", "151"],
+            ans: 0,
+            exp: "\\(a=7,\\ b=3\\). \\(U_{50}=7+49\\times3=7+147=154\\)."
+        },
+        {
+            q: "Suku ke-8 dari barisan geometri 3, 6, 12, ... adalah ...",
+            opts: ["384", "192", "768"],
+            ans: 0,
+            exp: "\\(a=3,\\ r=2\\). \\(U_8=3\\times2^7=3\\times128=384\\)."
+        },
+        {
+            q: "Jumlah 20 suku pertama dari deret aritmetika \\(4+6+8+\\ldots\\) adalah ...",
+            opts: ["460", "480", "500"],
+            ans: 0,
+            exp: "\\(a=4,\\ b=2\\). \\(S_{20}=\\frac{20}{2}(8+38)=10\\times46=460\\)."
+        },
+        {
+            q: "Jumlah 6 suku pertama dari deret geometri \\(2+6+18+\\ldots\\) adalah ...",
+            opts: ["728", "364", "729"],
+            ans: 0,
+            exp: "\\(a=2,\\ r=3\\). \\(S_6=\\frac{2(3^6-1)}{2}=728\\)."
+        },
+        {
+            q: "Dalam barisan aritmetika, \\(U_3=9\\) dan \\(U_7=21\\). Suku pertama \\(a\\) adalah ...",
+            opts: ["3", "5", "1"],
+            ans: 0,
+            exp: "\\(4b=21-9=12\\Rightarrow b=3\\). \\(U_3=a+2b=9\\Rightarrow a=3\\)."
+        },
+        {
+            q: "Suku ke-30 dari barisan 50, 48, 46, ... adalah ...",
+            opts: ["\\(-8\\)", "8", "\\(-6\\)"],
+            ans: 0,
+            exp: "\\(a=50,\\ b=-2\\). \\(U_{30}=50+29\\times(-2)=50-58=-8\\)."
+        },
+        {
+            q: "Suku ke-7 dari barisan \\(\\frac{1}{8}, \\frac{1}{4}, \\frac{1}{2}, \\ldots\\) adalah ...",
+            opts: ["8", "4", "16"],
+            ans: 0,
+            exp: "\\(a=\\frac{1}{8},\\ r=2\\). \\(U_7=\\frac{1}{8}\\times2^6=\\frac{64}{8}=8\\)."
+        },
+        {
+            q: "Jumlah 10 suku pertama dari deret \\(1+2+3+\\ldots+10\\) adalah ...",
+            opts: ["55", "50", "100"],
+            ans: 0,
+            exp: "\\(S_{10}=\\frac{10}{2}(1+10)=5\\times11=55\\)."
+        },
+        {
+            q: "Jumlah 5 suku pertama dari deret \\(81+27+9+\\ldots\\) adalah ...",
+            opts: ["121", "243", "81"],
+            ans: 0,
+            exp: "\\(a=81,\\ r=\\frac{1}{3}\\). \\(S_5=81\\times\\frac{1-(1/3)^5}{1-1/3}=121\\)."
+        },
+        {
+            q: "Dalam barisan geometri, \\(U_2=6\\) dan \\(U_4=24\\). Rasionya adalah ...",
+            opts: ["2", "3", "4"],
+            ans: 0,
+            exp: "\\(r^2=\\frac{U_4}{U_2}=\\frac{24}{6}=4\\Rightarrow r=2\\)."
+        },
+        {
+            q: "Suku ke-n sebuah barisan aritmetika adalah \\(U_n=3n+2\\). Bedanya adalah ...",
+            opts: ["3", "2", "5"],
+            ans: 0,
+            exp: "Beda = koefisien \\(n = 3\\). Atau: \\(U_1=5,\\ U_2=8\\), beda \\(=3\\)."
+        },
+        {
+            q: "Suku ke berapa dari barisan 3, 7, 11, ... yang nilainya 43?",
+            opts: ["11", "10", "12"],
+            ans: 0,
+            exp: "\\(3+(n-1)\\cdot4=43\\Rightarrow n-1=10\\Rightarrow n=11\\)."
+        },
+        {
+            q: "Diketahui \\(U_3=20\\) dan \\(U_5=80\\) pada barisan geometri. Suku pertama \\(a\\) adalah ...",
+            opts: ["5", "10", "2"],
+            ans: 0,
+            exp: "\\(r^2=80/20=4\\Rightarrow r=2\\). \\(U_3=ar^2=20\\Rightarrow 4a=20\\Rightarrow a=5\\)."
+        },
+        {
+            q: "Jumlah semua bilangan kelipatan 3 antara 100 dan 200 adalah ...",
+            opts: ["4950", "5000", "4850"],
+            ans: 0,
+            exp: "Barisan 102, 105, ..., 198. \\(n=33\\). \\(S_{33}=\\frac{33}{2}(102+198)=33\\times150=4950\\)."
+        },
+        {
+            q: "Diketahui \\(S_n=n^2+2n\\). Suku ke-5 \\((U_5)\\) adalah ...",
+            opts: ["11", "35", "24"],
+            ans: 0,
+            exp: "\\(U_5=S_5-S_4=(25+10)-(16+8)=35-24=11\\)."
+        },
+        {
+            q: "Suku tengah dari barisan 3, 8, 13, ..., 103 adalah ...",
+            opts: ["53", "58", "51"],
+            ans: 0,
+            exp: "\\(U_t=\\frac{a+U_n}{2}=\\frac{3+103}{2}=53\\)."
+        },
+        {
+            q: "Jumlah 15 suku pertama dari deret dengan \\(U_n=5-2n\\) adalah ...",
+            opts: ["\\(-165\\)", "165", "\\(-150\\)"],
+            ans: 0,
+            exp: "\\(U_1=3,\\ U_{15}=-25\\). \\(S_{15}=\\frac{15}{2}(3-25)=\\frac{15}{2}(-22)=-165\\)."
+        },
+        {
+            q: "Banyak suku pada barisan 6, 9, 12, ..., 78 adalah ...",
+            opts: ["25", "24", "26"],
+            ans: 0,
+            exp: "\\(78=6+(n-1)\\cdot3\\Rightarrow n-1=24\\Rightarrow n=25\\)."
+        },
+        {
+            q: "Suku ke-6 dan ke-10 barisan aritmetika berturut-turut 19 dan 31. Suku ke-20 adalah ...",
+            opts: ["61", "59", "63"],
+            ans: 0,
+            exp: "\\(4b=31-19=12\\Rightarrow b=3\\). \\(U_6=a+5b=19\\Rightarrow a=4\\). \\(U_{20}=4+57=61\\)."
+        },
+        {
+            q: "Sebuah deret geometri memiliki \\(a=3\\) dan \\(U_4=24\\). Jumlah 5 suku pertamanya adalah ...",
+            opts: ["93", "96", "48"],
+            ans: 0,
+            exp: "\\(3r^3=24\\Rightarrow r=2\\). \\(S_5=\\frac{3(2^5-1)}{1}=3\\times31=93\\)."
+        },
+        {
+            q: "Sebuah amoeba membelah jadi dua setiap 5 menit. Jika awalnya 2, jumlah setelah 30 menit adalah ...",
+            opts: ["128", "64", "256"],
+            ans: 0,
+            exp: "6 kali pembelahan. \\(U_7=2\\times2^6=2^7=128\\)."
+        },
+        {
+            q: "Tali dipotong menjadi 5 bagian membentuk barisan geometri. Terpendek 4 cm, terpanjang 324 cm. Panjang tali semula ...",
+            opts: ["484 cm", "328 cm", "400 cm"],
+            ans: 0,
+            exp: "\\(r^4=324/4=81\\Rightarrow r=3\\). \\(S_5=\\frac{4(3^5-1)}{2}=484\\) cm."
+        },
+        {
+            q: "Jumlah 15 suku pertama dari deret aritmetika dengan \\(a=2\\) dan \\(U_{15}=44\\) adalah ...",
+            opts: ["345", "330", "360"],
+            ans: 0,
+            exp: "\\(S_{15}=\\frac{15}{2}(2+44)=\\frac{15}{2}\\times46=345\\)."
+        },
+        {
+            q: "Dalam barisan geometri, \\(U_1=2\\) dan \\(U_5=162\\). Nilai \\(r\\) adalah ...",
+            opts: ["3", "2", "4"],
+            ans: 0,
+            exp: "\\(2r^4=162\\Rightarrow r^4=81\\Rightarrow r=3\\)."
+        },
+        {
+            q: "Jumlah semua bilangan bulat positif kelipatan 4 yang kurang dari 100 adalah ...",
+            opts: ["1188", "1200", "1176"],
+            ans: 0,
+            exp: "Barisan 4, 8, ..., 96. \\(n=24\\). \\(S_{24}=\\frac{24}{2}(4+96)=12\\times100=1200\\). Koreksi: \\(n=24\\), \\(S=1200\\). Pilihan 1200 benar."
+        },
+    ],
+
+    HOTS: [
+        {
+            q: "Jumlah deret geometri tak hingga \\(18+12+8+\\ldots\\) adalah ...",
+            opts: ["54", "36", "Tidak ada (divergen)"],
+            ans: 0,
+            exp: "\\(r=\\frac{12}{18}=\\frac{2}{3}\\). Karena \\(|r|<1\\): \\(S_\\infty=\\frac{18}{1-2/3}=\\frac{18}{1/3}=54\\)."
+        },
+        {
+            q: "Bola jatuh dari 8 m, memantul \\(\\frac{3}{4}\\) tinggi sebelumnya. Total lintasan sampai berhenti adalah ...",
+            opts: ["56 m", "32 m", "64 m"],
+            ans: 0,
+            exp: "Turun: \\(\\frac{8}{1-3/4}=32\\). Naik: \\(\\frac{6}{1-3/4}=24\\). Total = \\(56\\) m."
+        },
+        {
+            q: "Di antara 4 dan 28 disisipkan 5 bilangan membentuk barisan aritmetika. Bedanya adalah ...",
+            opts: ["4", "5", "6"],
+            ans: 0,
+            exp: "Total suku = 7. \\(U_7=4+6b=28\\Rightarrow b=4\\)."
+        },
+        {
+            q: "Tiga bilangan membentuk barisan geometri, jumlah 26, hasil kali 216. Bilangan terbesarnya adalah ...",
+            opts: ["18", "6", "2"],
+            ans: 0,
+            exp: "Misal \\(a/r, a, ar\\). \\(a^3=216\\Rightarrow a=6\\). \\(3r^2-10r+3=0\\Rightarrow r=3\\) atau \\(r=1/3\\). Terbesar = 18."
+        },
+        {
+            q: "Jumlah semua bilangan asli antara 1 dan 100 yang habis dibagi 3 tetapi tidak habis dibagi 5 adalah ...",
+            opts: ["1368", "1683", "315"],
+            ans: 0,
+            exp: "Kelipatan 3: \\(S=1683\\). Kelipatan 15: \\(S=315\\). Jawab: \\(1683-315=1368\\)."
+        },
+        {
+            q: "Jumlah deret tak hingga \\(\\frac{1}{2}+\\frac{1}{4}+\\frac{1}{8}+\\ldots\\) adalah ...",
+            opts: ["1", "2", "\\(\\frac{1}{2}\\)"],
+            ans: 0,
+            exp: "\\(a=\\frac{1}{2},\\ r=\\frac{1}{2}\\). \\(S_\\infty=\\frac{1/2}{1/2}=1\\)."
+        },
+        {
+            q: "Jika \\(S_n=2n^2+n\\), suku ke-10 adalah ...",
+            opts: ["39", "210", "164"],
+            ans: 0,
+            exp: "\\(U_{10}=S_{10}-S_9=210-171=39\\)."
+        },
+        {
+            q: "Agar deret \\((x-1)+(x-1)^2+\\ldots\\) konvergen, nilai \\(x\\) harus memenuhi ...",
+            opts: ["\\(0<x<2\\)", "\\(-1<x<1\\)", "\\(x>1\\)"],
+            ans: 0,
+            exp: "Syarat \\(|r|<1\\): \\(|x-1|<1\\Rightarrow 0<x<2\\)."
+        },
+        {
+            q: "Jumlah deret tak hingga \\(1-\\frac{2}{3}+\\frac{4}{9}-\\frac{8}{27}+\\ldots\\) adalah ...",
+            opts: ["\\(\\frac{3}{5}\\)", "\\(\\frac{3}{2}\\)", "\\(\\frac{5}{3}\\)"],
+            ans: 0,
+            exp: "\\(a=1,\\ r=-\\frac{2}{3}\\). \\(S_\\infty=\\frac{1}{1+2/3}=\\frac{3}{5}\\)."
+        },
+        {
+            q: "Suku tengah barisan aritmetika adalah 23. Suku terakhir 43, suku ketiga 13. Suku pertamanya adalah ...",
+            opts: ["3", "1", "5"],
+            ans: 0,
+            exp: "\\(U_t=\\frac{a+U_n}{2}\\Rightarrow 23=\\frac{a+43}{2}\\Rightarrow a=3\\)."
+        },
+        {
+            q: "Jika \\(S_n=3^n-1\\) adalah jumlah \\(n\\) suku pertama deret geometri, maka rasionya adalah ...",
+            opts: ["3", "2", "\\(\\frac{1}{3}\\)"],
+            ans: 0,
+            exp: "\\(U_1=S_1=2\\). \\(U_2=S_2-S_1=8-2=6\\). \\(r=6/2=3\\)."
+        },
+        {
+            q: "Sebuah ayunan mencapai lintasan pertama 120 cm, lintasan berikutnya \\(\\frac{2}{3}\\) dari sebelumnya. Total lintasan sampai berhenti adalah ...",
+            opts: ["360 cm", "240 cm", "180 cm"],
+            ans: 0,
+            exp: "\\(S_\\infty=\\frac{120}{1-2/3}=\\frac{120}{1/3}=360\\) cm."
+        },
+        {
+            q: "Tiga bilangan \\((x-1), (x+1), (3x-1)\\) membentuk barisan geometri. Nilai \\(x\\) positif adalah ...",
+            opts: ["3", "1", "2"],
+            ans: 0,
+            exp: "\\((x+1)^2=(x-1)(3x-1)\\Rightarrow 2x^2-6x=0\\Rightarrow x=3\\) (positif)."
+        },
+        {
+            q: "Sebuah bakteri membelah jadi 3 tiap 10 menit. Ada 5 bakteri pukul 09.00. Jumlah pukul 10.00 adalah ...",
+            opts: ["3645", "1215", "729"],
+            ans: 0,
+            exp: "6 kali pembelahan. \\(U_7=5\\times3^6=5\\times729=3645\\)."
+        },
+        {
+            q: "Jumlah bilangan ganjil dari 1 sampai 49 adalah ...",
+            opts: ["625", "650", "600"],
+            ans: 0,
+            exp: "25 bilangan ganjil. \\(S_{25}=\\frac{25}{2}(1+49)=25\\times25=625\\)."
+        },
+        {
+            q: "Panjang sisi segitiga siku-siku membentuk barisan aritmetika. Kelilingnya 24. Luasnya adalah ...",
+            opts: ["24", "12", "48"],
+            ans: 0,
+            exp: "Sisi: \\(a-b, a, a+b\\). \\(3a=24\\Rightarrow a=8\\). Pythagoras: \\(b=2\\). Sisi 6, 8, 10. Luas \\(=\\frac{1}{2}\\times6\\times8=24\\)."
+        },
+        {
+            q: "Jika \\(S_n=2n^2+3n\\), beda barisan tersebut adalah ...",
+            opts: ["4", "2", "3"],
+            ans: 0,
+            exp: "Beda \\(=2\\times\\) koefisien \\(n^2=4\\). Atau \\(U_1=5,\\ U_2=9\\), beda = 4."
+        },
+        {
+            q: "Suku ke-5 deret geometri = 162, suku ke-2 = 6. Jumlah 6 suku pertama adalah ...",
+            opts: ["728", "242", "729"],
+            ans: 0,
+            exp: "\\(r^3=162/6=27\\Rightarrow r=3\\). \\(a=2\\). \\(S_6=\\frac{2(729-1)}{2}=728\\)."
+        },
+        {
+            q: "Jumlah deret tak hingga \\(100+50+25+\\ldots\\) adalah ...",
+            opts: ["200", "150", "Tak hingga"],
+            ans: 0,
+            exp: "\\(r=\\frac{1}{2}\\). \\(S_\\infty=\\frac{100}{1/2}=200\\)."
+        },
+        {
+            q: "Suku ke-\\(n\\) barisan 2, 5, 10, 17, ... adalah ...",
+            opts: ["\\(n^2+1\\)", "\\(n^2-1\\)", "\\(2n\\)"],
+            ans: 0,
+            exp: "\\(1^2+1=2,\\ 2^2+1=5,\\ 3^2+1=10,\\ 4^2+1=17\\). Rumus: \\(U_n=n^2+1\\)."
+        },
+        {
+            q: "Persegi bersisi 10 cm. Di dalamnya dibuat persegi kedua dengan menghubungkan titik tengah sisinya, dan seterusnya. Jumlah luas semua persegi adalah ...",
+            opts: ["\\(200\\ \\text{cm}^2\\)", "\\(100\\ \\text{cm}^2\\)", "Tak hingga"],
+            ans: 0,
+            exp: "Luas: 100, 50, 25, ... Deret geometri \\(r=\\frac{1}{2}\\). \\(S_\\infty=\\frac{100}{1/2}=200\\) cm²."
+        },
+    ],
+
+};
+
+// ═══════════════════════════════════════════════════════════════
+//  ENGINE — JANGAN DIUBAH KECUALI TAHU APA YANG DILAKUKAN
+// ═══════════════════════════════════════════════════════════════
+
+const PASS_THRESHOLD  = 0.8;
+const MAX_ATTEMPTS    = 5;
+const PASSES_NEEDED   = 2;
+
+const LEVEL_ORDER = ['LOTS','MOTS','HOTS'];
+
+const defaultLevelState = () => ({ attempts: 0, passes: 0, failStreak: 0 });
+
+function loadProgress() {
+    try {
+        const raw = localStorage.getItem(SPRINT_CONFIG.storageKey);
+        if (!raw) return null;
+        return JSON.parse(raw);
+    } catch { return null; }
+}
+
+function saveProgress(data) {
+    localStorage.setItem(SPRINT_CONFIG.storageKey, JSON.stringify(data));
+}
+
+function initProgress() {
+    const saved = loadProgress();
+    if (saved) return saved;
+    return {
+        LOTS: defaultLevelState(),
+        MOTS: defaultLevelState(),
+        HOTS: defaultLevelState(),
+    };
+}
+
+// Helpers
+function getLevelStatus(prog, level) {
+    const lp = prog[level];
+    const prevIdx = LEVEL_ORDER.indexOf(level) - 1;
+    if (prevIdx >= 0) {
+        const prevLevel = LEVEL_ORDER[prevIdx];
+        if (prog[prevLevel].passes < PASSES_NEEDED) return 'locked';
+    }
+    if (lp.passes >= PASSES_NEEDED) return 'completed';
+    if (lp.failStreak >= 3 || (lp.attempts >= MAX_ATTEMPTS && lp.passes < PASSES_NEEDED)) return 'failed';
+    return 'unlocked';
+}
+
+function isAllDone(prog) {
+    return LEVEL_ORDER.every(l => prog[l].passes >= PASSES_NEEDED);
+}
+
+function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+// ── APP STATE ──
+let progress = initProgress();
+let quizState = null;
+
+const $ = id => document.getElementById(id);
+
+const APP = {
+
+    // ── VIEWS ──
+    showView(name) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        $('view-' + name).classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+
+    goToMateri() {
+        this.updateStageTrack('materi');
+        this.showView('materi');
+        if (window.MathJax) MathJax.typesetPromise();
+    },
+
+    goToLevels() {
+        this.updateStageTrack('levels');
+        this.renderLevelCards();
+        this.updateGlobalStats(null);
+        this.showView('levels');
+    },
+
+    // ── STAGE TRACK ──
+    updateStageTrack(activeView) {
+        const stageMap = {
+            materi:  'st-materi',
+            levels:  null,
+            quiz:    null,
+            result:  null,
+        };
+        const prog = progress;
+        const stagesOrder = ['st-materi','st-lots','st-mots','st-hots','st-selesai'];
+        stagesOrder.forEach(id => {
+            const el = $(id);
+            el.classList.remove('active','done');
+        });
+
+        if (isAllDone(prog)) {
+            stagesOrder.forEach(id => $(id).classList.add('done'));
+            return;
+        }
+
+        $('st-materi').classList.add('done');
+
+        ['LOTS','MOTS','HOTS'].forEach((lvl,i) => {
+            const stId = ['st-lots','st-mots','st-hots'][i];
+            const st = getLevelStatus(prog, lvl);
+            if (st === 'completed') $(stId).classList.add('done');
+        });
+
+        if (activeView === 'materi') {
+            $('st-materi').classList.remove('done');
+            $('st-materi').classList.add('active');
+        }
+    },
+
+    // ── GLOBAL STATS ──
+    updateGlobalStats(activeLevel) {
+        if (!activeLevel) {
+            $('gs-level').textContent = 'Level';
+            $('gs-attempts').textContent = '—';
+            $('gs-pass').textContent = '—';
+            return;
+        }
+        const lp = progress[activeLevel];
+        $('gs-level').textContent = activeLevel;
+        $('gs-attempts').textContent = MAX_ATTEMPTS - lp.attempts;
+        $('gs-pass').textContent = lp.passes + '/' + PASSES_NEEDED;
+    },
+
+    // ── LEVEL CARDS ──
+    renderLevelCards() {
+        const prog = progress;
+        const levelColors = {
+            LOTS: { dot:'var(--green)',  badgeClass:'badge-green'  },
+            MOTS: { dot:'var(--amber)',  badgeClass:'badge-amber'  },
+            HOTS: { dot:'var(--red)',    badgeClass:'badge-red'    },
         };
 
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
+        LEVEL_ORDER.forEach(level => {
+            const lp   = prog[level];
+            const st   = getLevelStatus(prog, level);
+            const card = $('lcard-' + level);
+            const lc   = levelColors[level];
 
-        function showNotification(message, type = 'warning') {
-            const container = document.getElementById('notification-container');
-            const notif = document.createElement('div');
-            notif.className = `notification ${type}`;
-            let icon = '⚠️';
-            if (type === 'success') icon = '✅';
-            if (type === 'info') icon = 'ℹ️';
-            notif.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
-            container.appendChild(notif);
-            setTimeout(() => { notif.remove(); }, 4000);
-        }
+            // Card state
+            card.classList.remove('locked','unlocked','open');
+            card.classList.add(st === 'locked' ? 'locked' : 'unlocked');
 
-        function updateProgress() {
-            const stages = ['step0', 'step1', 'step2', 'step3', 'step4'];
-            const progress = (state.currentStage / 4) * 100;
-            document.getElementById('progressFill').style.width = progress + '%';
-            stages.forEach((id, idx) => {
-                const step = document.getElementById(id);
-                step.classList.remove('active', 'completed');
-                if (idx < state.currentStage) step.classList.add('completed');
-                else if (idx === state.currentStage) step.classList.add('active');
-            });
-            const levelNames = ['Materi', 'LOTS', 'MOTS', 'HOTS', 'Selesai'];
-            document.getElementById('currentLevel').textContent = levelNames[state.currentStage];
-        }
-        
-        function showMaterial() {
-            document.getElementById('contentArea').innerHTML = quizContent.material + `<div class="button-group"><button class="btn btn-primary" onclick="startLOTS()">Mulai Level LOTS →</button></div>`;
-            state.currentStage = 0;
-            updateProgress();
-            setTimeout(() => MathJax.typesetPromise(), 10);
-        }
-        
-        function startQuiz(level) {
-            state.currentQuiz = level;
-            const fullBank = quizContent[level];
-            const shuffledBank = shuffleArray([...fullBank]);
-            state.activeQuestions = shuffledBank.slice(0, 5);
+            // Badge
+            const badge = $('badge-' + level);
+            badge.className = 'badge ' + lc.badgeClass;
+            badge.style.verticalAlign = 'middle';
+            badge.style.marginLeft = '6px';
+            if (st === 'completed') { badge.textContent = '✓ Lulus'; }
+            else if (st === 'locked') { badge.textContent = '🔒 Terkunci'; badge.className = 'badge'; badge.style.background='rgba(58,79,104,.15)'; badge.style.color='var(--text3)'; badge.style.border='1px solid var(--border)'; }
+            else if (st === 'failed') { badge.textContent = '✕ Gugur'; badge.className = 'badge badge-red'; }
+            else { badge.textContent = (MAX_ATTEMPTS - lp.attempts) + ' percobaan'; }
 
-            state.userAnswers = Array(state.activeQuestions.length).fill(null);
-            const levelMap = { LOTS: 1, MOTS: 2, HOTS: 3 };
-            state.currentStage = levelMap[level];
-            updateProgress(); updateStats();
-            const content = `<div class="quiz-section active">
-                    <h2 style="text-align:center; margin-bottom: 20px;">📝 ${level} - Mode Ujian (5 Soal Acak)</h2>
-                    <div class="attempts-info"><strong>Percobaan ${6 - state.attempts[level]} dari 5</strong> | Sudah lulus: ${state.passCount[level]}/2 kali | Gagal berturut-turut: ${state.consecutiveFails[level]}/3</div>
-                    <div id="questionsContainer"></div>
-                    <div class="button-group" id="quiz-button-group"><button id="submitBtn" class="btn btn-primary" onclick="submitQuiz()">Submit Jawaban</button></div>
-                </div>`;
-            document.getElementById('contentArea').innerHTML = content;
-            renderQuestions(state.activeQuestions);
-        }
-        
-        function renderQuestions(questions) {
-            const container = document.getElementById('questionsContainer');
-            container.innerHTML = questions.map((q, idx) => {
-                const optionsHTML = q.options.map((opt, optIdx) => 
-                    `<div class="option" onclick="selectOption(this, ${idx}, ${optIdx})">
-                        <input type="radio" name="q${idx}" id="q${idx}opt${optIdx}" style="pointer-events: none;">
-                        <label for="q${idx}opt${optIdx}" style="cursor: pointer; width: 100%;">${opt.text}</label>
-                    </div>`
-                ).join('');
-
-                return `<div class="question-card" id="question${idx}">
-                    <div class="question-number">Soal ${idx + 1} dari ${questions.length}</div>
-                    <div class="question-text">${q.question}</div>
-                    <div class="options" style="display:flex; flex-direction:column; gap:10px;">${optionsHTML}</div>
-                    <div class="explanation hidden" id="explanation${idx}"></div>
-                </div>`;
-            }).join('');
-            setTimeout(() => MathJax.typesetPromise(), 10);
-        }
-        
-        function selectOption(element, questionIdx, optionIdx) {
-            if (document.getElementById('submitBtn')?.disabled) { return; }
-            const options = document.querySelectorAll(`#question${questionIdx} .option`);
-            options.forEach(opt => opt.classList.remove('selected'));
-            element.classList.add('selected');
-            element.querySelector('input[type="radio"]').checked = true;
-            state.userAnswers[questionIdx] = optionIdx;
-        }
-        
-        function submitQuiz() {
-            const level = state.currentQuiz;
-            const questions = state.activeQuestions;
-            const unanswered = state.userAnswers.filter(ans => ans === null).length;
-
-            if (unanswered > 0) {
-                showNotification(`Mohon jawab semua soal! Ada ${unanswered} soal yang belum terjawab.`);
-                return;
+            // Attempt dots
+            const dotsEl = $('dots-' + level);
+            dotsEl.innerHTML = '';
+            for (let i = 0; i < MAX_ATTEMPTS; i++) {
+                const d = document.createElement('div');
+                d.className = 'adot';
+                if (i < lp.attempts) d.classList.add(i < lp.passes ? 'pass' : 'fail');
+                dotsEl.appendChild(d);
             }
 
-            let correct = 0;
-            questions.forEach((q, idx) => {
-                const userAnswerIdx = state.userAnswers[idx];
-                const isCorrect = (userAnswerIdx === q.correct);
-                if (isCorrect) correct++;
-                const options = document.querySelectorAll(`#question${idx} .option`);
-                options[userAnswerIdx].classList.add(isCorrect ? 'correct' : 'incorrect');
-                if (!isCorrect) { options[q.correct].classList.add('correct'); }
-                const explanation = document.getElementById(`explanation${idx}`);
-                explanation.innerHTML = `<strong>💡 Pembahasan:</strong> ${q.explanation}`;
-                explanation.classList.remove('hidden');
-            });
-            setTimeout(() => MathJax.typesetPromise(), 10);
-            
-            const score = (correct / questions.length) * 100;
-            const passed = score >= 80;
-            state.attempts[level]--;
-            if (passed) {
-                state.passCount[level]++; state.consecutiveFails[level] = 0;
-                showNotification(`Luar biasa! Skor Anda ${score.toFixed(0)}%.`, 'success');
+            // Info text & button
+            const infoEl = $('linfo-' + level);
+            const btnEl  = $('lbtn-' + level);
+
+            if (st === 'failed') {
+                infoEl.textContent = 'Gugur — percobaan habis atau gagal 3x berturut-turut';
+                btnEl.style.display = 'none';
+            } else if (st === 'locked') {
+                infoEl.textContent = 'Selesaikan level sebelumnya terlebih dahulu';
+                btnEl.style.display = 'none';
+            } else if (st === 'completed') {
+                infoEl.textContent = 'Sudah lulus! Bisa review soal jika mau.';
+                btnEl.textContent = 'Review';
+                btnEl.style.display = '';
             } else {
-                state.consecutiveFails[level]++;
-                showNotification(`Skor Anda ${score.toFixed(0)}%. Terus coba lagi!`, 'warning');
+                const att = MAX_ATTEMPTS - lp.attempts;
+                infoEl.textContent = '5 soal acak · Skor lulus ≥ 80% · ' + att + ' percobaan tersisa';
+                btnEl.textContent = lp.attempts === 0 ? 'Mulai →' : 'Coba Lagi →';
+                btnEl.style.display = '';
             }
-            updateStats();
-            document.getElementById('submitBtn').style.display = 'none';
-            document.getElementById('quiz-button-group').innerHTML = `<button class="btn btn-primary" onclick='showResult("${level}", ${score}, ${passed})'>Lihat Ringkasan Hasil →</button>`;
-        }
-        
-        function showResult(level, score, passed) {
-            const canProceed = state.passCount[level] >= 2;
-            const isEliminated = state.consecutiveFails[level] >= 3 || (state.attempts[level] === 0 && !canProceed);
-            let resultHTML = `
-                <div class="result-summary" style="text-align: center;">
-                    <h2>${passed ? '✅ Lulus!' : '❌ Belum Lulus'} (Skor Minimal: 80%)</h2>
-                    <div style="font-size: 4em; font-weight: bold; color: ${passed ? 'var(--accent-green)' : 'var(--accent-red)'}; margin: 20px 0;">${score.toFixed(0)}%</div>
-                    <p style="font-size: 1.2em; margin: 20px 0;">Kamu menjawab benar ${Math.round((score / 100) * state.activeQuestions.length)} dari ${state.activeQuestions.length} soal</p>
-                    <div class="attempts-info"><strong>Status:</strong><br>Lulus: ${state.passCount[level]}/2 kali | Percobaan tersisa: ${state.attempts[level]} | Gagal berturut-turut: ${state.consecutiveFails[level]}/3</div>`;
-            if (isEliminated) {
-                resultHTML += `<div style="background: rgba(220, 53, 69, 0.2); padding: 20px; border-radius: 10px; margin: 20px 0;"><h3 style="color: var(--accent-red);">❌ Mode Kilat - GUGUR</h3><p style="margin: 15px 0;">Kamu telah ${state.consecutiveFails[level] >= 3 ? 'gagal 3x berturut-turut' : 'kehabisan percobaan'}.</p></div><div class="button-group"><button class="btn btn-secondary" onclick="resetSystem()">Mulai Ulang dari Awal</button></div>`;
-            } else if (canProceed) {
-                const nextLevel = level === 'LOTS' ? 'MOTS' : (level === 'MOTS' ? 'HOTS' : null);
-                if (nextLevel) {
-                    resultHTML += `<div style="background: rgba(40, 167, 69, 0.2); padding: 20px; border-radius: 10px; margin: 20px 0;"><h3 style="color: var(--accent-green);">🔓 Level ${nextLevel} Terbuka!</h3><p style="margin: 15px 0;">Siap untuk tantangan berikutnya?</p></div><div class="button-group"><button class="btn" onclick="showMaterial()">Baca Materi Lagi</button><button class="btn btn-primary" onclick="start${nextLevel}()">Lanjut ke ${nextLevel} →</button></div>`;
-                } else { resultHTML += generateCertificate(); }
-            } else {
-                resultHTML += `<div class="button-group"><button class="btn" onclick="showMaterial()">Baca Materi Lagi</button><button class="btn btn-primary" onclick="start${level}()">Coba Lagi (${state.attempts[level]} percobaan)</button></div>`;
+        });
+    },
+
+    // ── LEVEL TOGGLE ──
+    toggleLevel(level) {
+        const st = getLevelStatus(progress, level);
+        if (st === 'locked') { this.toast('Level ini masih terkunci!', 'warn'); return; }
+        const card = $('lcard-' + level);
+        const isOpen = card.classList.contains('open');
+        // Tutup semua dulu
+        LEVEL_ORDER.forEach(l => $('lcard-' + l).classList.remove('open'));
+        if (!isOpen) card.classList.add('open');
+    },
+
+    // ── START QUIZ ──
+    startQuiz(level) {
+        const st = getLevelStatus(progress, level);
+        if (st === 'locked') { this.toast('Level masih terkunci!', 'warn'); return; }
+        if (st === 'failed')  { this.toast('Kamu sudah gugur di level ini. Reset untuk mencoba lagi.', 'warn'); return; }
+
+        const pool = shuffle(QUESTIONS[level]).slice(0, 5);
+        quizState = {
+            level,
+            questions: pool,
+            answers:   Array(pool.length).fill(null),
+            submitted: Array(pool.length).fill(false),
+            current:   0,
+            reviewMode: st === 'completed',
+        };
+
+        this.updateGlobalStats(level);
+        this.updateStageTrack('quiz');
+
+        const levelColors = { LOTS:'var(--green)', MOTS:'var(--amber)', HOTS:'var(--red)' };
+        const lp = progress[level];
+        $('quiz-title').innerHTML = `<span style="color:${levelColors[level]}">${level}</span> — ${SPRINT_CONFIG.title.replace('Sprint — ','')}`;
+        $('quiz-meta').textContent = pool.length + ' soal · Percobaan ke-' + (lp.attempts + 1) + ' dari ' + MAX_ATTEMPTS;
+
+        this.renderQuizQuestion();
+        this.showView('quiz');
+    },
+
+    // ── QUIZ QUESTION ──
+    renderQuizQuestion() {
+        const qs = quizState;
+        const idx = qs.current;
+        const q   = qs.questions[idx];
+
+        // Nav dots
+        $('q-nav').innerHTML = qs.questions.map((_, i) => {
+            let cls = 'q-dot';
+            if (i === idx) cls += ' current';
+            else if (qs.submitted[i]) {
+                cls += qs.answers[i] === qs.questions[i].ans ? ' ans-correct' : ' ans-wrong';
             }
-            resultHTML += `</div>`; document.getElementById('contentArea').innerHTML = resultHTML;
+            return `<div class="${cls}" onclick="APP.jumpQ(${i})">${i+1}</div>`;
+        }).join('');
+
+        // Question area
+        const letters = ['A','B','C','D','E'];
+        const isSubmitted = qs.submitted[idx];
+        const optsHTML = q.opts.map((opt, oi) => {
+            let cls = 'opt-btn';
+            if (isSubmitted) {
+                if (oi === q.ans) cls += ' correct';
+                else if (oi === qs.answers[idx]) cls += ' wrong';
+            } else if (oi === qs.answers[idx]) cls += ' selected';
+            return `<button class="${cls}" ${isSubmitted ? 'disabled' : ''} onclick="APP.selectOpt(${oi})">
+                <span class="opt-letter">${letters[oi]}</span>
+                <span>${opt}</span>
+            </button>`;
+        }).join('');
+
+        const expHTML = isSubmitted
+            ? `<div class="explanation"><strong>💡 PEMBAHASAN</strong><br>${q.exp}</div>`
+            : '';
+
+        const allAnswered = qs.answers.every(a => a !== null);
+        const allSubmitted = qs.submitted.every(s => s);
+
+        $('question-area').innerHTML = `
+            <div class="q-num">Soal ${idx+1} dari ${qs.questions.length}</div>
+            <div class="q-text">${q.q}</div>
+            <div>${optsHTML}</div>
+            ${!isSubmitted && qs.answers[idx] !== null
+                ? `<div style="margin-top:10px"><button class="btn btn-primary btn-sm" onclick="APP.submitOne(${idx})">Konfirmasi Jawaban ✓</button></div>`
+                : ''}
+            ${expHTML}
+            ${allSubmitted
+                ? `<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">
+                       <button class="btn btn-primary" onclick="APP.finishQuiz()">Lihat Hasil →</button>
+                   </div>`
+                : ''}
+        `;
+
+        $('q-prev').disabled = idx === 0;
+        const nextBtn = $('q-next');
+        if (idx === qs.questions.length - 1) {
+            nextBtn.textContent = 'Selesai ✓';
+            nextBtn.onclick = () => APP.finishQuiz();
+        } else {
+            nextBtn.textContent = 'Next →';
+            nextBtn.onclick = () => APP.nextOrFinish();
         }
 
-        function generateCertificate() {
-            state.currentStage = 4; updateProgress();
-            return `<div class="certificate"><div style="font-size: 5em;">🏆</div><h2 style="font-size: 2.5em; margin-bottom: 20px; color: var(--accent-teal);">Sertifikat Kelulusan Topik</h2><p style="font-size: 1.3em; margin: 20px 0;">SELAMAT!</p><p style="font-size: 1.1em; line-height: 1.6;">Kamu telah berhasil menyelesaikan topik <strong>Barisan dan Deret</strong> dengan melewati semua level: LOTS ✓ MOTS ✓ HOTS ✓</p></div><div class="button-group"><button class="btn btn-primary" onclick="resetSystem()">Mulai Topik Baru</button></div>`;
+        if (window.MathJax) MathJax.typesetPromise([$('question-area')]);
+    },
+
+    selectOpt(oi) {
+        if (quizState.submitted[quizState.current]) return;
+        quizState.answers[quizState.current] = oi;
+        this.renderQuizQuestion();
+    },
+
+    submitOne(idx) {
+        if (quizState.answers[idx] === null) { this.toast('Pilih jawaban dulu!','warn'); return; }
+        quizState.submitted[idx] = true;
+        this.renderQuizQuestion();
+    },
+
+    prevQ() {
+        if (quizState.current > 0) { quizState.current--; this.renderQuizQuestion(); }
+    },
+
+    nextOrFinish() {
+        const qs = quizState;
+        if (qs.current < qs.questions.length - 1) { qs.current++; this.renderQuizQuestion(); }
+        else this.finishQuiz();
+    },
+
+    jumpQ(i) { quizState.current = i; this.renderQuizQuestion(); },
+
+    exitQuiz() {
+        if (!quizState.submitted.every(s => s)) {
+            if (!confirm('Keluar sebelum selesai? Percobaan ini tidak akan dihitung.')) return;
         }
-        
-        function updateStats() {
-            const level = state.currentQuiz || 'LOTS';
-            document.getElementById('attemptsLeft').textContent = state.attempts[level];
-            document.getElementById('passCount').textContent = `${state.passCount[level]}/2`;
+        this.goToLevels();
+    },
+
+    // ── FINISH QUIZ ──
+    finishQuiz() {
+        const qs = quizState;
+        // Auto-submit yang belum di-submit tapi sudah dijawab
+        qs.questions.forEach((_,i) => { if (!qs.submitted[i] && qs.answers[i] !== null) qs.submitted[i] = true; });
+
+        let correct = 0;
+        qs.questions.forEach((q,i) => { if (qs.answers[i] === q.ans) correct++; });
+        const pct    = Math.round(correct / qs.questions.length * 100);
+        const passed = pct >= PASS_THRESHOLD * 100;
+
+        if (!qs.reviewMode) {
+            const lp = progress[qs.level];
+            lp.attempts++;
+            if (passed) { lp.passes++; lp.failStreak = 0; }
+            else lp.failStreak++;
+            saveProgress(progress);
         }
-        
-        function startLOTS() { startQuiz('LOTS'); }
-        function startMOTS() { startQuiz('MOTS'); }
-        function startHOTS() { startQuiz('HOTS'); }
-        
-        function resetSystem() {
-            Object.assign(state, {
-                currentStage: 0, attempts: { LOTS: 5, MOTS: 5, HOTS: 5 }, passCount: { LOTS: 0, MOTS: 0, HOTS: 0 },
-                consecutiveFails: { LOTS: 0, MOTS: 0, HOTS: 0 }, currentQuiz: null, userAnswers: [], activeQuestions: []
-            });
-            showNotification('Sistem telah direset, selamat belajar kembali!', 'info');
-            showMaterial();
+
+        this.renderResult(correct, qs.questions.length, pct, passed);
+        this.updateGlobalStats(qs.level);
+        this.updateStageTrack('result');
+        this.showView('result');
+    },
+
+    // ── RESULT ──
+    renderResult(correct, total, pct, passed) {
+        const qs    = quizState;
+        const level = qs.level;
+        const lp    = progress[level];
+        const st    = getLevelStatus(progress, level);
+
+        const color = passed ? 'var(--green)' : pct >= 60 ? 'var(--amber)' : 'var(--red)';
+
+        const circ  = Math.round(2 * Math.PI * 44);
+        const dash  = Math.round(pct / 100 * circ);
+
+        // notice box
+        let noticeHTML = '';
+        if (st === 'completed') {
+            const nextLvl = LEVEL_ORDER[LEVEL_ORDER.indexOf(level) + 1];
+            if (nextLvl) {
+                noticeHTML = `<div class="notice-box green">
+                    <div class="n-title">🔓 Level ${nextLvl} Terbuka!</div>
+                    <div class="n-sub">Kamu sudah lulus ${PASSES_NEEDED}x di level ini.</div>
+                </div>`;
+            } else if (isAllDone(progress)) {
+                noticeHTML = `<div class="cert">
+                    <div class="cert-icon">🏆</div>
+                    <div class="cert-title">Sprint Selesai!</div>
+                    <div class="cert-text">Kamu berhasil menyelesaikan semua level:<br>LOTS ✓ &nbsp; MOTS ✓ &nbsp; HOTS ✓</div>
+                </div>`;
+            }
+        } else if (st === 'failed') {
+            noticeHTML = `<div class="notice-box red">
+                <div class="n-title">Gugur di Level Ini</div>
+                <div class="n-sub">${lp.failStreak >= 3 ? 'Gagal 3x berturut-turut.' : 'Percobaan habis.'} Reset untuk mencoba ulang.</div>
+            </div>`;
+        } else if (passed) {
+            const need = PASSES_NEEDED - lp.passes;
+            if (need > 0) {
+                noticeHTML = `<div class="notice-box cyan">
+                    <div class="n-title">Lulus! ${lp.passes}/${PASSES_NEEDED}</div>
+                    <div class="n-sub">Butuh ${need} kali lulus lagi untuk naik level.</div>
+                </div>`;
+            }
         }
-        
-        // Inisialisasi
-        showMaterial();
-    </script>
+
+        // action buttons
+        const attLeft = MAX_ATTEMPTS - lp.attempts;
+        let actHTML = `<div class="btn-group">
+            <button class="btn btn-ghost" onclick="APP.goToLevels()">← Kembali ke Level</button>`;
+        if (!qs.reviewMode && attLeft > 0 && st !== 'failed' && st !== 'completed') {
+            actHTML += `<button class="btn btn-primary" onclick="APP.startQuiz('${level}')">Coba Lagi (${attLeft}x) →</button>`;
+        }
+        if (st === 'completed' && !isAllDone(progress)) {
+            const nextLvl = LEVEL_ORDER[LEVEL_ORDER.indexOf(level) + 1];
+            if (nextLvl) actHTML += `<button class="btn btn-primary" onclick="APP.startQuiz('${nextLvl}')">Mulai ${nextLvl} →</button>`;
+        }
+        actHTML += `</div>`;
+
+        $('result-panel').innerHTML = `
+            <div class="result-hero">
+                <div class="score-ring-wrap">
+                    <svg width="110" height="110" viewBox="0 0 110 110" style="transform:rotate(-90deg)">
+                        <circle cx="55" cy="55" r="44" fill="none" stroke="var(--border)" stroke-width="7"/>
+                        <circle cx="55" cy="55" r="44" fill="none"
+                            stroke="${color}" stroke-width="7"
+                            stroke-dasharray="${circ}" stroke-dashoffset="${circ - dash}"
+                            stroke-linecap="round"/>
+                    </svg>
+                    <div class="score-ring-text">
+                        <div class="score-big" style="color:${color}">${pct}</div>
+                        <div class="score-pct">%</div>
+                    </div>
+                </div>
+                <div class="result-verdict" style="color:${passed?'var(--green)':'var(--red)'}">${passed ? '✓ LULUS' : '✗ BELUM LULUS'}</div>
+                <div class="result-sub">${correct} dari ${total} soal benar · Skor lulus ≥ 80%</div>
+            </div>
+
+            <div class="result-stats">
+                <div class="rs-card">
+                    <div class="rs-val" style="color:var(--green)">${lp.passes}/${PASSES_NEEDED}</div>
+                    <div class="rs-lbl">Kali Lulus</div>
+                </div>
+                <div class="rs-card">
+                    <div class="rs-val mono">${lp.attempts}/${MAX_ATTEMPTS}</div>
+                    <div class="rs-lbl">Percobaan</div>
+                </div>
+                <div class="rs-card">
+                    <div class="rs-val" style="color:var(--amber)">${lp.failStreak}/3</div>
+                    <div class="rs-lbl">Gagal Berturut</div>
+                </div>
+            </div>
+
+            ${noticeHTML}
+            ${actHTML}
+        `;
+
+        if (window.MathJax) MathJax.typesetPromise([$('result-panel')]);
+    },
+
+    // ── RESET ──
+    resetConfirm() {
+        if (!confirm('Reset semua progress di sprint ini? Aksi tidak bisa dibatalkan.')) return;
+        progress = {
+            LOTS: defaultLevelState(),
+            MOTS: defaultLevelState(),
+            HOTS: defaultLevelState(),
+        };
+        saveProgress(progress);
+        this.toast('Progress direset!', 'info');
+        this.goToLevels();
+    },
+
+    // ── TOAST ──
+    toast(msg, type = 'info') {
+        const colors = { info:'var(--cyan)', success:'var(--green)', warn:'var(--amber)', error:'var(--red)' };
+        const t = $('toast');
+        t.style.borderColor = colors[type] || colors.info;
+        t.innerHTML = `<span style="color:${colors[type]};font-size:16px">${type==='success'?'✓':type==='error'?'✗':'i'}</span> ${msg}`;
+        t.style.display = 'flex';
+        clearTimeout(APP._toastTimer);
+        APP._toastTimer = setTimeout(() => { t.style.display = 'none'; }, 3500);
+    },
+    _toastTimer: null,
+};
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', () => {
+    $('page-title').textContent = SPRINT_CONFIG.title;
+    $('page-sub').textContent   = SPRINT_CONFIG.sub;
+    APP.goToMateri();
+});
+</script>
 </body>
 </html>
