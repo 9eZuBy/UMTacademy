@@ -1,1 +1,1694 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sprint — Logika Matematika</title>
+    <script>
+      MathJax = { tex: { inlineMath: [['\\(','\\)'],['$','$']] } };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        /* ── RESET & BASE ── */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
+        :root {
+            --bg-main:    #080C14;
+            --bg-panel:   #0D1520;
+            --bg-panel2:  #111A28;
+            --border:     #1A2840;
+            --border2:    #1E3050;
+            --text:       #E2EAF4;
+            --text2:      #637A96;
+            --text3:      #3A4F68;
+            --cyan:       #22D3EE;
+            --cyan2:      #0EA5E9;
+            --cyan-dim:   rgba(34,211,238,0.08);
+            --green:      #34D399;
+            --amber:      #FBBF24;
+            --red:        #F87171;
+            --purple:     #A78BFA;
+            --radius-sm:  8px;
+            --radius-md:  12px;
+            --radius-lg:  16px;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg-main);
+            color: var(--text);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            padding: 16px;
+        }
+
+        /* ── IMPORT FONT ── */
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* ── LAYOUT ── */
+        .wrap { max-width: 760px; margin: 0 auto; }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        .back-btn {
+            display: flex; align-items: center; gap: 6px;
+            background: var(--bg-panel2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 7px 12px;
+            color: var(--text2);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: border-color .2s, color .2s;
+            flex-shrink: 0;
+        }
+        .back-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+        .topbar-title { font-size: 14px; font-weight: 700; color: var(--text); }
+        .topbar-sub   { font-size: 11px; color: var(--text2); margin-top: 1px; }
+
+        /* ── PANEL ── */
+        .panel {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 14px;
+        }
+        @media (min-width: 600px) { .panel { padding: 24px; } }
+
+        /* ── PROGRESS TRACK ── */
+        .stage-track {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin-bottom: 20px;
+        }
+        .stage-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+        .stage-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: var(--border);
+            z-index: 0;
+            transition: background .4s;
+        }
+        .stage-item.done:not(:last-child)::after { background: var(--cyan2); }
+        .stage-dot {
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            background: var(--bg-panel2);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 700;
+            color: var(--text3);
+            transition: all .3s;
+            position: relative;
+            z-index: 2;
+        }
+        .stage-item.active .stage-dot {
+            border-color: var(--cyan);
+            color: var(--cyan);
+            background: var(--bg-panel);
+            box-shadow: 0 0 0 4px rgba(34,211,238,0.12);
+        }
+        .stage-item.done .stage-dot {
+            border-color: var(--green);
+            background: rgba(52,211,153,0.12);
+            color: var(--green);
+        }
+        .stage-lbl {
+            font-size: 10px; font-weight: 600;
+            color: var(--text3);
+            margin-top: 5px;
+            transition: color .3s;
+        }
+        .stage-item.active .stage-lbl { color: var(--cyan); }
+        .stage-item.done  .stage-lbl  { color: var(--green); }
+
+        /* ── STAT ROW ── */
+        .stat-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .stat-card {
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            text-align: center;
+        }
+        .stat-val {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--cyan);
+            font-family: 'JetBrains Mono', monospace;
+            line-height: 1.2;
+        }
+        .stat-lbl { font-size: 10px; color: var(--text2); margin-top: 3px; }
+
+        /* ── BUTTONS ── */
+        .btn {
+            display: inline-flex; align-items: center; gap: 7px;
+            padding: 9px 20px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all .2s;
+            font-family: inherit;
+        }
+        .btn-primary { background: var(--cyan2); color: #000; border-color: var(--cyan2); }
+        .btn-primary:hover { background: var(--cyan); border-color: var(--cyan); }
+        .btn-ghost {
+            background: transparent;
+            color: var(--text2);
+            border-color: var(--border);
+        }
+        .btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); }
+        .btn-danger { background: rgba(248,113,113,.1); color: var(--red); border-color: rgba(248,113,113,.25); }
+        .btn-danger:hover { background: rgba(248,113,113,.2); }
+        .btn:disabled { opacity: .4; cursor: not-allowed; }
+        .btn-sm { padding: 6px 14px; font-size: 12px; }
+
+        .btn-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+        .btn-group.center { justify-content: center; }
+
+        /* ── BADGE ── */
+        .badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            font-size: 10px; font-weight: 700;
+            padding: 3px 8px; border-radius: 20px;
+            letter-spacing: .04em;
+        }
+        .badge-cyan   { background: var(--cyan-dim);           color: var(--cyan);   border: 1px solid rgba(34,211,238,.2); }
+        .badge-green  { background: rgba(52,211,153,.08);      color: var(--green);  border: 1px solid rgba(52,211,153,.2); }
+        .badge-amber  { background: rgba(251,191,36,.08);      color: var(--amber);  border: 1px solid rgba(251,191,36,.2); }
+        .badge-red    { background: rgba(248,113,113,.08);     color: var(--red);    border: 1px solid rgba(248,113,113,.2); }
+        .badge-purple { background: rgba(167,139,250,.08);     color: var(--purple); border: 1px solid rgba(167,139,250,.2); }
+
+        /* ── MATERIAL ── */
+        .mat-heading {
+            font-size: 14px; font-weight: 700; color: var(--cyan);
+            margin: 20px 0 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .mat-heading::before {
+            content: '';
+            display: inline-block;
+            width: 3px; height: 14px;
+            background: var(--cyan);
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+        .mat-text { font-size: 13px; color: var(--text2); line-height: 1.7; margin-bottom: 10px; }
+        .rule-box {
+            background: rgba(0,0,0,.2);
+            border-left: 3px solid var(--cyan2);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            padding: 14px 16px;
+            margin: 10px 0;
+            font-size: 13px;
+            color: var(--text2);
+            line-height: 1.8;
+        }
+        .rule-box ul { list-style: none; padding: 0; }
+        .rule-box li { margin-bottom: 8px; }
+        .key { color: var(--amber); font-weight: 600; }
+        .info-box {
+            background: rgba(251,191,36,.06);
+            border: 1px solid rgba(251,191,36,.2);
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            font-size: 12px;
+            color: var(--amber);
+            line-height: 1.6;
+            margin-top: 16px;
+        }
+
+        /* ── LEVEL CARDS ── */
+        .level-card {
+            background: var(--bg-panel2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            margin-bottom: 10px;
+            transition: border-color .2s;
+        }
+        .level-card.unlocked:hover { border-color: var(--border2); }
+        .level-card.locked { opacity: .55; }
+
+        .level-header {
+            display: flex; align-items: center; gap: 12px;
+            padding: 14px 16px;
+            cursor: pointer;
+        }
+        .level-card.locked .level-header { cursor: not-allowed; }
+
+        .level-icon {
+            width: 36px; height: 36px;
+            border-radius: var(--radius-sm);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        .level-meta { flex: 1; min-width: 0; }
+        .level-name { font-size: 14px; font-weight: 700; color: var(--text); }
+        .level-sub  { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+        /* attempt dots */
+        .attempt-dots { display: flex; gap: 4px; margin-top: 6px; }
+        .adot {
+            width: 9px; height: 9px; border-radius: 50%;
+            background: var(--border2);
+            transition: background .3s;
+        }
+        .adot.pass { background: var(--green); }
+        .adot.fail { background: var(--red); }
+
+        .level-chevron { color: var(--text3); font-size: 11px; transition: transform .25s; }
+        .level-card.open .level-chevron { transform: rotate(180deg); }
+
+        .level-body {
+            display: none;
+            padding: 0 16px 14px;
+            border-top: 1px solid var(--border);
+        }
+        .level-card.open .level-body { display: block; }
+
+        .level-info-row {
+            display: flex; align-items: center; justify-content: space-between;
+            padding-top: 12px;
+            flex-wrap: wrap; gap: 8px;
+        }
+        .level-info-text { font-size: 12px; color: var(--text2); }
+
+        /* ── QUIZ ── */
+        .q-nav { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+        .q-dot {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            border: 1.5px solid var(--border);
+            font-size: 11px; font-weight: 700;
+            color: var(--text3);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all .2s;
+            font-family: 'JetBrains Mono', monospace;
+            flex-shrink: 0;
+        }
+        .q-dot:hover       { border-color: var(--cyan); color: var(--cyan); }
+        .q-dot.current     { background: var(--cyan); border-color: var(--cyan); color: #000; }
+        .q-dot.ans-correct { background: rgba(52,211,153,.12); border-color: var(--green); color: var(--green); }
+        .q-dot.ans-wrong   { background: rgba(248,113,113,.12); border-color: var(--red); color: var(--red); }
+
+        .q-num    { font-size: 11px; color: var(--text2); margin-bottom: 10px; }
+        .q-text   { font-size: 15px; color: var(--text); line-height: 1.65; margin-bottom: 16px; }
+
+        .opt-btn {
+            width: 100%;
+            text-align: left;
+            background: var(--bg-panel2);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 12px 14px;
+            color: var(--text2);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all .2s;
+            margin-bottom: 8px;
+            display: flex; align-items: center; gap: 10px;
+            font-family: inherit;
+        }
+        .opt-btn:hover:not(:disabled) { border-color: var(--cyan); color: var(--text); background: var(--cyan-dim); }
+        .opt-btn.selected  { border-color: var(--cyan);  color: var(--text); background: var(--cyan-dim); }
+        .opt-btn.correct   { border-color: var(--green); color: #d4edda;    background: rgba(52,211,153,.1); }
+        .opt-btn.wrong     { border-color: var(--red);   color: #f8d7da;    background: rgba(248,113,113,.1); }
+        .opt-btn:disabled  { cursor: not-allowed; }
+        .opt-letter {
+            width: 22px; height: 22px;
+            border-radius: 50%;
+            border: 1.5px solid currentColor;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px; font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .explanation {
+            background: var(--cyan-dim);
+            border-left: 3px solid var(--cyan);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            padding: 12px 14px;
+            margin-top: 14px;
+            font-size: 13px;
+            color: var(--text2);
+            line-height: 1.7;
+        }
+        .explanation strong { color: var(--cyan); font-size: 11px; letter-spacing: .04em; }
+
+        .quiz-footer {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+            gap: 8px;
+        }
+
+        /* ── RESULT ── */
+        .result-hero { text-align: center; padding: 16px 0 20px; }
+        .score-ring-wrap { position: relative; display: inline-block; margin-bottom: 12px; }
+        .score-ring-text {
+            position: absolute; inset: 0;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+        }
+        .score-big { font-size: 28px; font-weight: 700; line-height: 1; font-family: 'JetBrains Mono', monospace; }
+        .score-pct { font-size: 11px; color: var(--text2); }
+        .result-verdict { font-size: 17px; font-weight: 700; margin-top: 4px; }
+        .result-sub    { font-size: 12px; color: var(--text2); margin-top: 4px; }
+
+        .result-stats {
+            display: grid; grid-template-columns: repeat(3,1fr);
+            gap: 8px; margin: 16px 0;
+        }
+        .rs-card {
+            background: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 10px;
+            text-align: center;
+        }
+        .rs-val { font-size: 16px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+        .rs-lbl { font-size: 10px; color: var(--text2); margin-top: 2px; }
+
+        .notice-box {
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            font-size: 13px;
+            line-height: 1.6;
+            margin: 12px 0;
+        }
+        .notice-box.green  { background: rgba(52,211,153,.06); border: 1px solid rgba(52,211,153,.2); color: var(--green); }
+        .notice-box.red    { background: rgba(248,113,113,.06); border: 1px solid rgba(248,113,113,.2); color: var(--red); }
+        .notice-box.cyan   { background: var(--cyan-dim);       border: 1px solid rgba(34,211,238,.2);  color: var(--cyan); }
+        .notice-box .n-title { font-weight: 700; margin-bottom: 4px; }
+        .notice-box .n-sub   { font-size: 12px; opacity: .8; }
+
+        /* ── CERTIFICATE ── */
+        .cert {
+            text-align: center;
+            padding: 28px 20px;
+            border: 1px solid rgba(34,211,238,.3);
+            border-radius: var(--radius-lg);
+            background: var(--bg-panel2);
+            position: relative;
+            overflow: hidden;
+        }
+        .cert::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(34,211,238,.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .cert-icon { font-size: 40px; margin-bottom: 12px; }
+        .cert-title { font-size: 20px; font-weight: 700; color: var(--cyan); margin-bottom: 8px; }
+        .cert-text  { font-size: 13px; color: var(--text2); line-height: 1.7; }
+
+        /* ── TOAST ── */
+        #toast {
+            position: fixed; bottom: 20px; right: 20px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            font-size: 13px;
+            color: var(--text);
+            z-index: 9999;
+            display: none;
+            align-items: center; gap: 10px;
+            max-width: 300px;
+            box-shadow: 0 8px 24px rgba(0,0,0,.4);
+            animation: toastIn .3s ease;
+        }
+        @keyframes toastIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+        /* ── VIEWS ── */
+        .view { display: none; }
+        .view.active { display: block; }
+
+        /* ── SECTION HEADER ── */
+        .sec-hdr {
+            display: flex; align-items: center; gap: 8px;
+            margin-bottom: 14px;
+        }
+        .sec-accent { width: 3px; height: 16px; background: var(--cyan); border-radius: 2px; flex-shrink: 0; }
+        .sec-title  { font-size: 14px; font-weight: 700; color: var(--text); }
+
+        /* ── MOBILE ── */
+        @media (max-width: 480px) {
+            body { padding: 12px 10px; }
+            .stat-row { grid-template-columns: 1fr 1fr; }
+            .result-stats { grid-template-columns: 1fr 1fr; }
+            .quiz-footer { flex-direction: column; }
+            .quiz-footer .btn { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrap">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+        <a href="javascript:history.back()" class="back-btn">&#8592; Kembali</a>
+        <div>
+            <div class="topbar-title" id="page-title">⚡ Sprint — Barisan & Deret</div>
+            <div class="topbar-sub" id="page-sub">Latihan Sprint · 3 Level</div>
+        </div>
+    </div>
+
+    <!-- STAGE TRACK -->
+    <div class="panel" style="padding:16px 20px">
+        <div class="stage-track" id="stage-track">
+            <div class="stage-item" id="st-materi">
+                <div class="stage-dot">📚</div>
+                <div class="stage-lbl">Materi</div>
+            </div>
+            <div class="stage-item" id="st-lots">
+                <div class="stage-dot mono">①</div>
+                <div class="stage-lbl">LOTS</div>
+            </div>
+            <div class="stage-item" id="st-mots">
+                <div class="stage-dot mono">②</div>
+                <div class="stage-lbl">MOTS</div>
+            </div>
+            <div class="stage-item" id="st-hots">
+                <div class="stage-dot mono">③</div>
+                <div class="stage-lbl">HOTS</div>
+            </div>
+            <div class="stage-item" id="st-selesai">
+                <div class="stage-dot">🏆</div>
+                <div class="stage-lbl">Selesai</div>
+            </div>
+        </div>
+        <div class="stat-row" id="global-stats">
+            <div class="stat-card">
+                <div class="stat-val" id="gs-level">Materi</div>
+                <div class="stat-lbl">Tahap</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val" id="gs-attempts">—</div>
+                <div class="stat-lbl">Percobaan Tersisa</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val" id="gs-pass">0/2</div>
+                <div class="stat-lbl">Kali Lulus</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── VIEW: MATERI ── -->
+    <div class="view active" id="view-materi">
+        <div class="panel">
+            <div class="sec-hdr">
+                <div class="sec-accent"></div>
+                <div class="sec-title">Materi Ringkas</div>
+                <span class="badge badge-cyan">Baca Dulu</span>
+            </div>
+
+            <!-- ═══════════════════════════════════════════
+                 GANTI KONTEN MATERI DI SINI
+            ═══════════════════════════════════════════ -->
+            <div id="materi-content">
+    <div class="mat-heading">1. Pernyataan & Operator Logika</div>
+    <p class="mat-text">
+        Sebuah <span class="key">pernyataan (proposisi)</span> adalah kalimat yang memiliki nilai kebenaran, yaitu <span class="key">Benar (B)</span> atau <span class="key">Salah (S)</span>, tetapi tidak keduanya.
+    </p>
+    <div class="rule-box">
+        <ul>
+            <li><strong>Negasi (\(\sim p\)):</strong> TIDAK p. (Membalik nilai kebenaran)</li>
+            <li><strong>Konjungsi (\(p \land q\)):</strong> p DAN q. (Benar hanya jika keduanya benar)</li>
+            <li><strong>Disjungsi (\(p \lor q\)):</strong> p ATAU q. (Salah hanya jika keduanya salah)</li>
+            <li><strong>Implikasi (\(p \rightarrow q\)):</strong> JIKA p MAKA q. (Salah hanya jika B → S)</li>
+            <li><strong>Biimplikasi (\(p \leftrightarrow q\)):</strong> p JIKA DAN HANYA JIKA q. (Benar jika keduanya punya nilai kebenaran yang sama)</li>
+        </ul>
+    </div>
+
+    <div class="mat-heading">2. Kuantor & Ekuivalensi</div>
+    <p class="mat-text">Kuantor digunakan untuk pernyataan yang melibatkan variabel.</p>
+    <div class="rule-box">
+        <ul>
+            <li><strong>Kuantor Universal (\(\forall x\)):</strong> "Untuk semua" atau "Setiap". Negasinya: \(\sim(\forall x, P(x)) \equiv \exists x, \sim P(x)\).</li>
+            <li><strong>Kuantor Eksistensial (\(\exists x\)):</strong> "Ada" atau "Beberapa". Negasinya: \(\sim(\exists x, P(x)) \equiv \forall x, \sim P(x)\).</li>
+            <li><strong>Ekuivalensi Penting:</strong> \((p \rightarrow q) \equiv (\sim q \rightarrow \sim p) \equiv (\sim p \lor q)\)</li>
+        </ul>
+    </div>
+
+    <div class="mat-heading">3. Penarikan Kesimpulan</div>
+    <p class="mat-text">Tiga aturan dasar untuk menarik kesimpulan yang sah (valid):</p>
+    <div class="rule-box">
+        <ul>
+            <li><strong>Modus Ponens:</strong> Premis 1: \(p \rightarrow q\), Premis 2: \(p\). Kesimpulan: \(q\).</li>
+            <li><strong>Modus Tollens:</strong> Premis 1: \(p \rightarrow q\), Premis 2: \(\sim q\). Kesimpulan: \(\sim p\).</li>
+            <li><strong>Silogisme:</strong> Premis 1: \(p \rightarrow q\), Premis 2: \(q \rightarrow r\). Kesimpulan: \(p \rightarrow r\).</li>
+        </ul>
+    </div>
+            </div>
+            <!-- ═══════════════════════════════════════════ -->
+
+            <div class="info-box">
+                ⚠️ <strong>Aturan Sprint:</strong> Setiap percobaan berisi <strong>5 soal acak</strong>.
+                Lulus jika skor ≥ 80% (minimal 4 benar). Harus lulus <strong>2 kali</strong> untuk membuka level berikutnya.
+                Gagal 3x berturut-turut atau habis percobaan (5x) → gugur di level itu.
+            </div>
+
+            <div class="btn-group center" style="margin-top:20px">
+                <button class="btn btn-primary" onclick="APP.goToLevels()">
+                    Mulai Latihan →
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── VIEW: LEVEL SELECT ── -->
+    <div class="view" id="view-levels">
+        <div class="panel">
+            <div class="sec-hdr">
+                <div class="sec-accent"></div>
+                <div class="sec-title">Pilih Level</div>
+            </div>
+
+            <!-- LOTS -->
+            <div class="level-card unlocked" id="lcard-LOTS">
+                <div class="level-header" onclick="APP.toggleLevel('LOTS')">
+                    <div class="level-icon" style="background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.2)">
+                        <span style="color:var(--green);font-weight:700;font-family:monospace">①</span>
+                    </div>
+                    <div class="level-meta">
+                        <div class="level-name">
+                            LOTS
+                            <span id="badge-LOTS" class="badge badge-cyan" style="margin-left:6px;vertical-align:middle"></span>
+                        </div>
+                        <div class="level-sub">Lower Order Thinking Skill — Level Dasar</div>
+                        <div class="attempt-dots" id="dots-LOTS"></div>
+                    </div>
+                    <div class="level-chevron" id="chev-LOTS">▾</div>
+                </div>
+                <div class="level-body" id="lbody-LOTS">
+                    <div class="level-info-row">
+                        <div class="level-info-text" id="linfo-LOTS">5 soal acak · skor lulus ≥ 80%</div>
+                        <button class="btn btn-primary btn-sm" id="lbtn-LOTS" onclick="APP.startQuiz('LOTS')">Mulai →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MOTS -->
+            <div class="level-card locked" id="lcard-MOTS">
+                <div class="level-header" onclick="APP.toggleLevel('MOTS')">
+                    <div class="level-icon" style="background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.2)">
+                        <span style="color:var(--amber);font-weight:700;font-family:monospace">②</span>
+                    </div>
+                    <div class="level-meta">
+                        <div class="level-name">
+                            MOTS
+                            <span id="badge-MOTS" class="badge badge-amber" style="margin-left:6px;vertical-align:middle"></span>
+                        </div>
+                        <div class="level-sub">Medium Order Thinking Skill — Level Menengah</div>
+                        <div class="attempt-dots" id="dots-MOTS"></div>
+                    </div>
+                    <div class="level-chevron" id="chev-MOTS">▾</div>
+                </div>
+                <div class="level-body" id="lbody-MOTS">
+                    <div class="level-info-row">
+                        <div class="level-info-text" id="linfo-MOTS">5 soal acak · skor lulus ≥ 80%</div>
+                        <button class="btn btn-primary btn-sm" id="lbtn-MOTS" onclick="APP.startQuiz('MOTS')">Mulai →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HOTS -->
+            <div class="level-card locked" id="lcard-HOTS">
+                <div class="level-header" onclick="APP.toggleLevel('HOTS')">
+                    <div class="level-icon" style="background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.2)">
+                        <span style="color:var(--red);font-weight:700;font-family:monospace">③</span>
+                    </div>
+                    <div class="level-meta">
+                        <div class="level-name">
+                            HOTS
+                            <span id="badge-HOTS" class="badge badge-red" style="margin-left:6px;vertical-align:middle"></span>
+                        </div>
+                        <div class="level-sub">Higher Order Thinking Skill — Level Tinggi</div>
+                        <div class="attempt-dots" id="dots-HOTS"></div>
+                    </div>
+                    <div class="level-chevron" id="chev-HOTS">▾</div>
+                </div>
+                <div class="level-body" id="lbody-HOTS">
+                    <div class="level-info-row">
+                        <div class="level-info-text" id="linfo-HOTS">5 soal acak · skor lulus ≥ 80%</div>
+                        <button class="btn btn-primary btn-sm" id="lbtn-HOTS" onclick="APP.startQuiz('HOTS')">Mulai →</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group" style="margin-top:16px;justify-content:space-between">
+                <button class="btn btn-ghost btn-sm" onclick="APP.goToMateri()">← Baca Materi</button>
+                <button class="btn btn-danger btn-sm" onclick="APP.resetConfirm()">Reset Progress</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── VIEW: QUIZ ── -->
+    <div class="view" id="view-quiz">
+        <div class="panel">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+                <div>
+                    <div id="quiz-title" style="font-size:15px;font-weight:700;color:var(--text)"></div>
+                    <div id="quiz-meta" style="font-size:11px;color:var(--text2);margin-top:2px"></div>
+                </div>
+                <button class="btn btn-ghost btn-sm" onclick="APP.exitQuiz()">✕ Keluar</button>
+            </div>
+
+            <div class="q-nav" id="q-nav"></div>
+            <div id="question-area"></div>
+
+            <div class="quiz-footer">
+                <button class="btn btn-ghost btn-sm" id="q-prev" onclick="APP.prevQ()">← Prev</button>
+                <button class="btn btn-primary btn-sm" id="q-next" onclick="APP.nextOrFinish()">Next →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── VIEW: RESULT ── -->
+    <div class="view" id="view-result">
+        <div class="panel" id="result-panel"></div>
+    </div>
+
+</div><!-- /wrap -->
+
+<div id="toast"></div>
+
+<script>
+
+if (!sessionStorage.getItem('sessionToken')) {
+            window.location.href = '../../Login/';
+        }
+
+// ═══════════════════════════════════════════════════════════════
+//  KONFIGURASI — GANTI BAGIAN INI SESUAI TOPIK SPRINT
+// ═══════════════════════════════════════════════════════════════
+
+const SPRINT_CONFIG = {
+    // Key localStorage — HARUS UNIK per file sprint
+    storageKey: 'logika_matematika_v1',
+
+    // Nama topik untuk ditampilkan
+    title: 'Sprint — Logika Matematika',
+    sub:   'Latihan Sprint · 3 Level',
+};
+
+// ═══════════════════════════════════════════════════════════════
+//  BANK SOAL — GANTI/TAMBAH SOAL DI SINI
+//  Format setiap soal:
+//  {
+//    q:    "teks pertanyaan",
+//    opts: ["opsi A","opsi B","opsi C"],   ← minimal 2, maks 5
+//    ans:  0,                               ← index jawaban benar (0-based)
+//    exp:  "teks pembahasan"
+//  }
+// ═══════════════════════════════════════════════════════════════
+
+const QUESTIONS = {
+    LOTS: [
+        {
+            q: "Manakah di antara kalimat berikut yang merupakan pernyataan (proposisi)?",
+            opts: ["Jakarta adalah ibukota Indonesia.", "Tolong ambilkan buku itu!", "Siapa nama kamu?"],
+            ans: 0,
+            exp: "Pernyataan adalah kalimat yang memiliki nilai kebenaran (benar atau salah). 'Jakarta adalah ibukota Indonesia' adalah pernyataan yang bernilai benar."
+        },
+        {
+            q: "Negasi dari pernyataan 'Hari ini hujan' adalah...",
+            opts: ["Tidak benar bahwa hari ini hujan.", "Hari ini cerah.", "Kemarin hujan."],
+            ans: 0,
+            exp: "Negasi (ingkaran) secara harfiah berarti 'tidak benar bahwa...'. Negasi yang paling tepat adalah 'Tidak benar bahwa hari ini hujan' atau 'Hari ini tidak hujan'."
+        },
+        {
+            q: "Simbol \\(\\land\\) dalam logika matematika dibaca sebagai...",
+            opts: ["dan", "atau", "jika...maka..."],
+            ans: 0,
+            exp: "Simbol \\(\\land\\) adalah operator konjungsi, yang berarti 'dan'."
+        },
+        {
+            q: "Simbol \\(\\lor\\) dalam logika matematika dibaca sebagai...",
+            opts: ["atau", "dan", "tidak"],
+            ans: 0,
+            exp: "Simbol \\(\\lor\\) adalah operator disjungsi, yang berarti 'atau'."
+        },
+        {
+            q: "Jika pernyataan \\(p\\) bernilai Benar dan \\(q\\) bernilai Salah, maka \\(p \\land q\\) bernilai...",
+            opts: ["Salah", "Benar", "Bisa Benar atau Salah"],
+            ans: 0,
+            exp: "Konjungsi (dan) hanya bernilai Benar jika kedua pernyataan komponennya Benar. Karena \\(q\\) Salah, maka hasilnya Salah."
+        },
+        {
+            q: "Jika pernyataan \\(p\\) bernilai Benar dan \\(q\\) bernilai Salah, maka \\(p \\lor q\\) bernilai...",
+            opts: ["Benar", "Salah", "Bisa Benar atau Salah"],
+            ans: 0,
+            exp: "Disjungsi (atau) bernilai Benar selama salah satu komponennya Benar. Karena \\(p\\) Benar, maka hasilnya Benar."
+        },
+        {
+            q: "Negasi dari '2 + 3 = 5' adalah...",
+            opts: ["\\(2 + 3 \\ne 5\\)", "\\(2 + 3 > 5\\)", "\\(2 + 3 < 5\\)"],
+            ans: 0,
+            exp: "Negasi dari 'sama dengan' (=) adalah 'tidak sama dengan' (≠)."
+        },
+        {
+            q: "Kalimat 'Semoga kamu berhasil' adalah...",
+            opts: ["Bukan pernyataan", "Pernyataan Benar", "Pernyataan Salah"],
+            ans: 0,
+            exp: "Kalimat tersebut adalah kalimat harapan dan tidak memiliki nilai kebenaran, sehingga bukan pernyataan."
+        },
+        {
+            q: "Simbol \\(\\rightarrow\\) dalam logika matematika berarti...",
+            opts: ["Implikasi (jika...maka...)", "Konjungsi (dan)", "Biimplikasi (jika dan hanya jika)"],
+            ans: 0,
+            exp: "Simbol \\(\\rightarrow\\) adalah operator implikasi."
+        },
+        {
+            q: "Pada implikasi \\(p \\rightarrow q\\), \\(p\\) disebut sebagai...",
+            opts: ["Hipotesis/Anteseden", "Konklusi/Konsekuen", "Negasi"],
+            ans: 0,
+            exp: "Bagian 'jika' dari implikasi disebut hipotesis atau anteseden."
+        },
+        {
+            q: "Negasi dari 'Semua kucing adalah mamalia' adalah...",
+            opts: ["Ada kucing yang bukan mamalia.", "Semua kucing bukan mamalia.", "Tidak ada kucing yang mamalia."],
+            ans: 0,
+            exp: "Negasi dari kuantor universal 'semua' adalah kuantor eksistensial 'ada/beberapa' dengan predikat yang dinegasikan."
+        },
+        {
+            q: "Manakah yang merupakan kalimat terbuka?",
+            opts: ["\\(x + 5 = 7\\)", "\\(2 + 5 = 7\\)", "Tutup pintunya!"],
+            ans: 0,
+            exp: "Kalimat terbuka adalah kalimat yang nilai kebenarannya bergantung pada nilai variabel di dalamnya."
+        },
+        {
+            q: "Pernyataan '2 adalah bilangan genap' memiliki nilai kebenaran...",
+            opts: ["Benar", "Salah", "Tidak keduanya"],
+            ans: 0,
+            exp: "Ini adalah fakta matematika yang benar."
+        },
+        {
+            q: "Pernyataan 'Bulan terbuat dari keju' memiliki nilai kebenaran...",
+            opts: ["Salah", "Benar", "Tidak keduanya"],
+            ans: 0,
+            exp: "Ini adalah pernyataan yang jelas salah."
+        },
+        {
+            q: "Negasi dari pernyataan \\(p\\) dilambangkan dengan...",
+            opts: ["\\(\\sim p\\)", "\\(p'\\)", "\\(-p\\)"],
+            ans: 0,
+            exp: "Simbol yang umum digunakan untuk negasi adalah tilde (\\(\\sim\\))."
+        },
+        {
+            q: "Jika \\(p\\): 'Matahari terbit dari timur' (Benar), maka \\(\\sim p\\) adalah...",
+            opts: ["Matahari tidak terbit dari timur (Salah)", "Matahari terbenam di barat (Benar)", "Matahari terbit dari timur (Benar)"],
+            ans: 0,
+            exp: "Negasi membalik nilai kebenaran. Pernyataan yang benar menjadi salah."
+        },
+        {
+            q: "Konjungsi dari \\(p\\): 'Saya lapar' dan \\(q\\): 'Saya haus' adalah...",
+            opts: ["Saya lapar dan saya haus", "Saya lapar atau saya haus", "Jika saya lapar maka saya haus"],
+            ans: 0,
+            exp: "Konjungsi adalah penggabungan dua pernyataan dengan kata 'dan'."
+        },
+        {
+            q: "Disjungsi dari \\(p\\): 'Dia belajar' dan \\(q\\): 'Dia bermain' adalah...",
+            opts: ["Dia belajar atau dia bermain", "Dia belajar dan dia bermain", "Dia tidak belajar"],
+            ans: 0,
+            exp: "Disjungsi adalah penggabungan dua pernyataan dengan kata 'atau'."
+        },
+        {
+            q: "Jika \\(p\\) Salah dan \\(q\\) Salah, maka \\(p \\lor q\\) bernilai...",
+            opts: ["Salah", "Benar", "Tidak tentu"],
+            ans: 0,
+            exp: "Disjungsi (atau) hanya bernilai Salah jika kedua komponennya Salah."
+        },
+        {
+            q: "Jika \\(p\\) Benar, maka \\(p \\lor q\\) pasti bernilai...",
+            opts: ["Benar", "Salah", "Tergantung nilai q"],
+            ans: 0,
+            exp: "Disjungsi (atau) akan selalu Benar jika salah satu komponennya Benar, tidak peduli nilai kebenaran komponen lainnya."
+        },
+        {
+            q: "Simbol \\(\\leftrightarrow\\) dibaca sebagai...",
+            opts: ["jika dan hanya jika", "jika...maka...", "dan/atau"],
+            ans: 0,
+            exp: "Simbol \\(\\leftrightarrow\\) adalah operator biimplikasi."
+        },
+        {
+            q: "Negasi dari 'beberapa' adalah...",
+            opts: ["semua", "tidak ada", "beberapa tidak"],
+            ans: 0,
+            exp: "Negasi dari kuantor eksistensial 'beberapa' (ada) adalah kuantor universal 'semua' (dengan predikat dinegasikan)."
+        },
+        {
+            q: "Kata lain untuk 'ingkaran' adalah...",
+            opts: ["Negasi", "Konjungsi", "Implikasi"],
+            ans: 0,
+            exp: "Ingkaran adalah istilah lain untuk negasi dalam bahasa Indonesia."
+        },
+        {
+            q: "Premis adalah...",
+            opts: ["Pernyataan yang dianggap benar sebagai dasar argumen", "Kesimpulan dari argumen", "Lawan dari pernyataan"],
+            ans: 0,
+            exp: "Premis adalah pernyataan-pernyataan awal yang menjadi dasar untuk penarikan kesimpulan."
+        },
+        {
+            q: "Jika p Benar, maka \\(\\sim p\\) bernilai...",
+            opts: ["Salah", "Benar", "Tidak tentu"],
+            ans: 0,
+            exp: "Negasi selalu membalik nilai kebenaran. Benar menjadi Salah."
+        }
+    ],
+    MOTS: [
+        {
+            q: "Jika \\(p\\) Benar dan \\(q\\) Salah, maka pernyataan \\(p \\rightarrow q\\) bernilai...",
+            opts: ["Salah", "Benar", "Tidak dapat ditentukan"],
+            ans: 0,
+            exp: "Implikasi hanya bernilai Salah jika anteseden (p) Benar dan konsekuen (q) Salah (B → S)."
+        },
+        {
+            q: "Jika \\(p\\) Salah dan \\(q\\) Benar, maka pernyataan \\(p \\leftrightarrow q\\) bernilai...",
+            opts: ["Salah", "Benar", "Tidak dapat ditentukan"],
+            ans: 0,
+            exp: "Biimplikasi hanya bernilai Benar jika kedua komponen memiliki nilai kebenaran yang sama. Karena berbeda (S ↔ B), maka hasilnya Salah."
+        },
+        {
+            q: "Negasi dari pernyataan 'Hari ini cerah dan saya pergi ke pantai' adalah...",
+            opts: ["Hari ini tidak cerah atau saya tidak pergi ke pantai", "Hari ini tidak cerah dan saya tidak pergi ke pantai", "Jika hari ini cerah, maka saya pergi ke pantai"],
+            ans: 0,
+            exp: "Ini menggunakan Hukum De Morgan: \\(\\sim(p \\land q) \\equiv \\sim p \\lor \\sim q\\)."
+        },
+        {
+            q: "Negasi dari pernyataan 'Jika harga naik, maka permintaan turun' adalah...",
+            opts: ["Harga naik dan permintaan tidak turun", "Jika harga tidak naik, maka permintaan tidak turun", "Harga tidak naik atau permintaan turun"],
+            ans: 0,
+            exp: "Negasi dari implikasi \\(p \\rightarrow q\\) adalah \\(p \\land \\sim q\\)."
+        },
+        {
+            q: "Premis 1: Jika belajar, maka lulus. Premis 2: Saya belajar. Kesimpulan yang sah adalah...",
+            opts: ["Saya lulus", "Saya tidak lulus", "Saya tidak belajar"],
+            ans: 0,
+            exp: "Ini adalah contoh Modus Ponens. \\(p \\rightarrow q\\), \\(p\\), maka \\(q\\)."
+        },
+        {
+            q: "Premis 1: Jika lampu merah, maka mobil berhenti. Premis 2: Mobil tidak berhenti. Kesimpulan yang sah adalah...",
+            opts: ["Lampu tidak merah", "Lampu merah", "Mobil rusak"],
+            ans: 0,
+            exp: "Ini adalah contoh Modus Tollens. \\(p \\rightarrow q\\), \\(\\sim q\\), maka \\(\\sim p\\)."
+        },
+        {
+            q: "Negasi dari pernyataan 'Ada siswa yang tidak mengerjakan PR' adalah...",
+            opts: ["Semua siswa mengerjakan PR", "Semua siswa tidak mengerjakan PR", "Ada siswa yang mengerjakan PR"],
+            ans: 0,
+            exp: "Negasi dari 'Ada...tidak...' (\\(\\exists x, \\sim P(x)\\)) adalah 'Semua...' (\\(\\forall x, P(x)\\))."
+        },
+        {
+            q: "Konvers dari 'Jika hujan, maka jalanan basah' adalah...",
+            opts: ["Jika jalanan basah, maka hujan", "Jika tidak hujan, maka jalanan tidak basah", "Jika jalanan tidak basah, maka tidak hujan"],
+            ans: 0,
+            exp: "Konvers dari \\(p \\rightarrow q\\) adalah \\(q \\rightarrow p\\)."
+        },
+        {
+            q: "Invers dari 'Jika saya lapar, maka saya makan' adalah...",
+            opts: ["Jika saya tidak lapar, maka saya tidak makan", "Jika saya makan, maka saya lapar", "Saya lapar dan saya tidak makan"],
+            ans: 0,
+            exp: "Invers dari \\(p \\rightarrow q\\) adalah \\(\\sim p \\rightarrow \\sim q\\)."
+        },
+        {
+            q: "Kontraposisi dari 'Jika segitiga sama sisi, maka semua sudutnya sama' adalah...",
+            opts: ["Jika ada sudut yang tidak sama, maka segitiga itu bukan sama sisi", "Jika semua sudutnya sama, maka segitiga itu sama sisi", "Jika segitiga bukan sama sisi, maka ada sudut yang tidak sama"],
+            ans: 0,
+            exp: "Kontraposisi dari \\(p \\rightarrow q\\) adalah \\(\\sim q \\rightarrow \\sim p\\)."
+        },
+        {
+            q: "Jika \\(p\\) Salah, maka \\(p \\rightarrow q\\) akan selalu bernilai...",
+            opts: ["Benar", "Salah", "Tergantung q"],
+            ans: 0,
+            exp: "Implikasi hanya salah jika B → S. Jika anteseden (p) sudah Salah, maka implikasi pasti Benar."
+        },
+        {
+            q: "Pernyataan \\(p \\lor \\sim p\\) akan selalu bernilai...",
+            opts: ["Benar (Tautologi)", "Salah (Kontradiksi)", "Kontingensi"],
+            ans: 0,
+            exp: "Sebuah pernyataan atau negasinya pasti benar. Ini adalah contoh Tautologi."
+        },
+        {
+            q: "Pernyataan \\(p \\land \\sim p\\) akan selalu bernilai...",
+            opts: ["Salah (Kontradiksi)", "Benar (Tautologi)", "Kontingensi"],
+            ans: 0,
+            exp: "Sebuah pernyataan dan negasinya tidak mungkin benar bersamaan. Ini adalah contoh Kontradiksi."
+        },
+        {
+            q: "Premis 1: Jika saya ke Jakarta, saya naik kereta. Premis 2: Jika saya naik kereta, saya tiba di stasiun Gambir. Kesimpulannya?",
+            opts: ["Jika saya ke Jakarta, saya tiba di stasiun Gambir", "Saya ke Jakarta", "Saya tiba di stasiun Gambir"],
+            ans: 0,
+            exp: "Ini adalah contoh Silogisme. \\((p \\rightarrow q) \\land (q \\rightarrow r) \\implies (p \\rightarrow r)\\)."
+        },
+        {
+            q: "Pernyataan yang ekuivalen dengan \\(p \\rightarrow q\\) adalah...",
+            opts: ["\\(\\sim p \\lor q\\)", "\\(p \\land \\sim q\\)", "\\(p \\lor \\sim q\\)"],
+            ans: 0,
+            exp: "Ekuivalensi logika penting: \\((p \\rightarrow q) \\equiv (\\sim p \\lor q)\\)."
+        },
+        {
+            q: "Negasi dari 'Semua bilangan prima adalah ganjil' adalah...",
+            opts: ["Ada bilangan prima yang tidak ganjil", "Semua bilangan prima adalah genap", "Tidak ada bilangan prima yang ganjil"],
+            ans: 0,
+            exp: "Negasi dari 'Semua P' adalah 'Ada yang bukan P'. Angka 2 adalah bilangan prima yang tidak ganjil."
+        },
+        {
+            q: "Diketahui \\(p \\lor q\\) bernilai Salah. Pernyataan yang pasti benar adalah...",
+            opts: ["\\(p \\land q\\) Salah", "\\(p \\rightarrow q\\) Benar", "\\(\\sim p\\) Salah"],
+            ans: 0,
+            exp: "Jika \\(p \\lor q\\) Salah, maka \\(p\\) Salah dan \\(q\\) Salah. Jadi \\(p \\land q\\) pasti Salah."
+        },
+        {
+            q: "Pernyataan 'Jika 2x2=4, maka Jakarta ada di Jawa Barat' bernilai...",
+            opts: ["Salah", "Benar", "Tidak punya nilai kebenaran"],
+            ans: 0,
+            exp: "p: Benar, q: Salah. B → S bernilai Salah."
+        },
+        {
+            q: "Pernyataan 'Jika 1+1=3, maka kuda bisa terbang' bernilai...",
+            opts: ["Benar", "Salah", "Tidak punya nilai kebenaran"],
+            ans: 0,
+            exp: "p: Salah, q: Salah. S → S bernilai Benar dalam implikasi."
+        },
+        {
+            q: "Invers, konvers, dan kontraposisi berhubungan dengan...",
+            opts: ["Implikasi", "Disjungsi", "Konjungsi"],
+            ans: 0,
+            exp: "Istilah tersebut adalah variasi dari pernyataan implikasi \\(p \\rightarrow q\\)."
+        },
+        {
+            q: "Jika \\(\\sim (p \\land q)\\) benar, maka...",
+            opts: ["Minimal salah satu dari p atau q adalah salah", "p dan q keduanya salah", "p benar dan q salah"],
+            ans: 0,
+            exp: "\\(\\sim (p \\land q)\\) benar berarti \\(p \\land q\\) salah. Konjungsi salah jika minimal satu komponen salah."
+        },
+        {
+            q: "Tabel kebenaran untuk \\(p \\leftrightarrow q\\) bernilai 'Benar' sebanyak...",
+            opts: ["2 baris", "1 baris", "3 baris"],
+            ans: 0,
+            exp: "Biimplikasi benar saat nilai keduanya sama (B-B dan S-S)."
+        },
+        {
+            q: "Jika kamu di Manado, maka kamu di Indonesia. Kamu tidak di Indonesia. Kesimpulannya?",
+            opts: ["Kamu tidak di Manado", "Kamu di Manado", "Tidak bisa disimpulkan"],
+            ans: 0,
+            exp: "Modus Tollens: Jika p maka q. Tidak q, maka tidak p."
+        },
+        {
+            q: "Negasi dari 'Saya akan datang jika diundang' adalah...",
+            opts: ["Saya diundang tetapi saya tidak datang", "Saya tidak diundang dan saya tidak datang", "Saya akan datang walaupun tidak diundang"],
+            ans: 0,
+            exp: "Pernyataan ekuivalen dengan 'Jika diundang, maka datang'. Negasi: p dan tidak q."
+        },
+        {
+            q: "Pernyataan 'Segitiga memiliki 3 sisi atau lingkaran memiliki 4 sisi' bernilai...",
+            opts: ["Benar", "Salah", "Tidak keduanya"],
+            ans: 0,
+            exp: "p: Benar, q: Salah. B ∨ S bernilai Benar."
+        }
+    ],
+    HOTS: [
+        {
+            q: "Manakah yang ekuivalen secara logis dengan \\(\\sim(p \\rightarrow q)\\)?",
+            opts: ["\\(p \\land \\sim q\\)", "\\(\\sim p \\lor q\\)", "\\(q \\rightarrow p\\)"],
+            ans: 0,
+            exp: "\\(p \\rightarrow q\\) ekuivalen dengan \\(\\sim p \\lor q\\). Negasinya menurut De Morgan adalah \\(p \\land \\sim q\\)."
+        },
+        {
+            q: "Kontraposisi dari 'Jika semua bil. prima ganjil, maka 2 bukan bil. prima' adalah...",
+            opts: ["Jika 2 adalah bil. prima, maka ada bil. prima yang tidak ganjil", "Jika 2 bukan bil. prima, maka semua bil. prima ganjil", "Jika ada bil. prima tidak ganjil, maka 2 adalah bil. prima"],
+            ans: 0,
+            exp: "Kontraposisi \\(\\sim q \\rightarrow \\sim p\\). Negasi dari 'semua' adalah 'ada/beberapa'."
+        },
+        {
+            q: "Pernyataan \\( (p \\rightarrow q) \\lor (q \\rightarrow p) \\) merupakan...",
+            opts: ["Tautologi", "Kontradiksi", "Kontingensi"],
+            ans: 0,
+            exp: "Pernyataan ini tidak pernah salah di tabel kebenaran manapun (Tautologi)."
+        },
+        {
+            q: "Premis: p→q, q→r, ~r. Kesimpulannya?",
+            opts: ["Saya tidak rajin", "Saya rajin", "Saya pintar"],
+            ans: 0,
+            exp: "Silogisme (p→r) digabung Modus Tollens (~r) menghasilkan ~p."
+        },
+        {
+            q: "Negasi dari \\(\\forall x, x+1 > x\\) adalah...",
+            opts: ["\\(\\exists x, x+1 \\le x\\)", "\\(\\exists x, x+1 < x\\)", "\\(\\forall x, x+1 \\le x\\)"],
+            ans: 0,
+            exp: "Kuantor universal menjadi eksistensial, dan operator > menjadi ≤."
+        },
+        {
+            q: "Jika \\((p \\lor q) \\rightarrow r\\) bernilai Salah, maka...",
+            opts: ["p dan q minimal satu Benar, r Salah", "p, q, r semua Salah", "p dan q Salah, r Benar"],
+            ans: 0,
+            exp: "Implikasi Salah jika B → S. Jadi \\(p \\lor q\\) harus Benar dan r harus Salah."
+        },
+        {
+            q: "Manakah yang merupakan kontradiksi?",
+            opts: ["\\((p \\lor q) \\land (\\sim p \\land \\sim q)\\)", "\\(p \\rightarrow (p \\lor q)\\)", "\\(p \\lor (p \\rightarrow q)\\)"],
+            ans: 0,
+            exp: "Bentuk \\(A \\land \\sim A\\) selalu menghasilkan nilai Salah (Kontradiksi)."
+        },
+        {
+            q: "Premis 1: Semua mamalia menyusui. Premis 2: Kucing adalah mamalia. Kesimpulannya?",
+            opts: ["Kucing menyusui", "Semua yang menyusui adalah kucing", "Tidak ada kesimpulan"],
+            ans: 0,
+            exp: "Silogisme universal: Jika semua A adalah B, dan C adalah A, maka C adalah B."
+        },
+        {
+            q: "Konvers dari kontraposisi sebuah implikasi \\(p \\rightarrow q\\) adalah...",
+            opts: ["Invers (\\(\\sim p \\rightarrow \\sim q\\))", "Konvers (\\(q \\rightarrow p\\))", "Implikasi itu sendiri (\\(p \\rightarrow q\\))"],
+            ans: 0,
+            exp: "Konvers dari \\(\\sim q \\rightarrow \\sim p\\) adalah \\(\\sim p \\rightarrow \\sim q\\) (Invers)."
+        },
+        {
+            q: "Pernyataan 'Tidak ada korupsi atau negara makmur' ekuivalen dengan...",
+            opts: ["Jika ada korupsi, maka negara makmur", "Jika tidak ada korupsi, maka negara makmur", "Ada korupsi dan negara tidak makmur"],
+            ans: 0,
+            exp: "Bentuk \\(\\sim p \\lor q\\) ekuivalen dengan implikasi \\(p \\rightarrow q\\)."
+        },
+        {
+            q: "Jika \\(p \\leftrightarrow q\\) Salah, manakah yang pasti Benar?",
+            opts: ["\\(p \\lor q\\) Benar", "\\(p \\land q\\) Benar", "\\(p \\rightarrow q\\) Salah"],
+            ans: 0,
+            exp: "Jika biimplikasi Salah, nilai p dan q berbeda. Jika berbeda, minimal satu pasti Benar, maka disjungsinya Benar."
+        },
+        {
+            q: "Tentukan kesimpulan: 'Jika belajar, nilai bagus. Nilai tidak bagus.'",
+            opts: ["Saya tidak belajar", "Saya belajar", "Saya malas"],
+            ans: 0,
+            exp: "Modus Tollens: p → q, ~q menghasilkan ~p."
+        },
+        {
+            q: "Negasi dari 'Beberapa siswa suka matematika dan fisika' adalah...",
+            opts: ["Semua siswa tidak suka matematika atau tidak suka fisika", "Beberapa siswa tidak suka matematika dan fisika", "Semua siswa tidak suka matematika dan fisika"],
+            ans: 0,
+            exp: "Negasi dari 'Ada (P dan Q)' adalah 'Semua (tidak P atau tidak Q)'."
+        },
+        {
+            q: "Argumen: 'Jika p ganjil, p^2 ganjil. p^2 ganjil. Kesimpulan: p ganjil'. Argumen ini...",
+            opts: ["Tidak valid", "Valid (Modus Ponens)", "Valid (Modus Tollens)"],
+            ans: 0,
+            exp: "Ini adalah kesalahan 'Affirming the Consequent' (q → p tidak otomatis benar)."
+        },
+        {
+            q: "Pernyataan \\((p \\land q) \\rightarrow p\\) adalah sebuah...",
+            opts: ["Tautologi", "Kontradiksi", "Kontingensi"],
+            ans: 0,
+            exp: "Jika konjungsi Benar, maka p pasti Benar. Jadi tidak mungkin terjadi B → S."
+        },
+        {
+            q: "Kesimpulan dari 'Semua ikan bisa berenang' dan 'Nemo adalah ikan' adalah...",
+            opts: ["Nemo bisa berenang", "Semua yang berenang adalah Nemo", "Nemo bukan ikan"],
+            ans: 0,
+            exp: "Penerapan spesifik dari hukum kuantor universal."
+        },
+        {
+            q: "Jika \\(p\\): 'x < 5' dan \\(q\\): 'x > 1', maka \\(p \\land q\\) adalah...",
+            opts: ["\\(1 < x < 5\\)", "\\(x > 5\\)", "\\(x < 1\\)"],
+            ans: 0,
+            exp: "Penggabungan interval x lebih besar dari 1 DAN lebih kecil dari 5."
+        },
+        {
+            q: "Kontraposisi dari \\(\\sim p \\rightarrow q\\) adalah...",
+            opts: ["\\(\\sim q \\rightarrow p\\)", "\\(p \\rightarrow \\sim q\\)", "\\(q \\rightarrow \\sim p\\)"],
+            ans: 0,
+            exp: "Negasikan dan tukar: \\(\\sim q \\rightarrow \\sim(\\sim p)\\) menjadi \\(\\sim q \\rightarrow p\\)."
+        },
+        {
+            q: "Argumen: 'Jika \\(p \\lor q\\) dan \\(\\sim p\\), maka \\(q\\)' disebut...",
+            opts: ["Silogisme Disjungtif", "Modus Ponens", "Silogisme Hipotetis"],
+            ans: 0,
+            exp: "Hukum dasar logika untuk mengeliminasi salah satu pilihan dalam disjungsi."
+        },
+        {
+            q: "Negasi dari 'Jika saya tidak belajar, maka saya tidak lulus' adalah...",
+            opts: ["Saya tidak belajar dan saya lulus", "Saya belajar dan saya lulus", "Jika saya belajar, maka saya lulus"],
+            ans: 0,
+            exp: "Negasi dari p→q adalah p ∧ ~q. Di sini p adalah 'tidak belajar' dan q adalah 'tidak lulus'."
+        },
+        {
+            q: "Jika \\(p \rightarrow (q \land r))\\) bernilai Salah, maka...",
+            opts: ["p Benar, q atau r Salah", "p Salah", "p, q, r semua Benar"],
+            ans: 0,
+            exp: "Implikasi Salah jika B → S. Maka p Benar dan konjungsi (q ∧ r) harus Salah."
+        },
+        {
+            q: "Pernyataan \\(p \leftrightarrow q\\) ekuivalen dengan...",
+            opts: ["\\((p \\rightarrow q) \\land (q \\rightarrow p)\\)", "\\((p \\rightarrow q) \\lor (q \rightarrow p)\\)", "\\(p \\land q\\)"],
+            ans: 0,
+            exp: "Biimplikasi ekuivalen dengan konjungsi dari dua implikasi yang berlawanan arah."
+        },
+        {
+            q: "Manakah yang bukan merupakan penarikan kesimpulan yang valid?",
+            opts: ["Invers", "Modus Ponens", "Modus Tollens"],
+            ans: 0,
+            exp: "Kesimpulan berdasarkan Invers (atau Konvers) adalah cacat logika."
+        },
+        {
+            q: "Kesimpulan: 'Mhs bawa laptop. Tak ada dosen bawa laptop.'",
+            opts: ["Tidak ada mahasiswa yang seorang dosen", "Semua dosen membawa laptop", "Beberapa mahasiswa adalah dosen"],
+            ans: 0,
+            exp: "Jika Mhs maka Laptop. Jika Laptop maka bukan Dosen. Maka: Jika Mhs maka bukan Dosen."
+        },
+        {
+            q: "Negasi dari 'Jika \\(x^2=4\\), maka \\(x=2\\)' adalah...",
+            opts: ["\\(x^2=4\\) dan \\(x \ne 2\\)", "Jika \\(x^2 \ne 4\\), maka \\(x \ne 2\\)", "\\(x^2=4\\) atau \\(x \ne 2\\)"],
+            ans: 0,
+            exp: "Negasi p→q adalah p ∧ ~q. Ini benar karena ada solusi x = -2."
+        }
+    ]
+};
+
+// ═══════════════════════════════════════════════════════════════
+//  ENGINE — JANGAN DIUBAH KECUALI TAHU APA YANG DILAKUKAN
+// ═══════════════════════════════════════════════════════════════
+
+const PASS_THRESHOLD  = 0.8;
+const MAX_ATTEMPTS    = 5;
+const PASSES_NEEDED   = 2;
+
+const LEVEL_ORDER = ['LOTS','MOTS','HOTS'];
+
+const defaultLevelState = () => ({ attempts: 0, passes: 0, failStreak: 0 });
+
+function loadProgress() {
+    try {
+        const raw = localStorage.getItem(SPRINT_CONFIG.storageKey);
+        if (!raw) return null;
+        return JSON.parse(raw);
+    } catch { return null; }
+}
+
+function saveProgress(data) {
+    localStorage.setItem(SPRINT_CONFIG.storageKey, JSON.stringify(data));
+}
+
+function initProgress() {
+    const saved = loadProgress();
+    if (saved) return saved;
+    return {
+        LOTS: defaultLevelState(),
+        MOTS: defaultLevelState(),
+        HOTS: defaultLevelState(),
+    };
+}
+
+// Helpers
+function getLevelStatus(prog, level) {
+    const lp = prog[level];
+    const prevIdx = LEVEL_ORDER.indexOf(level) - 1;
+    if (prevIdx >= 0) {
+        const prevLevel = LEVEL_ORDER[prevIdx];
+        if (prog[prevLevel].passes < PASSES_NEEDED) return 'locked';
+    }
+    if (lp.passes >= PASSES_NEEDED) return 'completed';
+    if (lp.failStreak >= 3 || (lp.attempts >= MAX_ATTEMPTS && lp.passes < PASSES_NEEDED)) return 'failed';
+    return 'unlocked';
+}
+
+function isAllDone(prog) {
+    return LEVEL_ORDER.every(l => prog[l].passes >= PASSES_NEEDED);
+}
+
+function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+// ── APP STATE ──
+let progress = initProgress();
+let quizState = null;
+
+const $ = id => document.getElementById(id);
+
+const APP = {
+
+    // ── VIEWS ──
+    showView(name) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        $('view-' + name).classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+
+    goToMateri() {
+        this.updateStageTrack('materi');
+        this.showView('materi');
+        if (window.MathJax) MathJax.typesetPromise();
+    },
+
+    goToLevels() {
+        this.updateStageTrack('levels');
+        this.renderLevelCards();
+        this.updateGlobalStats(null);
+        this.showView('levels');
+    },
+
+    // ── STAGE TRACK ──
+    updateStageTrack(activeView) {
+        const stageMap = {
+            materi:  'st-materi',
+            levels:  null,
+            quiz:    null,
+            result:  null,
+        };
+        const prog = progress;
+        const stagesOrder = ['st-materi','st-lots','st-mots','st-hots','st-selesai'];
+        stagesOrder.forEach(id => {
+            const el = $(id);
+            el.classList.remove('active','done');
+        });
+
+        if (isAllDone(prog)) {
+            stagesOrder.forEach(id => $(id).classList.add('done'));
+            return;
+        }
+
+        $('st-materi').classList.add('done');
+
+        ['LOTS','MOTS','HOTS'].forEach((lvl,i) => {
+            const stId = ['st-lots','st-mots','st-hots'][i];
+            const st = getLevelStatus(prog, lvl);
+            if (st === 'completed') $(stId).classList.add('done');
+        });
+
+        if (activeView === 'materi') {
+            $('st-materi').classList.remove('done');
+            $('st-materi').classList.add('active');
+        }
+    },
+
+    // ── GLOBAL STATS ──
+    updateGlobalStats(activeLevel) {
+        if (!activeLevel) {
+            $('gs-level').textContent = 'Level';
+            $('gs-attempts').textContent = '—';
+            $('gs-pass').textContent = '—';
+            return;
+        }
+        const lp = progress[activeLevel];
+        $('gs-level').textContent = activeLevel;
+        $('gs-attempts').textContent = MAX_ATTEMPTS - lp.attempts;
+        $('gs-pass').textContent = lp.passes + '/' + PASSES_NEEDED;
+    },
+
+    // ── LEVEL CARDS ──
+    renderLevelCards() {
+        const prog = progress;
+        const levelColors = {
+            LOTS: { dot:'var(--green)',  badgeClass:'badge-green'  },
+            MOTS: { dot:'var(--amber)',  badgeClass:'badge-amber'  },
+            HOTS: { dot:'var(--red)',    badgeClass:'badge-red'    },
+        };
+
+        LEVEL_ORDER.forEach(level => {
+            const lp   = prog[level];
+            const st   = getLevelStatus(prog, level);
+            const card = $('lcard-' + level);
+            const lc   = levelColors[level];
+
+            // Card state
+            card.classList.remove('locked','unlocked','open');
+            card.classList.add(st === 'locked' ? 'locked' : 'unlocked');
+
+            // Badge
+            const badge = $('badge-' + level);
+            badge.className = 'badge ' + lc.badgeClass;
+            badge.style.verticalAlign = 'middle';
+            badge.style.marginLeft = '6px';
+            if (st === 'completed') { badge.textContent = '✓ Lulus'; }
+            else if (st === 'locked') { badge.textContent = '🔒 Terkunci'; badge.className = 'badge'; badge.style.background='rgba(58,79,104,.15)'; badge.style.color='var(--text3)'; badge.style.border='1px solid var(--border)'; }
+            else if (st === 'failed') { badge.textContent = '✕ Gugur'; badge.className = 'badge badge-red'; }
+            else { badge.textContent = (MAX_ATTEMPTS - lp.attempts) + ' percobaan'; }
+
+            // Attempt dots
+            const dotsEl = $('dots-' + level);
+            dotsEl.innerHTML = '';
+            for (let i = 0; i < MAX_ATTEMPTS; i++) {
+                const d = document.createElement('div');
+                d.className = 'adot';
+                if (i < lp.attempts) d.classList.add(i < lp.passes ? 'pass' : 'fail');
+                dotsEl.appendChild(d);
+            }
+
+            // Info text & button
+            const infoEl = $('linfo-' + level);
+            const btnEl  = $('lbtn-' + level);
+
+            if (st === 'failed') {
+                infoEl.textContent = 'Gugur — percobaan habis atau gagal 3x berturut-turut';
+                btnEl.style.display = 'none';
+            } else if (st === 'locked') {
+                infoEl.textContent = 'Selesaikan level sebelumnya terlebih dahulu';
+                btnEl.style.display = 'none';
+            } else if (st === 'completed') {
+                infoEl.textContent = 'Sudah lulus! Bisa review soal jika mau.';
+                btnEl.textContent = 'Review';
+                btnEl.style.display = '';
+            } else {
+                const att = MAX_ATTEMPTS - lp.attempts;
+                infoEl.textContent = '5 soal acak · Skor lulus ≥ 80% · ' + att + ' percobaan tersisa';
+                btnEl.textContent = lp.attempts === 0 ? 'Mulai →' : 'Coba Lagi →';
+                btnEl.style.display = '';
+            }
+        });
+    },
+
+    // ── LEVEL TOGGLE ──
+    toggleLevel(level) {
+        const st = getLevelStatus(progress, level);
+        if (st === 'locked') { this.toast('Level ini masih terkunci!', 'warn'); return; }
+        const card = $('lcard-' + level);
+        const isOpen = card.classList.contains('open');
+        // Tutup semua dulu
+        LEVEL_ORDER.forEach(l => $('lcard-' + l).classList.remove('open'));
+        if (!isOpen) card.classList.add('open');
+    },
+
+    // ── START QUIZ ──
+    startQuiz(level) {
+        const st = getLevelStatus(progress, level);
+        if (st === 'locked') { this.toast('Level masih terkunci!', 'warn'); return; }
+        if (st === 'failed')  { this.toast('Kamu sudah gugur di level ini. Reset untuk mencoba lagi.', 'warn'); return; }
+
+        const pool = shuffle(QUESTIONS[level]).slice(0, 5);
+        quizState = {
+            level,
+            questions: pool,
+            answers:   Array(pool.length).fill(null),
+            submitted: Array(pool.length).fill(false),
+            current:   0,
+            reviewMode: st === 'completed',
+        };
+
+        this.updateGlobalStats(level);
+        this.updateStageTrack('quiz');
+
+        const levelColors = { LOTS:'var(--green)', MOTS:'var(--amber)', HOTS:'var(--red)' };
+        const lp = progress[level];
+        $('quiz-title').innerHTML = `<span style="color:${levelColors[level]}">${level}</span> — ${SPRINT_CONFIG.title.replace('Sprint — ','')}`;
+        $('quiz-meta').textContent = pool.length + ' soal · Percobaan ke-' + (lp.attempts + 1) + ' dari ' + MAX_ATTEMPTS;
+
+        this.renderQuizQuestion();
+        this.showView('quiz');
+    },
+
+    // ── QUIZ QUESTION ──
+    renderQuizQuestion() {
+        const qs = quizState;
+        const idx = qs.current;
+        const q   = qs.questions[idx];
+
+        // Nav dots
+        $('q-nav').innerHTML = qs.questions.map((_, i) => {
+            let cls = 'q-dot';
+            if (i === idx) cls += ' current';
+            else if (qs.submitted[i]) {
+                cls += qs.answers[i] === qs.questions[i].ans ? ' ans-correct' : ' ans-wrong';
+            }
+            return `<div class="${cls}" onclick="APP.jumpQ(${i})">${i+1}</div>`;
+        }).join('');
+
+        // Question area
+        const letters = ['A','B','C','D','E'];
+        const isSubmitted = qs.submitted[idx];
+        const optsHTML = q.opts.map((opt, oi) => {
+            let cls = 'opt-btn';
+            if (isSubmitted) {
+                if (oi === q.ans) cls += ' correct';
+                else if (oi === qs.answers[idx]) cls += ' wrong';
+            } else if (oi === qs.answers[idx]) cls += ' selected';
+            return `<button class="${cls}" ${isSubmitted ? 'disabled' : ''} onclick="APP.selectOpt(${oi})">
+                <span class="opt-letter">${letters[oi]}</span>
+                <span>${opt}</span>
+            </button>`;
+        }).join('');
+
+        const expHTML = isSubmitted
+            ? `<div class="explanation"><strong>💡 PEMBAHASAN</strong><br>${q.exp}</div>`
+            : '';
+
+        const allAnswered = qs.answers.every(a => a !== null);
+        const allSubmitted = qs.submitted.every(s => s);
+
+        $('question-area').innerHTML = `
+            <div class="q-num">Soal ${idx+1} dari ${qs.questions.length}</div>
+            <div class="q-text">${q.q}</div>
+            <div>${optsHTML}</div>
+            ${!isSubmitted && qs.answers[idx] !== null
+                ? `<div style="margin-top:10px"><button class="btn btn-primary btn-sm" onclick="APP.submitOne(${idx})">Konfirmasi Jawaban ✓</button></div>`
+                : ''}
+            ${expHTML}
+            ${allSubmitted
+                ? `<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">
+                       <button class="btn btn-primary" onclick="APP.finishQuiz()">Lihat Hasil →</button>
+                   </div>`
+                : ''}
+        `;
+
+        $('q-prev').disabled = idx === 0;
+        const nextBtn = $('q-next');
+        if (idx === qs.questions.length - 1) {
+            nextBtn.textContent = 'Selesai ✓';
+            nextBtn.onclick = () => APP.finishQuiz();
+        } else {
+            nextBtn.textContent = 'Next →';
+            nextBtn.onclick = () => APP.nextOrFinish();
+        }
+
+        if (window.MathJax) MathJax.typesetPromise([$('question-area')]);
+    },
+
+    selectOpt(oi) {
+        if (quizState.submitted[quizState.current]) return;
+        quizState.answers[quizState.current] = oi;
+        this.renderQuizQuestion();
+    },
+
+    submitOne(idx) {
+        if (quizState.answers[idx] === null) { this.toast('Pilih jawaban dulu!','warn'); return; }
+        quizState.submitted[idx] = true;
+        this.renderQuizQuestion();
+    },
+
+    prevQ() {
+        if (quizState.current > 0) { quizState.current--; this.renderQuizQuestion(); }
+    },
+
+    nextOrFinish() {
+        const qs = quizState;
+        if (qs.current < qs.questions.length - 1) { qs.current++; this.renderQuizQuestion(); }
+        else this.finishQuiz();
+    },
+
+    jumpQ(i) { quizState.current = i; this.renderQuizQuestion(); },
+
+    exitQuiz() {
+        if (!quizState.submitted.every(s => s)) {
+            if (!confirm('Keluar sebelum selesai? Percobaan ini tidak akan dihitung.')) return;
+        }
+        this.goToLevels();
+    },
+
+    // ── FINISH QUIZ ──
+    finishQuiz() {
+        const qs = quizState;
+        // Auto-submit yang belum di-submit tapi sudah dijawab
+        qs.questions.forEach((_,i) => { if (!qs.submitted[i] && qs.answers[i] !== null) qs.submitted[i] = true; });
+
+        let correct = 0;
+        qs.questions.forEach((q,i) => { if (qs.answers[i] === q.ans) correct++; });
+        const pct    = Math.round(correct / qs.questions.length * 100);
+        const passed = pct >= PASS_THRESHOLD * 100;
+
+        if (!qs.reviewMode) {
+            const lp = progress[qs.level];
+            lp.attempts++;
+            if (passed) { lp.passes++; lp.failStreak = 0; }
+            else lp.failStreak++;
+            saveProgress(progress);
+        }
+
+        this.renderResult(correct, qs.questions.length, pct, passed);
+        this.updateGlobalStats(qs.level);
+        this.updateStageTrack('result');
+        this.showView('result');
+    },
+
+    // ── RESULT ──
+    renderResult(correct, total, pct, passed) {
+        const qs    = quizState;
+        const level = qs.level;
+        const lp    = progress[level];
+        const st    = getLevelStatus(progress, level);
+
+        const color = passed ? 'var(--green)' : pct >= 60 ? 'var(--amber)' : 'var(--red)';
+
+        const circ  = Math.round(2 * Math.PI * 44);
+        const dash  = Math.round(pct / 100 * circ);
+
+        // notice box
+        let noticeHTML = '';
+        if (st === 'completed') {
+            const nextLvl = LEVEL_ORDER[LEVEL_ORDER.indexOf(level) + 1];
+            if (nextLvl) {
+                noticeHTML = `<div class="notice-box green">
+                    <div class="n-title">🔓 Level ${nextLvl} Terbuka!</div>
+                    <div class="n-sub">Kamu sudah lulus ${PASSES_NEEDED}x di level ini.</div>
+                </div>`;
+            } else if (isAllDone(progress)) {
+                noticeHTML = `<div class="cert">
+                    <div class="cert-icon">🏆</div>
+                    <div class="cert-title">Sprint Selesai!</div>
+                    <div class="cert-text">Kamu berhasil menyelesaikan semua level:<br>LOTS ✓ &nbsp; MOTS ✓ &nbsp; HOTS ✓</div>
+                </div>`;
+            }
+        } else if (st === 'failed') {
+            noticeHTML = `<div class="notice-box red">
+                <div class="n-title">Gugur di Level Ini</div>
+                <div class="n-sub">${lp.failStreak >= 3 ? 'Gagal 3x berturut-turut.' : 'Percobaan habis.'} Reset untuk mencoba ulang.</div>
+            </div>`;
+        } else if (passed) {
+            const need = PASSES_NEEDED - lp.passes;
+            if (need > 0) {
+                noticeHTML = `<div class="notice-box cyan">
+                    <div class="n-title">Lulus! ${lp.passes}/${PASSES_NEEDED}</div>
+                    <div class="n-sub">Butuh ${need} kali lulus lagi untuk naik level.</div>
+                </div>`;
+            }
+        }
+
+        // action buttons
+        const attLeft = MAX_ATTEMPTS - lp.attempts;
+        let actHTML = `<div class="btn-group">
+            <button class="btn btn-ghost" onclick="APP.goToLevels()">← Kembali ke Level</button>`;
+        if (!qs.reviewMode && attLeft > 0 && st !== 'failed' && st !== 'completed') {
+            actHTML += `<button class="btn btn-primary" onclick="APP.startQuiz('${level}')">Coba Lagi (${attLeft}x) →</button>`;
+        }
+        if (st === 'completed' && !isAllDone(progress)) {
+            const nextLvl = LEVEL_ORDER[LEVEL_ORDER.indexOf(level) + 1];
+            if (nextLvl) actHTML += `<button class="btn btn-primary" onclick="APP.startQuiz('${nextLvl}')">Mulai ${nextLvl} →</button>`;
+        }
+        actHTML += `</div>`;
+
+        $('result-panel').innerHTML = `
+            <div class="result-hero">
+                <div class="score-ring-wrap">
+                    <svg width="110" height="110" viewBox="0 0 110 110" style="transform:rotate(-90deg)">
+                        <circle cx="55" cy="55" r="44" fill="none" stroke="var(--border)" stroke-width="7"/>
+                        <circle cx="55" cy="55" r="44" fill="none"
+                            stroke="${color}" stroke-width="7"
+                            stroke-dasharray="${circ}" stroke-dashoffset="${circ - dash}"
+                            stroke-linecap="round"/>
+                    </svg>
+                    <div class="score-ring-text">
+                        <div class="score-big" style="color:${color}">${pct}</div>
+                        <div class="score-pct">%</div>
+                    </div>
+                </div>
+                <div class="result-verdict" style="color:${passed?'var(--green)':'var(--red)'}">${passed ? '✓ LULUS' : '✗ BELUM LULUS'}</div>
+                <div class="result-sub">${correct} dari ${total} soal benar · Skor lulus ≥ 80%</div>
+            </div>
+
+            <div class="result-stats">
+                <div class="rs-card">
+                    <div class="rs-val" style="color:var(--green)">${lp.passes}/${PASSES_NEEDED}</div>
+                    <div class="rs-lbl">Kali Lulus</div>
+                </div>
+                <div class="rs-card">
+                    <div class="rs-val mono">${lp.attempts}/${MAX_ATTEMPTS}</div>
+                    <div class="rs-lbl">Percobaan</div>
+                </div>
+                <div class="rs-card">
+                    <div class="rs-val" style="color:var(--amber)">${lp.failStreak}/3</div>
+                    <div class="rs-lbl">Gagal Berturut</div>
+                </div>
+            </div>
+
+            ${noticeHTML}
+            ${actHTML}
+        `;
+
+        if (window.MathJax) MathJax.typesetPromise([$('result-panel')]);
+    },
+
+    // ── RESET ──
+    resetConfirm() {
+        if (!confirm('Reset semua progress di sprint ini? Aksi tidak bisa dibatalkan.')) return;
+        progress = {
+            LOTS: defaultLevelState(),
+            MOTS: defaultLevelState(),
+            HOTS: defaultLevelState(),
+        };
+        saveProgress(progress);
+        this.toast('Progress direset!', 'info');
+        this.goToLevels();
+    },
+
+    // ── TOAST ──
+    toast(msg, type = 'info') {
+        const colors = { info:'var(--cyan)', success:'var(--green)', warn:'var(--amber)', error:'var(--red)' };
+        const t = $('toast');
+        t.style.borderColor = colors[type] || colors.info;
+        t.innerHTML = `<span style="color:${colors[type]};font-size:16px">${type==='success'?'✓':type==='error'?'✗':'i'}</span> ${msg}`;
+        t.style.display = 'flex';
+        clearTimeout(APP._toastTimer);
+        APP._toastTimer = setTimeout(() => { t.style.display = 'none'; }, 3500);
+    },
+    _toastTimer: null,
+};
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', () => {
+    $('page-title').textContent = SPRINT_CONFIG.title;
+    $('page-sub').textContent   = SPRINT_CONFIG.sub;
+    APP.goToMateri();
+});
+</script>
+</body>
+</html>
